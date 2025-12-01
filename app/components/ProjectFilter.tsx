@@ -49,12 +49,12 @@ export default function ProjectFilter({
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-dark-lighter border border-white/5 rounded-lg hover:border-cyan/50 transition-all"
+        className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-dark-lighter border border-slate-200 dark:border-white/5 rounded-lg hover:border-cyan-600/50 dark:hover:border-cyan/50 transition-all text-slate-700 dark:text-white"
       >
         <Filter size={18} />
         <span>Filter</span>
         {totalActive > 0 && (
-          <span className="px-2 py-0.5 bg-cyan text-dark text-xs font-semibold rounded-full">
+          <span className="px-2 py-0.5 bg-cyan-600 dark:bg-cyan text-white dark:text-dark text-xs font-semibold rounded-full">
             {totalActive}
           </span>
         )}
@@ -66,13 +66,13 @@ export default function ProjectFilter({
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute z-50 mt-2 w-80 bg-dark-lighter border border-white/10 rounded-lg shadow-lg p-4 space-y-4">
+          <div className="absolute z-50 mt-2 w-80 bg-white dark:bg-dark-lighter border border-slate-200 dark:border-white/10 rounded-lg shadow-lg p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-white">Filters</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-white">Filters</h3>
               {totalActive > 0 && (
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-cyan hover:text-cyan-secondary flex items-center gap-1"
+                  className="text-sm text-cyan-600 dark:text-cyan hover:text-sky-600 dark:hover:text-cyan-secondary flex items-center gap-1"
                 >
                   <X size={14} />
                   Clear all
@@ -82,7 +82,7 @@ export default function ProjectFilter({
 
             {/* Tags Filter */}
             <div>
-              <label className="text-sm font-medium text-gray-300 mb-2 block">
+              <label className="text-sm font-medium text-slate-600 dark:text-gray-300 mb-2 block">
                 Tags
               </label>
               <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
@@ -94,8 +94,8 @@ export default function ProjectFilter({
                       onClick={() => toggleTag(tag)}
                       className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                         isActive
-                          ? 'bg-cyan text-dark border border-cyan'
-                          : 'bg-dark border border-white/5 text-gray-300 hover:border-cyan/50'
+                          ? 'bg-cyan-600 dark:bg-cyan text-white dark:text-dark border border-cyan-600 dark:border-cyan'
+                          : 'bg-slate-100 dark:bg-dark border border-slate-200 dark:border-white/5 text-slate-600 dark:text-gray-300 hover:border-cyan-600/50 dark:hover:border-cyan/50'
                       }`}
                     >
                       {tag}
@@ -107,7 +107,7 @@ export default function ProjectFilter({
 
             {/* Tech Stack Filter */}
             <div>
-              <label className="text-sm font-medium text-gray-300 mb-2 block">
+              <label className="text-sm font-medium text-slate-600 dark:text-gray-300 mb-2 block">
                 Tech Stack
               </label>
               <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
@@ -119,8 +119,8 @@ export default function ProjectFilter({
                       onClick={() => toggleTech(tech)}
                       className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                         isActive
-                          ? 'bg-cyan text-dark border border-cyan'
-                          : 'bg-dark border border-white/5 text-gray-300 hover:border-cyan/50'
+                          ? 'bg-cyan-600 dark:bg-cyan text-white dark:text-dark border border-cyan-600 dark:border-cyan'
+                          : 'bg-slate-100 dark:bg-dark border border-slate-200 dark:border-white/5 text-slate-600 dark:text-gray-300 hover:border-cyan-600/50 dark:hover:border-cyan/50'
                       }`}
                     >
                       {tech}

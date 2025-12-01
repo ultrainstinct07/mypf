@@ -68,7 +68,7 @@ export default function ProjectSearch({
     <div className={`relative ${className}`}>
       <div className="relative">
         <Search
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-400"
           size={20}
         />
         <input
@@ -84,12 +84,12 @@ export default function ProjectSearch({
             onFocus?.();
           }}
           placeholder={placeholder}
-          className="w-full pl-12 pr-12 py-3 bg-dark-lighter border border-white/5 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan/50 focus:ring-2 focus:ring-cyan/20 transition-all"
+          className="w-full pl-12 pr-12 py-3 bg-white dark:bg-dark-lighter border border-slate-200 dark:border-white/5 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-400 focus:outline-none focus:border-cyan-600/50 dark:focus:border-cyan/50 focus:ring-2 focus:ring-cyan-600/20 dark:focus:ring-cyan/20 transition-all"
         />
         {value && (
           <button
             onClick={handleClear}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-cyan transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan transition-colors"
             aria-label="Clear search"
           >
             <X size={20} />
@@ -100,18 +100,18 @@ export default function ProjectSearch({
       {showSuggestions && filteredRecent.length > 0 && (
         <div
           ref={suggestionsRef}
-          className="absolute z-50 w-full mt-2 bg-dark-lighter border border-white/10 rounded-lg shadow-lg overflow-hidden"
+          className="absolute z-50 w-full mt-2 bg-white dark:bg-dark-lighter border border-slate-200 dark:border-white/10 rounded-lg shadow-lg overflow-hidden"
         >
-          <div className="px-3 py-2 text-xs text-gray-400 uppercase tracking-wider border-b border-white/5">
+          <div className="px-3 py-2 text-xs text-slate-500 dark:text-gray-400 uppercase tracking-wider border-b border-slate-200 dark:border-white/5">
             Recent Searches
           </div>
           {filteredRecent.map((search, index) => (
             <button
               key={index}
               onClick={() => handleSuggestionClick(search)}
-              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-cyan/10 hover:text-cyan transition-colors flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm text-slate-600 dark:text-gray-300 hover:bg-cyan-600/10 dark:hover:bg-cyan/10 hover:text-cyan-600 dark:hover:text-cyan transition-colors flex items-center gap-2"
             >
-              <Search size={14} className="text-gray-500" />
+              <Search size={14} className="text-slate-400 dark:text-gray-500" />
               {search}
             </button>
           ))}

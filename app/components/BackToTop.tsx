@@ -61,7 +61,7 @@ export default function BackToTop() {
           onClick={scrollToTop}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="fixed bottom-8 right-8 z-50 group"
+          className="fixed bottom-28 right-6 z-50 group"
           aria-label="Scroll to top"
         >
           {/* Glow effect background */}

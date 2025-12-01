@@ -13,38 +13,46 @@ export const SITE_CONFIG = {
   },
 
   bio: {
-    short: "Currently interning at Levithan Technologies; experienced with Burp Suite, OWASP Top 10 remediation, security automation, and threat intel tooling. I combine systems thinking and hands-on tooling to secure products from code to cloud.",
+    short: "Cybersecurity analyst with over one year of full-time experience at Levithan Technologies, specializing in web application security, mobile application pentesting, and red-team methodology. CRTA certified, actively building security tools, and preparing for OSCP and CEH certifications.",
     
-    paragraph1: "I'm Kshitiz Kumar, a cybersecurity analyst currently interning at Levithan Technologies with hands-on experience in Burp Suite, OWASP Top 10 remediation, and government website projects. I've built Ark Surveillance (private AI surveillance prototype), Collegia (student guidance AI server), a Python-based phishing detection engine, and am actively studying mobile app pentesting and Windows internals.",
+    paragraph1: "Kshitiz Kumar is a cybersecurity analyst with over one year of full-time experience at Levithan Technologies, specializing in web application security, mobile application pentesting, and red-team methodology. His work spans vulnerability assessment, exploit development basics, reconnaissance workflows, and hands-on security testing for government and enterprise environments.",
     
-    paragraph2: "I balance product-focused security with pragmatic tooling to make systems safer and maintainable."
-  }
+    paragraph2: "He holds the CRTA (Certified Red Team Analyst) certification, demonstrating his capability in adversary simulation, privilege escalation, lateral movement, and post-exploitation techniques. Beyond formal work, he actively builds tools and internal solutions, including automated reconnaissance utilities, phishing detection systems, and OSINT-driven intelligence modules. His learning path is heavily focused on red teaming and offensive security engineering. He is currently preparing for OSCP and CEH, aiming to complete both certifications next year as part of his progression into advanced offensive cybersecurity and penetration testing roles. He enjoys working at the intersection of threat simulation, real-world attack modeling, and practical defense improvement—bridging the gap between theoretical security and what attackers actually do."
+  },
+  
+  employmentStatus: 'Full-time'
 };
 
 export const EXPERTISE_ITEMS = [
   {
     id: '1',
-    title: 'Security Tooling',
-    description: 'Building intuitive interfaces for complex security workflows and automated scanning tools',
-    icon: 'shield-check',
+    title: 'Offensive Security & Red Teaming',
+    description: 'Adversary simulation, exploit research, privilege escalation, post-exploitation, and Active Directory attack chains.',
+    icon: 'target',
   },
   {
     id: '2',
-    title: 'Threat Research',
-    description: 'Analyzing vulnerabilities, researching attack patterns, and developing detection mechanisms',
-    icon: 'search',
+    title: 'Application Security (Web + Mobile)',
+    description: 'Hands-on testing using Burp Suite, MITM tools, static/dynamic analysis, and manual exploitation techniques.',
+    icon: 'smartphone',
   },
   {
     id: '3',
-    title: 'Product Security',
-    description: 'Integrating security best practices into development lifecycle and branding security solutions',
-    icon: 'layers',
+    title: 'Threat Intelligence & OSINT',
+    description: 'SOCMINT, intel feeds integration, data enrichment tools, and automation pipelines.',
+    icon: 'search',
   },
   {
     id: '4',
-    title: 'Secure Workflows',
-    description: 'Designing usable security workflows that balance protection with user experience',
-    icon: 'workflow',
+    title: 'Security Engineering',
+    description: 'Designing internal tools, improving reconnaissance workflows, and building custom scripts to speed up offensive operations.',
+    icon: 'code',
+  },
+  {
+    id: '5',
+    title: 'Research & Continuous Learning',
+    description: 'Breaking things, learning patterns, and understanding how real attackers think.',
+    icon: 'book-open',
   },
 ];
 

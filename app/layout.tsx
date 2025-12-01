@@ -84,7 +84,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -122,7 +122,7 @@ export default function RootLayout({
           <ScrollProgress />
           <Navbar />
           <PageTransition>
-            {children}
+          {children}
           </PageTransition>
           <CommandPalette />
           <ChatWidget />

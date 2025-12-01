@@ -157,17 +157,16 @@ export default function Hero() {
               {/* Glowing ring */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-600 via-sky-500 dark:from-cyan dark:via-cyan-secondary to-transparent opacity-20 blur-2xl animate-glow" />
               
-              {/* Portrait container */}
-              <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-cyan-600/30 dark:border-cyan/30 glow-cyan">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/10 dark:from-cyan/10 to-transparent" />
+              {/* Base portrait container (circular frame) */}
+              <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-cyan-600/30 dark:border-cyan/30 glow-cyan z-10">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/10 dark:from-cyan/10 to-transparent z-10" />
                 <Image
-                  src="/images/hero-portrait.svg"
+                  src="/images/hero-portrait.png"
                   alt="Kshitiz Kumar - Cybersecurity Analyst"
                   fill
-                  className="object-cover"
+                  className="object-cover object-top"
                   priority
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  unoptimized
                 />
               </div>
 
@@ -176,7 +175,7 @@ export default function Hero() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
-                className="absolute left-0 top-1/4 -translate-x-1/2 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-2xl px-4 py-3 shadow-lg dark:shadow-none glow-cyan z-10"
+                className="absolute left-0 bottom-1/4 -translate-x-1/2 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-2xl px-4 py-3 shadow-lg dark:shadow-none glow-cyan z-30"
               >
                 <div className="text-sm text-cyan-600 dark:text-cyan font-semibold">Security Analyst</div>
                 <div className="text-xs text-slate-500 dark:text-gray-400">@ {SITE_CONFIG.company}</div>
@@ -186,7 +185,7 @@ export default function Hero() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1.4, duration: 0.8 }}
-                className="absolute right-0 bottom-1/4 translate-x-1/4 xl:translate-x-1/3 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-2xl px-4 py-3 shadow-lg dark:shadow-none glow-cyan z-10"
+                className="absolute right-0 bottom-1/2 translate-x-1/2 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-2xl px-4 py-3 shadow-lg dark:shadow-none glow-cyan z-30"
               >
                 <div className="text-sm text-cyan-600 dark:text-cyan font-semibold">{SITE_CONFIG.location.split(',')[0]}</div>
                 <div className="text-xs text-slate-500 dark:text-gray-400">Based in India</div>

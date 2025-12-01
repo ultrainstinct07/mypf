@@ -1,10 +1,17 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { usePreferences, type Theme } from '../hooks/usePreferences';
 
 export default function ThemeToggle() {
+  const [mounted, setMounted] = useState(false);
   const { preferences, updatePreferences } = usePreferences();
+
+  // Only show the toggle after mounting to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const themes: { value: Theme; icon: typeof Sun; label: string }[] = [
     { value: 'light', icon: Sun, label: 'Light' },
@@ -20,6 +27,19 @@ export default function ThemeToggle() {
     const nextIndex = (currentIndex + 1) % themes.length;
     updatePreferences({ theme: themes[nextIndex].value });
   };
+
+  // Render a placeholder with the same dimensions to prevent layout shift
+  if (!mounted) {
+    return (
+      <button
+        className="p-2 rounded-lg border transition-all group bg-slate-100 border-slate-200 dark:bg-dark-lighter dark:border-white/5"
+        aria-label="Loading theme toggle"
+        disabled
+      >
+        <div className="w-[18px] h-[18px]" />
+      </button>
+    );
+  }
 
   return (
     <button

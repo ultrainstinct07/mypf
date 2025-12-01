@@ -29,14 +29,14 @@ export default function SkillBars({ skills, className = '' }: SkillBarsProps) {
           className="space-y-2"
         >
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-300">
+            <span className="text-sm font-medium text-slate-600 dark:text-gray-300">
               {skill.name}
             </span>
-            <span className="text-sm text-cyan font-semibold">
+            <span className="text-sm text-cyan-600 dark:text-cyan font-semibold">
               {skill.level}%
             </span>
           </div>
-          <div className="h-2 bg-dark-lighter rounded-full overflow-hidden">
+          <div className="h-2 bg-slate-200 dark:bg-dark-lighter rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
@@ -46,7 +46,7 @@ export default function SkillBars({ skills, className = '' }: SkillBarsProps) {
                 ease: 'easeOut',
               }}
               className={`h-full rounded-full ${
-                skill.color || 'bg-gradient-to-r from-cyan to-cyan-secondary'
+                skill.color || 'bg-gradient-to-r from-cyan-600 to-sky-500 dark:from-cyan dark:to-cyan-secondary'
               }`}
             />
           </div>

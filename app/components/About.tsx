@@ -94,12 +94,11 @@ export default function About() {
               <div className="relative bg-slate-50 dark:bg-dark rounded-3xl overflow-hidden border border-cyan-600/20 dark:border-cyan/20 glow-cyan shadow-xl dark:shadow-none">
                 <div className="aspect-[3/4] relative">
                   <Image
-                    src="/images/about-portrait.svg"
+                    src="/images/about-portrait.png"
                     alt="Kshitiz Kumar working on security analysis"
                     fill
-                    className="object-cover"
+                    className="object-contain"
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    unoptimized
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-dark via-transparent to-transparent" />
                 </div>
@@ -111,7 +110,7 @@ export default function About() {
                     {SITE_CONFIG.role}
                   </p>
                   <p className="text-slate-500 dark:text-gray-400 text-sm">
-                    Intern @ {SITE_CONFIG.company}
+                    {SITE_CONFIG.employmentStatus || 'Full-time'} @ {SITE_CONFIG.company}
                   </p>
                 </div>
               </div>

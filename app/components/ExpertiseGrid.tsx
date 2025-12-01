@@ -4,13 +4,14 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { EXPERTISE_ITEMS } from '@/lib/constants';
-import { Shield, Search, Layers, Workflow } from 'lucide-react';
+import { Target, Smartphone, Search, Code, BookOpen } from 'lucide-react';
 
 const iconMap: { [key: string]: any } = {
-  'shield-check': Shield,
+  'target': Target,
+  'smartphone': Smartphone,
   'search': Search,
-  'layers': Layers,
-  'workflow': Workflow,
+  'code': Code,
+  'book-open': BookOpen,
 };
 
 export default function ExpertiseGrid() {
@@ -33,7 +34,7 @@ export default function ExpertiseGrid() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-cyan-600 dark:text-cyan text-sm font-semibold uppercase tracking-wider"
           >
-            My Capabilities
+            What I Do
           </motion.span>
           
           <motion.h2
@@ -42,8 +43,8 @@ export default function ExpertiseGrid() {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="font-display text-4xl md:text-5xl font-bold mt-4 mb-6 text-slate-900 dark:text-white"
           >
-            I Have Expertise to{' '}
-            <span className="text-gradient-cyan">Tackle Challenges</span>
+            My{' '}
+            <span className="text-gradient-cyan">Expertise</span>
           </motion.h2>
 
           <motion.p
@@ -52,13 +53,13 @@ export default function ExpertiseGrid() {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="text-slate-600 dark:text-gray-300 text-lg max-w-2xl mx-auto"
           >
-            My skill set combines modern security practices with pragmatic tools and intuitive workflows.
+            Specializing in offensive security, application testing, threat intelligence, security engineering, and continuous research.
           </motion.p>
         </motion.div>
 
         {/* Expertise cards grid with staggered animations */}
         <motion.div 
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8"
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={{
@@ -97,7 +98,7 @@ export default function ExpertiseGrid() {
                   <div className="absolute inset-0 bg-cyan-600/10 dark:bg-cyan/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
                   {/* Card */}
-                  <div className="relative bg-white dark:bg-gradient-to-br dark:from-cyan/10 dark:to-cyan-secondary/5 rounded-3xl p-8 border border-slate-200 dark:border-cyan/20 hover:border-cyan-600/40 dark:hover:border-cyan/40 transition-all duration-300 hover:glow-cyan group-hover:scale-105 transform shadow-md dark:shadow-none">
+                  <div className="relative bg-white dark:bg-dark-lighter rounded-3xl p-8 border border-slate-200 dark:border-cyan/20 hover:border-cyan-600/40 dark:hover:border-cyan/40 transition-all duration-300 hover:glow-cyan group-hover:scale-105 transform shadow-md dark:shadow-none">
                     {/* Icon circle */}
                     <div className="relative w-20 h-20 mx-auto mb-6">
                       <div className="absolute inset-0 bg-cyan-600/20 dark:bg-cyan/20 rounded-full animate-pulse" />
