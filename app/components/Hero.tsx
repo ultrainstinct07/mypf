@@ -159,12 +159,12 @@ export default function Hero() {
               
               {/* Base portrait container (circular frame) */}
               <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-cyan-600/30 dark:border-cyan/30 glow-cyan z-10">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/10 dark:from-cyan/10 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/10 dark:from-cyan/10 to-transparent" />
                 <Image
                   src="/images/hero-portrait.png"
                   alt="Kshitiz Kumar - Cybersecurity Analyst"
                   fill
-                  className="object-cover object-top"
+                  className="object-cover object-top relative z-10"
                   priority
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
