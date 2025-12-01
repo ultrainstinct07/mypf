@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot } from 'lucide-react';
 import { FAQ_ITEMS } from '@/lib/constants';
-import Fuse from 'fuse.js';
+import Fuse, { type IFuseOptions } from 'fuse.js';
 
 interface Message {
   id: string;
@@ -12,7 +12,7 @@ interface Message {
   timestamp: Date;
 }
 
-const fuseOptions: Fuse.IFuseOptions<typeof FAQ_ITEMS[0]> = {
+const fuseOptions: IFuseOptions<typeof FAQ_ITEMS[0]> = {
   keys: ['question', 'answer'],
   threshold: 0.4,
 };

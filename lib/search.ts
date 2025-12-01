@@ -1,13 +1,13 @@
-import Fuse from 'fuse.js';
+import Fuse, { type IFuseOptions, type FuseResultMatch } from 'fuse.js';
 import type { Project } from '@/types';
 
 export interface SearchResult {
   item: Project;
   score: number;
-  matches?: readonly Fuse.FuseResultMatch[];
+  matches?: readonly FuseResultMatch[];
 }
 
-const searchOptions: Fuse.IFuseOptions<Project> = {
+const searchOptions: IFuseOptions<Project> = {
   keys: [
     { name: 'title', weight: 0.5 },
     { name: 'description', weight: 0.3 },

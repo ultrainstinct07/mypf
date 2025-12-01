@@ -29,7 +29,7 @@ const config: Config = {
         'slide-up': 'slideUp 0.6s ease-out forwards',
         'glow': 'glow 2s ease-in-out infinite',
         'slideDown': 'slideDown 0.3s ease-out',
-        'slideUp': 'slideUp 0.3s ease-out',
+        'accordionSlideUp': 'accordionSlideUp 0.3s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -48,7 +48,7 @@ const config: Config = {
           '0%': { height: '0', opacity: '0' },
           '100%': { height: 'var(--radix-accordion-content-height)', opacity: '1' },
         },
-        slideUp: {
+        accordionSlideUp: {
           '0%': { height: 'var(--radix-accordion-content-height)', opacity: '1' },
           '100%': { height: '0', opacity: '0' },
         },

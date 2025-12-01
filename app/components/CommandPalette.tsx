@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Fuse from 'fuse.js';
+import Fuse, { type IFuseOptions } from 'fuse.js';
 import { Search, ArrowRight, X } from 'lucide-react';
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut';
 
@@ -24,7 +24,7 @@ const commands: CommandItem[] = [
   { id: 'contact', label: 'Contact', href: '/#contact', keywords: ['email', 'reach'] },
 ];
 
-const fuseOptions: Fuse.IFuseOptions<CommandItem> = {
+const fuseOptions: IFuseOptions<CommandItem> = {
   keys: [
     { name: 'label', weight: 0.7 },
     { name: 'description', weight: 0.2 },
