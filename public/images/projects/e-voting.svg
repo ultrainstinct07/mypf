@@ -1,0 +1,7 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#1F1F1F"/>
+  <text x="600" y="280" font-size="120" text-anchor="middle" fill="#00D9FF">🗳️</text>
+  <text x="600" y="400" font-size="42" text-anchor="middle" fill="#FFFFFF" font-family="Arial" font-weight="bold">E-Voting Prototype</text>
+  <text x="600" y="450" font-size="24" text-anchor="middle" fill="#9CA3AF" font-family="Arial">Secure Cryptographic Voting</text>
+</svg>
+

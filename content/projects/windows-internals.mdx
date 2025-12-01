@@ -1,0 +1,329 @@
+---
+title: "Windows Internals Research"
+description: "Research notes and tooling experiments exploring Windows internals, kernel security, and low-level system mechanisms."
+tags: ["Research", "Windows", "Kernel"]
+image: "/images/projects/windows-internals.svg"
+repoUrl: "https://github.com/kshitiz/windows-internals"
+techStack: ["C++", "Assembly", "WinDbg", "Python", "IDA Pro", "Ghidra"]
+---
+
+## Overview
+
+An ongoing exploration of Windows operating system internals, focusing on kernel architecture, security mechanisms, and low-level system programming. This project documents research findings, proof-of-concept tools, and analysis techniques.
+
+## Research Areas
+
+### Windows Kernel Architecture
+
+#### Executive Subsystems
+- Process and Thread Management
+- Memory Manager (Virtual Memory, Paging)
+- I/O Manager and Driver Architecture
+- Object Manager (Kernel Objects)
+- Security Reference Monitor
+- Configuration Manager (Registry)
+
+#### Kernel Mode vs. User Mode
+- Ring 0 vs. Ring 3 separation
+- System call mechanisms (syscalls)
+- Kernel Patch Protection (PatchGuard)
+- Driver Signature Enforcement
+
+### Process and Thread Internals
+
+#### EPROCESS Structure
+Deep dive into the process control block:
+```cpp
+// Key EPROCESS fields
+typedef struct _EPROCESS {
+    KPROCESS Pcb;
+    EX_PUSH_LOCK ProcessLock;
+    LARGE_INTEGER CreateTime;
+    EX_RUNDOWN_REF RundownProtect;
+    PVOID UniqueProcessId;
+    LIST_ENTRY ActiveProcessLinks;
+    // ... many more fields
+} EPROCESS, *PEPROCESS;
+```
+
+#### Thread Scheduling
+- Thread priority and affinity
+- CPU scheduler algorithms
+- Context switching mechanisms
+- Thread local storage (TLS)
+
+### Memory Management
+
+#### Virtual Memory
+- Page tables and address translation
+- Working set management
+- Memory-mapped files
+- Shared memory sections
+
+#### Heap Internals
+- NT Heap implementation
+- Low Fragmentation Heap (LFH)
+- Segment Heap (Windows 10+)
+- Heap exploitation mitigations
+
+#### Virtual Address Descriptors (VADs)
+- VAD tree structure
+- Memory protection tracking
+- Copy-on-write mechanisms
+
+### Security Mechanisms
+
+#### Access Control
+- Security Descriptors (SDs)
+- Access Control Lists (ACLs)
+- Security Identifiers (SIDs)
+- Privilege and token management
+
+#### Exploit Mitigations
+- Address Space Layout Randomization (ASLR)
+- Data Execution Prevention (DEP)
+- Control Flow Guard (CFG)
+- Arbitrary Code Guard (ACG)
+- Code Integrity Guard (CIG)
+
+#### Kernel Isolation
+- Kernel Isolated User Mode (KI-UM)
+- Virtualization-Based Security (VBS)
+- Hypervisor Code Integrity (HVCI)
+- Credential Guard
+
+### Driver Development
+
+#### WDM (Windows Driver Model)
+- Driver types: WDM, WDF, KMDF, UMDF
+- I/O Request Packets (IRPs)
+- Driver communication (IOCTL)
+- Plug and Play (PnP) support
+
+#### Kernel Mode Code Signing
+- Test signing mode
+- Self-signed certificate generation
+- Windows Hardware Quality Labs (WHQL)
+- Code Integrity checks
+
+## Research Projects
+
+### Project 1: System Call Tracer
+
+Custom tool to intercept and log system calls:
+
+**Features**:
+- Monitors all syscalls from target process
+- Logs parameters and return values
+- Minimal performance overhead
+- Kernel-mode and user-mode implementations
+
+**Techniques**:
+- SSDT (System Service Descriptor Table) hooking
+- Inline hooking of ntdll.dll
+- ETW (Event Tracing for Windows) provider
+
+**Challenges**:
+- PatchGuard detection avoidance
+- Thread synchronization in kernel mode
+- Performance optimization
+
+### Project 2: Process Injection Techniques
+
+Research into various code injection methods:
+
+#### Classic Injection
+- CreateRemoteThread
+- QueueUserAPC
+- SetThreadContext
+
+#### Modern Techniques
+- Process Hollowing
+- Process Doppelgänging
+- Atom Bombing
+- Early Bird Injection
+
+#### Detection & Prevention
+- Behavioral analysis
+- Memory scanning
+- API monitoring
+
+### Project 3: Rootkit Detection Tool
+
+User-mode scanner for rootkit artifacts:
+
+**Detection Methods**:
+- Direct Kernel Object Manipulation (DKOM) detection
+- Hidden process enumeration
+- Driver analysis
+- SSDT integrity checking
+- IRP hook detection
+
+**Limitations**:
+- Cannot detect all kernel-mode rootkits
+- Requires elevated privileges
+- May be bypassed by sophisticated rootkits
+
+### Project 4: WinDbg Automation Scripts
+
+Custom WinDbg extensions for security research:
+
+```javascript
+// Example: Dump process token privileges
+.foreach (proc {!process 0 0}) {
+    .echo Processing: proc
+    !token proc+TokenOffset
+}
+```
+
+**Script Categories**:
+- Memory forensics
+- Exploit development
+- Malware analysis
+- Crash dump analysis
+
+## Tools & Debugging
+
+### Essential Tools
+
+#### WinDbg
+- Kernel debugging setup
+- Symbol server configuration
+- Common commands and extensions
+- Memory dump analysis
+
+#### IDA Pro / Ghidra
+- Static analysis workflows
+- Custom plugin development
+- Signature creation
+- Diff analysis for patches
+
+#### Sysinternals Suite
+- Process Explorer
+- Process Monitor
+- TCPView
+- ProcDump
+- NotMyFault
+
+### Custom Tooling
+
+#### Kernel Driver Template
+Minimal driver framework for research:
+- Clean build environment
+- Debugging support
+- Safe unload mechanisms
+- Error handling
+
+#### Memory Analysis Framework
+Python scripts for memory dump analysis:
+- Process enumeration
+- Memory region scanning
+- String extraction
+- Executable detection
+
+## Security Research
+
+### Vulnerability Analysis
+
+#### Common Bug Classes
+- Buffer overflows (stack, heap)
+- Use-after-free vulnerabilities
+- Race conditions (TOCTOU)
+- Integer overflows
+- Uninitialized memory use
+
+#### Exploit Development
+- ROP chain construction
+- Heap spray techniques
+- Bypassing ASLR and DEP
+- Kernel exploitation basics
+
+### Patch Diffing
+
+Binary diffing for security updates:
+- BinDiff for IDA Pro
+- Diaphora analysis
+- Manual assembly comparison
+- Vulnerability root cause analysis
+
+## Learning Resources
+
+### Books
+- "Windows Internals" by Russinovich & Solomon
+- "The Rootkit Arsenal" by Bill Blunden
+- "Windows Kernel Programming" by Pavel Yosifovich
+- "Windows System Programming" by Johnson Hart
+
+### Online Resources
+- Microsoft Documentation (docs.microsoft.com)
+- OSR Online (Windows driver development)
+- ReactOS source code (open-source Windows clone)
+- Windows Internals blog posts
+
+### Hands-On Practice
+- HackSys Extreme Vulnerable Driver (HEVD)
+- Windows kernel debugging labs
+- Custom driver development projects
+- Malware analysis exercises
+
+## Challenges & Solutions
+
+### Challenge: Kernel Debugging Setup
+**Solution**: Created automated setup scripts for VMware/Hyper-V kernel debugging
+
+### Challenge: Symbol Resolution
+**Solution**: Configured Microsoft symbol server + local cache
+
+### Challenge: Driver Signing
+**Solution**: Test signing mode for development, documented WHQL process
+
+### Challenge: Keeping Updated
+**Solution**: Following Windows Insider builds, tracking security bulletins
+
+## Ethical Considerations
+
+All research conducted responsibly:
+- No exploitation of production systems without authorization
+- Responsible disclosure of any vulnerabilities found
+- Focus on defensive applications
+- Educational purpose documentation
+
+## Future Research Directions
+
+- Windows Subsystem for Linux (WSL) internals
+- Windows Defender internals and bypasses
+- Exploit mitigation analysis (Spectre/Meltdown)
+- Hardware security features (Intel VT-x, AMD-V)
+- User-mode sandbox escape techniques
+- Windows container security
+
+## Practical Applications
+
+### SOC/Incident Response
+- Understanding attack techniques
+- Malware behavior analysis
+- Forensic artifact identification
+- Threat hunting methodologies
+
+### Red Team Operations
+- Evasion technique development
+- Persistence mechanism research
+- Privilege escalation pathways
+- Defense-in-depth assessment
+
+### Blue Team Defense
+- Detection rule creation
+- Security monitoring enhancement
+- Hardening recommendations
+- Incident response playbooks
+
+## Community Contributions
+
+- Published research findings on personal blog
+- Contributed to open-source analysis tools
+- Shared WinDbg scripts on GitHub
+- Participated in security conferences (demos/talks)
+
+## Continuous Learning
+
+This is an ongoing research area with frequent updates as I discover new techniques and security mechanisms in the Windows ecosystem.

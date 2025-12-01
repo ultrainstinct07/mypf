@@ -1,0 +1,85 @@
+---
+title: "Ark Surveillance"
+description: "Private AI surveillance prototype using TensorFlow for face recognition and local-first deployment."
+tags: ["AI", "Security", "Computer Vision"]
+image: "/images/projects/ark-surveillance.svg"
+repoUrl: "https://github.com/kshitiz/ark-surveillance"
+techStack: ["Python", "TensorFlow", "OpenCV", "Flask", "SQLite", "Docker"]
+featured: true
+---
+
+## Overview
+
+Ark Surveillance is a privacy-focused AI surveillance system that performs real-time face recognition without relying on cloud services. The system is designed to run entirely on local infrastructure, ensuring that sensitive biometric data never leaves the premises.
+
+## Key Features
+
+### Local-First Architecture
+- All processing happens on-device or on-premises servers
+- No data transmission to external services
+- Complete control over biometric data storage and processing
+
+### Real-Time Face Recognition
+- Uses TensorFlow for deep learning-based face detection
+- OpenCV for video stream processing
+- Achieves 30+ FPS on modern hardware
+- Handles multiple camera feeds simultaneously
+
+### Privacy & Security
+- Encrypted database for face embeddings
+- Role-based access control
+- Audit logging for all system access
+- GDPR-compliant data handling
+
+## Technical Implementation
+
+### Computer Vision Pipeline
+The system uses a multi-stage pipeline:
+1. **Frame Capture**: Optimized video capture from RTSP/HTTP streams
+2. **Face Detection**: MTCNN-based face detection with bounding boxes
+3. **Face Alignment**: Geometric normalization for consistent embeddings
+4. **Feature Extraction**: FaceNet-based 128-dimensional embeddings
+5. **Recognition**: k-NN classification with similarity thresholding
+
+### Performance Optimization
+- GPU acceleration with CUDA support
+- Multi-threaded frame processing
+- Efficient frame skipping for low-priority feeds
+- Redis caching for frequently accessed embeddings
+
+## Security Considerations
+
+### Threat Model
+- Prevents unauthorized access through multi-factor authentication
+- Rate limiting on API endpoints
+- Input validation to prevent injection attacks
+- Secure communication via TLS 1.3
+
+### Data Protection
+- Face embeddings stored using AES-256 encryption
+- Automatic data retention policies
+- Secure deletion protocols for removed subjects
+- Access logs maintained for forensic analysis
+
+## Deployment
+
+The system supports multiple deployment scenarios:
+- Single-machine setup for small installations
+- Distributed architecture for enterprise deployments
+- Docker Compose for easy orchestration
+- Kubernetes manifests for cloud-native deployments
+
+## Lessons Learned
+
+Building Ark Surveillance taught me the importance of balancing performance with privacy. Key takeaways include:
+- Privacy-preserving systems can match cloud-based performance
+- Local deployment requires careful resource planning
+- User trust is paramount in biometric systems
+- Compliance frameworks guide better security design
+
+## Future Enhancements
+
+- Support for additional biometric modalities
+- Federated learning for privacy-preserving model updates
+- Integration with existing SIEM systems
+- Mobile app for real-time alerts

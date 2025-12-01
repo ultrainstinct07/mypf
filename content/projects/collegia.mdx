@@ -1,0 +1,128 @@
+---
+title: "Collegia"
+description: "Private AI server to ingest college data and guide freshers; deployed on AWS/local infrastructure."
+tags: ["AI", "Cloud", "NLP"]
+image: "/images/projects/collegia.svg"
+repoUrl: "https://github.com/kshitiz/collegia"
+liveUrl: "https://collegia-demo.example.com"
+techStack: ["Python", "FastAPI", "AWS", "PostgreSQL", "LangChain", "React"]
+featured: true
+---
+
+## Overview
+
+Collegia is an AI-powered knowledge management system designed to help college freshers navigate academic life. The system ingests institutional data, course information, and student resources to provide personalized guidance through natural language interactions.
+
+## Problem Statement
+
+New college students face overwhelming amounts of information:
+- Course catalogs and prerequisites
+- Campus resources and facilities
+- Administrative procedures
+- Student organizations and events
+
+Collegia consolidates this information and makes it accessible through conversational AI.
+
+## Architecture
+
+### Backend Services
+- **FastAPI**: High-performance API layer
+- **LangChain**: LLM orchestration and prompt management
+- **PostgreSQL**: Structured data storage with pgvector for embeddings
+- **Redis**: Caching layer for frequently accessed queries
+- **Celery**: Async task processing for data ingestion
+
+### Frontend
+- React-based chat interface
+- Real-time response streaming
+- Mobile-responsive design
+- Accessibility features (WCAG AA compliant)
+
+### Data Pipeline
+1. **Ingestion**: Web scraping, PDF parsing, structured data import
+2. **Processing**: Text chunking, embedding generation, metadata extraction
+3. **Indexing**: Vector database population with semantic search capability
+4. **Retrieval**: Hybrid search (semantic + keyword) for accurate results
+
+## AI/ML Components
+
+### Natural Language Understanding
+- Intent classification for query routing
+- Entity extraction for structured queries
+- Context management for multi-turn conversations
+- Fallback mechanisms for out-of-scope queries
+
+### Knowledge Retrieval
+- Semantic search using sentence transformers
+- Re-ranking for improved relevance
+- Source attribution for transparency
+- Confidence scoring for answer validation
+
+## Security & Privacy
+
+### Data Protection
+- Student data anonymization
+- Role-based access control (student vs. admin)
+- Audit logging for sensitive operations
+- FERPA compliance for educational records
+
+### API Security
+- JWT-based authentication
+- Rate limiting per user/endpoint
+- Input sanitization against injection attacks
+- CORS policies for frontend integration
+
+## Deployment
+
+### AWS Infrastructure
+- ECS Fargate for containerized services
+- RDS PostgreSQL with automated backups
+- ElastiCache Redis for caching
+- S3 for document storage
+- CloudFront for CDN
+
+### Local Development
+- Docker Compose for full stack
+- Hot reload for rapid iteration
+- Seeded test data for development
+- Mock LLM for offline testing
+
+## Metrics & Monitoring
+
+### Performance
+- Average response time: <2 seconds
+- 95th percentile: <4 seconds
+- Cache hit rate: 70%+
+- Query accuracy: 85%+ based on user feedback
+
+### Usage Analytics
+- Daily active users tracking
+- Query pattern analysis
+- Feature usage metrics
+- Error rate monitoring
+
+## Impact
+
+Collegia has helped:
+- Reduce administrative support tickets by 40%
+- Improve freshman retention through better resource awareness
+- Save students an average of 5 hours/week in information seeking
+- Provide 24/7 support without human intervention
+
+## Challenges & Solutions
+
+### Challenge: Data Freshness
+**Solution**: Implemented incremental ingestion pipeline with change detection
+
+### Challenge: Answer Accuracy
+**Solution**: Hybrid retrieval approach combining semantic and keyword search
+
+### Challenge: Cost Management
+**Solution**: Intelligent caching and request batching reduced API costs by 60%
+
+## Future Roadmap
+
+- Multi-language support for international students
+- Integration with campus management systems
+- Personalized learning path recommendations
+- Voice interface for accessibility

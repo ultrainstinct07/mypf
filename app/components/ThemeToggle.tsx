@@ -1,0 +1,38 @@
+'use client';
+
+import { Sun, Moon, Monitor } from 'lucide-react';
+import { usePreferences, type Theme } from '../hooks/usePreferences';
+
+export default function ThemeToggle() {
+  const { preferences, updatePreferences } = usePreferences();
+
+  const themes: { value: Theme; icon: typeof Sun; label: string }[] = [
+    { value: 'light', icon: Sun, label: 'Light' },
+    { value: 'dark', icon: Moon, label: 'Dark' },
+    { value: 'system', icon: Monitor, label: 'System' },
+  ];
+
+  const currentTheme = themes.find((t) => t.value === preferences.theme) || themes[2];
+  const CurrentIcon = currentTheme.icon;
+
+  const handleClick = () => {
+    const currentIndex = themes.findIndex((t) => t.value === preferences.theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    updatePreferences({ theme: themes[nextIndex].value });
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className="p-2 rounded-lg bg-dark-lighter border border-white/5 hover:border-cyan/50 hover:bg-cyan/10 transition-all group"
+      aria-label={`Switch theme. Current: ${currentTheme.label}`}
+      title={`Current: ${currentTheme.label}. Click to switch.`}
+    >
+      <CurrentIcon
+        size={18}
+        className="text-gray-300 group-hover:text-cyan transition-colors"
+      />
+    </button>
+  );
+}
+
