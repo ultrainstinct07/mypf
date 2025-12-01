@@ -38,9 +38,9 @@ export default function About() {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="font-display text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-slate-900 dark:text-white"
             >
-              A Deep Dive into My{' '}
-              <span className="text-gradient-cyan">Life&apos;s Experiences</span> and
-              Lessons Learned
+              Red Team Analyst &{' '}
+              <span className="text-gradient-cyan">Offensive Security</span>{' '}
+              Engineer
             </motion.h2>
 
             <motion.div
@@ -61,20 +61,20 @@ export default function About() {
               className="grid grid-cols-2 gap-3 sm:gap-4 pt-4 sm:pt-6"
             >
               <div className="space-y-1">
-                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Burp Suite</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Professional</div>
+                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">CRTA</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Certified</div>
               </div>
               <div className="space-y-1">
-                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">OWASP Top 10</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Remediation</div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Python</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Security Tools</div>
+                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Red Teaming</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">AD, Lateral Movement</div>
               </div>
               <div className="space-y-1">
                 <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Pentesting</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Mobile & Web</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Web, Mobile, Cloud</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Tools</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Burp, Cobalt Strike</div>
               </div>
             </motion.div>
           </div>

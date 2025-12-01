@@ -85,9 +85,9 @@ export default function Hero() {
               >
                 <TypingEffect
                   texts={[
-                    'Cybersecurity Analyst — I build resilient systems, pragmatic detection tools, and product-focused security integrations.',
-                    'Security Researcher — Exploring vulnerabilities, threat patterns, and defensive strategies.',
-                    'Tool Builder — Creating intuitive security automation and workflow solutions.',
+                    'Red Team Analyst & Offensive Security Engineer — I specialize in red teaming, web/mobile pentesting, and building practical offensive-security tooling.',
+                    'Offensive Security | Red Teaming | Vulnerability Research — I study real-world attack paths — privilege escalation, lateral movement, and exploitation — to strengthen systems before attackers do.',
+                    'CRTA Certified Red Team Analyst — Breaking things to build better defenses. Web, Mobile, AD, and Cloud pentesting with hands-on red team operations.',
                   ]}
                   speed={50}
                   delayBetweenTexts={3000}
@@ -100,23 +100,41 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.8 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-3 sm:gap-4"
             >
               <a
-                href={`mailto:${SITE_CONFIG.email}`}
+                href="#projects"
                 className="btn-primary inline-flex items-center gap-2 group"
               >
-                <Mail size={20} />
-                Get Started
+                View My Work
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </a>
               <a
-                href="#projects"
+                href={`mailto:${SITE_CONFIG.email}`}
                 className="btn-outline inline-flex items-center gap-2 group"
               >
-                See Projects
+                <Mail size={20} />
+                Contact for Opportunities
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </a>
+            </motion.div>
+
+            {/* Credibility markers */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+              className="space-y-2 pt-4"
+            >
+              <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600 dark:text-gray-300">
+                <span className="px-3 py-1 bg-cyan-600/10 dark:bg-cyan/10 border border-cyan-600/20 dark:border-cyan/20 rounded-full font-semibold text-cyan-600 dark:text-cyan">
+                  CRTA Certified
+                </span>
+                <span className="text-slate-500 dark:text-gray-400">•</span>
+                <span>1+ Year @ {SITE_CONFIG.company}</span>
+                <span className="text-slate-500 dark:text-gray-400">•</span>
+                <span>Preparing for OSCP & CEH</span>
+              </div>
             </motion.div>
 
             {/* Stats or badges */}
@@ -124,21 +142,23 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8 }}
-              className="flex flex-wrap gap-4 sm:gap-6 md:gap-8 pt-6 sm:pt-8 border-t border-slate-200 dark:border-white/10"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-6 sm:pt-8 border-t border-slate-200 dark:border-white/10"
             >
               <div>
-                <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">
-                  <AnimatedCounter end={6} suffix="+" />
-                </div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Projects</div>
+                <div className="text-lg sm:text-xl font-bold text-cyan-600 dark:text-cyan">CRTA</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Red Team Ops</div>
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">OWASP</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Top 10 Expert</div>
+                <div className="text-lg sm:text-xl font-bold text-cyan-600 dark:text-cyan">1+ Years</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">@ {SITE_CONFIG.company}</div>
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">Burp Suite</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Proficient</div>
+                <div className="text-lg sm:text-xl font-bold text-cyan-600 dark:text-cyan">Pentesting</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Web, Mobile, AD</div>
+              </div>
+              <div>
+                <div className="text-lg sm:text-xl font-bold text-cyan-600 dark:text-cyan">Tools</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Burp, Cobalt Strike</div>
               </div>
             </motion.div>
           </motion.div>
@@ -179,18 +199,28 @@ export default function Hero() {
                 transition={{ delay: 1.2, duration: 0.8 }}
                 className="absolute left-0 bottom-1/4 -translate-x-1/2 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-2xl px-4 py-3 shadow-lg dark:shadow-none glow-cyan z-30"
               >
-                <div className="text-sm text-cyan-600 dark:text-cyan font-semibold">Security Analyst</div>
-                <div className="text-xs text-slate-500 dark:text-gray-400">@ {SITE_CONFIG.company}</div>
+                <div className="text-sm text-cyan-600 dark:text-cyan font-semibold">CRTA Certified</div>
+                <div className="text-xs text-slate-500 dark:text-gray-400">Red Team Analyst</div>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1.4, duration: 0.8 }}
-                className="absolute right-0 bottom-1/2 translate-x-1/2 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-2xl px-4 py-3 shadow-lg dark:shadow-none glow-cyan z-30"
+                className="absolute right-1 bottom-1/5 translate-x-1/2 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-2xl px-4 py-3 shadow-lg dark:shadow-none glow-cyan z-30"
               >
-                <div className="text-sm text-cyan-600 dark:text-cyan font-semibold">{SITE_CONFIG.location.split(',')[0]}</div>
-                <div className="text-xs text-slate-500 dark:text-gray-400">Based in India</div>
+                <div className="text-sm text-cyan-600 dark:text-cyan font-semibold">Preparing for OSCP</div>
+                <div className="text-xs text-slate-500 dark:text-gray-400">Red Teamer in Training</div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.6, duration: 0.8 }}
+                className="absolute top-1/4 right-0 translate-x-1/2 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-2xl px-4 py-3 shadow-lg dark:shadow-none glow-cyan z-30"
+              >
+                <div className="text-sm text-cyan-600 dark:text-cyan font-semibold">1+ Years</div>
+                <div className="text-xs text-slate-500 dark:text-gray-400">Offensive Security</div>
               </motion.div>
             </div>
           </motion.div>

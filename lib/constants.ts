@@ -1,6 +1,6 @@
 export const SITE_CONFIG = {
   name: 'Kshitiz Kumar',
-  role: 'Cybersecurity Analyst',
+  role: 'Red Team Analyst & Offensive Security Engineer',
   email: 'bbruce670@gmail.com',
   linkedin: 'https://www.linkedin.com/in/kshitiz-kumar',
   location: 'Faridabad, Haryana, India',
@@ -13,11 +13,11 @@ export const SITE_CONFIG = {
   },
 
   bio: {
-    short: "Cybersecurity analyst with over one year of full-time experience at Levithan Technologies, specializing in web application security, mobile application pentesting, and red-team methodology. CRTA certified, actively building security tools, and preparing for OSCP and CEH certifications.",
+    short: "CRTA certified red team analyst with over one year of professional experience at Levithan Technologies. Specializing in offensive security, red team operations, and penetration testing across web, mobile, Active Directory, and cloud environments. Actively building offensive security tooling and preparing for OSCP and CEH certifications.",
     
-    paragraph1: "Kshitiz Kumar is a cybersecurity analyst with over one year of full-time experience at Levithan Technologies, specializing in web application security, mobile application pentesting, and red-team methodology. His work spans vulnerability assessment, exploit development basics, reconnaissance workflows, and hands-on security testing for government and enterprise environments.",
+    paragraph1: "I'm a CRTA (Certified Red Team Analyst) with over one year of hands-on experience in offensive security and red team operations at Levithan Technologies. My work focuses on breaking systems before attackers do—through web application pentesting, mobile security assessments, Active Directory exploitation, and cloud security testing. I've worked on government and enterprise security projects, conducting real-world vulnerability assessments, exploit development, and adversary simulation exercises.",
     
-    paragraph2: "He holds the CRTA (Certified Red Team Analyst) certification, demonstrating his capability in adversary simulation, privilege escalation, lateral movement, and post-exploitation techniques. Beyond formal work, he actively builds tools and internal solutions, including automated reconnaissance utilities, phishing detection systems, and OSINT-driven intelligence modules. His learning path is heavily focused on red teaming and offensive security engineering. He is currently preparing for OSCP and CEH, aiming to complete both certifications next year as part of his progression into advanced offensive cybersecurity and penetration testing roles. He enjoys working at the intersection of threat simulation, real-world attack modeling, and practical defense improvement—bridging the gap between theoretical security and what attackers actually do."
+    paragraph2: "Beyond formal engagements, I build practical offensive security tools—automated reconnaissance utilities, phishing detection systems, OSINT pipelines, and custom exploitation frameworks. My approach is attack-focused: I study real-world attack paths, privilege escalation techniques, lateral movement strategies, and post-exploitation methods to understand how adversaries actually operate. Currently preparing for OSCP and CEH, I'm committed to advancing my skills in advanced penetration testing and red team operations. I bridge the gap between theoretical security knowledge and what attackers actually do in the wild."
   },
   
   employmentStatus: 'Full-time'
