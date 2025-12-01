@@ -24,13 +24,13 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={handleClick}
-      className="p-2 rounded-lg bg-dark-lighter border border-white/5 hover:border-cyan/50 hover:bg-cyan/10 transition-all group"
+      className="p-2 rounded-lg border transition-all group bg-slate-100 border-slate-200 hover:border-cyan-600/50 hover:bg-cyan-600/10 dark:bg-dark-lighter dark:border-white/5 dark:hover:border-cyan/50 dark:hover:bg-cyan/10"
       aria-label={`Switch theme. Current: ${currentTheme.label}`}
       title={`Current: ${currentTheme.label}. Click to switch.`}
     >
       <CurrentIcon
         size={18}
-        className="text-gray-300 group-hover:text-cyan transition-colors"
+        className="text-slate-600 group-hover:text-cyan-600 dark:text-gray-300 dark:group-hover:text-cyan transition-colors"
       />
     </button>
   );

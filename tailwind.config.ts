@@ -6,18 +6,35 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
+        // Dark mode colors
         dark: {
           DEFAULT: '#0A0A0A',
           lighter: '#1F1F1F',
           card: '#151515',
         },
+        // Light mode colors
+        light: {
+          DEFAULT: '#F8FAFC',
+          surface: '#FFFFFF',
+          alt: '#F1F5F9',
+          border: '#E2E8F0',
+        },
+        // Accent colors (work for both themes)
         cyan: {
           DEFAULT: '#00D9FF',
           secondary: '#0EA5E9',
           glow: 'rgba(0, 217, 255, 0.15)',
+          light: '#0891B2', // Darker cyan for light mode
+        },
+        // Text colors for light mode
+        slate: {
+          900: '#0F172A',
+          600: '#475569',
+          500: '#64748B',
         },
       },
       fontFamily: {

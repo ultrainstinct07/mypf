@@ -7,6 +7,7 @@ import { getProjectBySlug, getAllProjectSlugs, getAllProjects } from '@/lib/mdx'
 import { ArrowLeft, ExternalLink, Github, Calendar, Tag } from 'lucide-react';
 import ShareButton from '@/app/components/ShareButton';
 import ProjectRecommendations from '@/app/components/ProjectRecommendations';
+import ReadingProgress from '@/app/components/ReadingProgress';
 
 interface ProjectPageProps {
   params: {
@@ -66,11 +67,14 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <main className="min-h-screen bg-dark">
+      {/* Reading Progress */}
+      <ReadingProgress showReadingTime={true} />
+      
       {/* Header */}
       <section className="relative overflow-hidden bg-gradient-to-br from-dark via-dark to-dark-lighter border-b border-white/5">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
         
-        <div className="container-custom relative z-10 py-12">
+        <div className="container-custom relative z-10 pt-28 pb-12">
           <Link
             href="/projects"
             className="inline-flex items-center gap-2 text-cyan hover:text-cyan-secondary transition-colors mb-8 group"

@@ -24,11 +24,11 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
     <section
       id="projects"
       ref={ref}
-      className="section-padding bg-dark relative overflow-hidden"
+      className="section-padding bg-white dark:bg-dark relative overflow-hidden transition-colors duration-300"
     >
       {/* Background decorative elements */}
-      <div className="absolute top-20 right-0 w-96 h-96 bg-cyan/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-20 left-0 w-96 h-96 bg-cyan-secondary/5 rounded-full blur-[120px]" />
+      <div className="absolute top-20 right-0 w-96 h-96 bg-cyan-600/5 dark:bg-cyan/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-20 left-0 w-96 h-96 bg-sky-500/5 dark:bg-cyan-secondary/5 rounded-full blur-[120px]" />
 
       <div className="container-custom relative z-10">
         {/* Section header */}
@@ -44,7 +44,7 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="text-cyan text-sm font-semibold uppercase tracking-wider"
+                className="text-cyan-600 dark:text-cyan text-sm font-semibold uppercase tracking-wider"
               >
                 Portfolio
               </motion.span>
@@ -53,7 +53,7 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
-                className="font-display text-4xl md:text-6xl font-bold mt-4"
+                className="font-display text-4xl md:text-6xl font-bold mt-4 text-slate-900 dark:text-white"
               >
                 My Best <span className="text-gradient-cyan">Projects</span>
               </motion.h2>
@@ -81,7 +81,7 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-gray-300 text-lg mt-6 max-w-3xl"
+            className="text-slate-600 dark:text-gray-300 text-lg mt-6 max-w-3xl"
           >
             Through a diverse portfolio spanning AI surveillance systems, security automation,
             and threat detection tools, I&apos;ve delivered practical solutions that balance
@@ -89,19 +89,49 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
           </motion.p>
         </motion.div>
 
-        {/* Projects grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Projects grid with staggered animations */}
+        <motion.div 
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.12,
+                delayChildren: 0.1,
+              }
+            }
+          }}
+        >
           {displayProjects.map((project, index) => (
-            <ProjectCard key={project.slug} project={project} index={index} />
+            <motion.div
+              key={project.slug}
+              variants={{
+                hidden: { opacity: 0, y: 30, scale: 0.97 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1,
+                  transition: {
+                    type: "spring",
+                    stiffness: 80,
+                    damping: 12,
+                  }
+                }
+              }}
+            >
+              <ProjectCard project={project} index={index} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Bottom stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ delay: 0.8, duration: 0.8 }}
-          className="mt-16 pt-16 border-t border-white/10"
+          className="mt-16 pt-16 border-t border-slate-200 dark:border-white/10"
         >
           <div className="grid sm:grid-cols-3 gap-8 text-center">
             <div>

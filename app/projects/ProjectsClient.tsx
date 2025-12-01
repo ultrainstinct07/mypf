@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProjectCard from '../components/ProjectCard';
 import ProjectSearch from '../components/ProjectSearch';
 import ProjectFilter from '../components/ProjectFilter';
@@ -69,7 +70,7 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
       <section className="relative overflow-hidden bg-gradient-to-br from-dark via-dark to-dark-lighter border-b border-white/5">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
         
-        <div className="container-custom relative z-10 py-24">
+        <div className="container-custom relative z-10 pt-32 pb-24">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-cyan hover:text-cyan-secondary transition-colors mb-8 group"
@@ -144,11 +145,39 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
       <section className="section-padding">
         <div className="container-custom">
           {filteredProjects.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProjects.map((project, index) => (
-                <ProjectCard key={project.slug} project={project} index={index} />
-              ))}
-            </div>
+            <motion.div 
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    staggerChildren: 0.08,
+                  }
+                }
+              }}
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project, index) => (
+                  <motion.div
+                    key={project.slug}
+                    layout
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 100,
+                      damping: 15,
+                      delay: index * 0.05,
+                    }}
+                  >
+                    <ProjectCard project={project} index={index} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
           ) : (
             <div className="text-center py-16">
               <p className="text-gray-400 text-lg mb-6">

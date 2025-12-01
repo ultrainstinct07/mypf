@@ -8,6 +8,9 @@ import ScrollProgress from './components/ScrollProgress';
 import CommandPalette from './components/CommandPalette';
 import ChatWidget from './components/ChatWidget';
 import KeyboardShortcuts from './components/KeyboardShortcuts';
+import PageTransition from './components/PageTransition';
+import BackToTop from './components/BackToTop';
+import CursorGlow from './components/CursorGlow';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -94,10 +97,14 @@ export default function RootLayout({
           </a>
           <ScrollProgress />
           <Navbar />
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
           <CommandPalette />
           <ChatWidget />
           <KeyboardShortcuts />
+          <BackToTop />
+          <CursorGlow />
         </ThemeProvider>
       </body>
     </html>
