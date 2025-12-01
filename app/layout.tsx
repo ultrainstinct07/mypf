@@ -89,6 +89,30 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('user-preferences');
+                  if (stored) {
+                    var prefs = JSON.parse(stored);
+                    var theme = prefs.theme;
+                    if (theme === 'system') {
+                      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    }
+                    document.documentElement.classList.add(theme);
+                  } else {
+                    // Default to dark mode
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
+        />
       </head>
       <body>
         <ThemeProvider>
