@@ -61,7 +61,7 @@ export default function BackToTop() {
           onClick={scrollToTop}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="fixed bottom-28 right-6 z-50 group"
+          className="fixed bottom-20 sm:bottom-28 right-4 sm:right-6 z-50 group touch-manipulation"
           aria-label="Scroll to top"
         >
           {/* Glow effect background */}
@@ -76,7 +76,7 @@ export default function BackToTop() {
           
           {/* Button */}
           <motion.div
-            className="relative w-12 h-12 bg-white border-2 border-cyan-600/50 dark:bg-dark-lighter dark:border-cyan/50 rounded-full flex items-center justify-center backdrop-blur-sm shadow-lg dark:shadow-none"
+            className="relative w-12 h-12 sm:w-11 sm:h-11 bg-white border-2 border-cyan-600/50 dark:bg-dark-lighter dark:border-cyan/50 rounded-full flex items-center justify-center backdrop-blur-sm shadow-lg dark:shadow-none touch-manipulation"
             whileHover={{ 
               boxShadow: '0 0 30px rgba(8, 145, 178, 0.5)',
             }}

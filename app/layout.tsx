@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { SITE_CONFIG } from '@/lib/constants';
@@ -24,6 +24,13 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
   weight: ['400', '500', '600', '700'],
 });
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
 
 export const metadata: Metadata = {
   title: SITE_CONFIG.meta.title,

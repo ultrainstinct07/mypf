@@ -41,7 +41,7 @@ export default function ExpertiseGrid() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-display text-4xl md:text-5xl font-bold mt-4 mb-6 text-slate-900 dark:text-white"
+            className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-4 mb-4 sm:mb-6 text-slate-900 dark:text-white"
           >
             My{' '}
             <span className="text-gradient-cyan">Expertise</span>
@@ -51,7 +51,7 @@ export default function ExpertiseGrid() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-slate-600 dark:text-gray-300 text-lg max-w-2xl mx-auto"
+            className="text-slate-600 dark:text-gray-300 text-base sm:text-lg max-w-2xl mx-auto"
           >
             Specializing in offensive security, application testing, threat intelligence, security engineering, and continuous research.
           </motion.p>
@@ -59,7 +59,7 @@ export default function ExpertiseGrid() {
 
         {/* Expertise cards grid with staggered animations */}
         <motion.div 
-          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8"
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={{
@@ -98,20 +98,20 @@ export default function ExpertiseGrid() {
                   <div className="absolute inset-0 bg-cyan-600/10 dark:bg-cyan/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
                   {/* Card */}
-                  <div className="relative bg-white dark:bg-dark-lighter rounded-3xl p-8 border border-slate-200 dark:border-cyan/20 hover:border-cyan-600/40 dark:hover:border-cyan/40 transition-all duration-300 hover:glow-cyan group-hover:scale-105 transform shadow-md dark:shadow-none">
+                  <div className="relative bg-white dark:bg-dark-lighter rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200 dark:border-cyan/20 hover:border-cyan-600/40 dark:hover:border-cyan/40 transition-all duration-300 hover:glow-cyan group-hover:scale-105 transform shadow-md dark:shadow-none">
                     {/* Icon circle */}
-                    <div className="relative w-20 h-20 mx-auto mb-6">
+                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6">
                       <div className="absolute inset-0 bg-cyan-600/20 dark:bg-cyan/20 rounded-full animate-pulse" />
                       <div className="relative w-full h-full bg-gradient-to-br from-cyan-600 to-sky-500 dark:from-cyan dark:to-cyan-secondary rounded-full flex items-center justify-center">
-                        <Icon className="w-10 h-10 text-white dark:text-dark" strokeWidth={2} />
+                        <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-white dark:text-dark" strokeWidth={2} />
                       </div>
                     </div>
 
                     {/* Content */}
-                    <h3 className="text-xl font-bold text-center mb-3 text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan transition-colors">
+                    <h3 className="text-lg sm:text-xl font-bold text-center mb-2 sm:mb-3 text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan transition-colors">
                       {item.title}
                     </h3>
-                    <p className="text-slate-500 dark:text-gray-400 text-center text-sm leading-relaxed">
+                    <p className="text-slate-500 dark:text-gray-400 text-center text-xs sm:text-sm leading-relaxed">
                       {item.description}
                     </p>
 

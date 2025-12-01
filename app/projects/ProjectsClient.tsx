@@ -70,35 +70,35 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
       <section className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-dark dark:via-dark dark:to-dark-lighter border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-40 dark:opacity-20" />
         
-        <div className="container-custom relative z-10 pt-32 pb-24">
+        <div className="container-custom relative z-10 pt-20 sm:pt-24 md:pt-32 pb-12 sm:pb-16 md:pb-24">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-cyan-600 dark:text-cyan hover:text-sky-600 dark:hover:text-cyan-secondary transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 text-cyan-600 dark:text-cyan hover:text-sky-600 dark:hover:text-cyan-secondary transition-colors mb-6 sm:mb-8 group min-h-[44px] touch-manipulation"
           >
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
 
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-slate-900 dark:text-white">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-slate-900 dark:text-white">
             All <span className="text-gradient-cyan">Projects</span>
           </h1>
           
-          <p className="text-slate-600 dark:text-gray-300 text-xl max-w-3xl">
+          <p className="text-slate-600 dark:text-gray-300 text-lg sm:text-xl max-w-3xl">
             A comprehensive collection of my security research, automation tools, and AI-powered solutions.
           </p>
 
-          <div className="flex items-center gap-8 mt-8 pt-8 border-t border-slate-200 dark:border-white/10">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-8 mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200 dark:border-white/10">
             <div>
-              <div className="text-3xl font-bold text-cyan-600 dark:text-cyan">{allProjects.length}</div>
-              <div className="text-sm text-slate-500 dark:text-gray-400">Total Projects</div>
+              <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">{allProjects.length}</div>
+              <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Total Projects</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-cyan-600 dark:text-cyan">Security</div>
-              <div className="text-sm text-slate-500 dark:text-gray-400">Primary Focus</div>
+              <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">Security</div>
+              <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Primary Focus</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-cyan-600 dark:text-cyan">AI/ML</div>
-              <div className="text-sm text-slate-500 dark:text-gray-400">Integration</div>
+              <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">AI/ML</div>
+              <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Integration</div>
             </div>
           </div>
         </div>
@@ -107,7 +107,7 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
       {/* Search and Filter Section */}
       <section className="section-padding border-b border-slate-200 dark:border-white/5">
         <div className="container-custom">
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="flex flex-col md:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
             <div className="flex-1">
               <ProjectSearch
                 value={searchQuery}
@@ -124,7 +124,7 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
           </div>
 
           {/* Results count */}
-          <div className="text-sm text-slate-500 dark:text-gray-400">
+          <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">
             Showing {filteredProjects.length} of {allProjects.length} projects
             {(searchQuery || filters.tags?.length || filters.techStack?.length) && (
               <button
@@ -132,7 +132,7 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
                   setSearchQuery('');
                   setFilters({});
                 }}
-                className="ml-2 text-cyan-600 dark:text-cyan hover:text-sky-600 dark:hover:text-cyan-secondary underline"
+                className="ml-2 text-cyan-600 dark:text-cyan hover:text-sky-600 dark:hover:text-cyan-secondary underline min-h-[44px] touch-manipulation"
               >
                 Clear all
               </button>
@@ -179,8 +179,8 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
               </AnimatePresence>
             </motion.div>
           ) : (
-            <div className="text-center py-16">
-              <p className="text-slate-500 dark:text-gray-400 text-lg mb-6">
+            <div className="text-center py-12 sm:py-16">
+              <p className="text-slate-500 dark:text-gray-400 text-base sm:text-lg mb-4 sm:mb-6">
                 No projects found matching your search criteria.
               </p>
               <button

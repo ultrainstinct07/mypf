@@ -48,7 +48,7 @@ export default function ShareButton({
   return (
     <button
       onClick={handleShare}
-      className={`inline-flex items-center gap-2 px-4 py-2 bg-dark-lighter border border-white/5 rounded-lg hover:border-cyan/50 hover:bg-cyan/10 transition-all ${className}`}
+      className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] bg-dark-lighter border border-white/5 rounded-lg hover:border-cyan/50 hover:bg-cyan/10 transition-all touch-manipulation ${className}`}
       aria-label="Share"
     >
       {copied ? (

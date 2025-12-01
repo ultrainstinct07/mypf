@@ -34,7 +34,7 @@ export default function FAQ() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-display text-4xl md:text-5xl font-bold mt-4 text-slate-900 dark:text-white"
+            className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-4 text-slate-900 dark:text-white"
           >
             Frequently Asked{' '}
             <span className="text-gradient-cyan">Questions</span>
@@ -44,7 +44,7 @@ export default function FAQ() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-slate-600 dark:text-gray-300 text-lg mt-4"
+            className="text-slate-600 dark:text-gray-300 text-base sm:text-lg mt-4"
           >
             Have any other questions? Feel free to reach out!
           </motion.p>
@@ -73,8 +73,8 @@ export default function FAQ() {
                   className="bg-white dark:bg-dark-lighter rounded-2xl border border-slate-200 dark:border-white/5 hover:border-cyan-600/30 dark:hover:border-cyan/30 transition-all duration-300 overflow-hidden group shadow-sm dark:shadow-none"
                 >
                   <Accordion.Header>
-                    <Accordion.Trigger className="w-full flex items-center justify-between p-6 text-left group/trigger">
-                      <span className="font-semibold text-lg text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan transition-colors pr-4">
+                    <Accordion.Trigger className="w-full flex items-center justify-between p-4 sm:p-6 text-left group/trigger min-h-[44px] touch-manipulation">
+                      <span className="font-semibold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan transition-colors pr-4">
                         {item.question}
                       </span>
                       <ChevronDown
@@ -84,7 +84,7 @@ export default function FAQ() {
                     </Accordion.Trigger>
                   </Accordion.Header>
                   <Accordion.Content className="data-[state=open]:animate-slideDown data-[state=closed]:animate-accordionSlideUp overflow-hidden">
-                    <div className="px-6 pb-6 text-slate-600 dark:text-gray-300 leading-relaxed">
+                    <div className="px-4 sm:px-6 pb-4 sm:pb-6 text-slate-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed">
                       {item.answer}
                     </div>
                   </Accordion.Content>
@@ -99,15 +99,15 @@ export default function FAQ() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ delay: 1, duration: 0.8 }}
-          className="text-center mt-12 p-8 bg-white dark:bg-dark-lighter rounded-2xl border border-cyan-600/20 dark:border-cyan/20 shadow-sm dark:shadow-none"
+          className="text-center mt-8 sm:mt-12 p-6 sm:p-8 bg-white dark:bg-dark-lighter rounded-xl sm:rounded-2xl border border-cyan-600/20 dark:border-cyan/20 shadow-sm dark:shadow-none"
         >
-          <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">Still have questions?</h3>
-          <p className="text-slate-500 dark:text-gray-400 mb-6">
+          <h3 className="text-lg sm:text-xl font-bold mb-2 text-slate-900 dark:text-white">Still have questions?</h3>
+          <p className="text-slate-500 dark:text-gray-400 text-sm sm:text-base mb-4 sm:mb-6">
             I&apos;m always happy to discuss your security needs and how I can help.
           </p>
           <a
             href="mailto:bbruce670@gmail.com"
-            className="btn-primary inline-flex items-center gap-2"
+            className="btn-primary inline-flex items-center gap-2 min-h-[44px] touch-manipulation"
           >
             Get in Touch
           </a>

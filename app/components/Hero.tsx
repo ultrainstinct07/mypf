@@ -24,19 +24,16 @@ export default function Hero() {
         }}
       />
       
-      {/* Particle Background */}
-      <ParticleBackground particleCount={30} />
-      
       {/* Cyan glow effect with parallax */}
       <div 
-        className="absolute top-20 right-20 w-96 h-96 bg-cyan-600/10 dark:bg-cyan/10 rounded-full blur-[120px] animate-pulse transition-transform duration-100 ease-out" 
+        className="absolute top-10 right-10 sm:top-20 sm:right-20 w-48 h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-cyan-600/10 dark:bg-cyan/10 rounded-full blur-[120px] animate-pulse transition-transform duration-100 ease-out" 
         style={{ 
           transform: `translateY(${parallaxSlow.y}px)`,
           opacity: parallaxSlow.opacity 
         }}
       />
       <div 
-        className="absolute bottom-20 left-20 w-96 h-96 bg-sky-500/10 dark:bg-cyan-secondary/10 rounded-full blur-[120px] animate-pulse transition-transform duration-100 ease-out" 
+        className="absolute bottom-10 left-10 sm:bottom-20 sm:left-20 w-48 h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96 bg-sky-500/10 dark:bg-cyan-secondary/10 rounded-full blur-[120px] animate-pulse transition-transform duration-100 ease-out" 
         style={{ 
           animationDelay: '1s',
           transform: `translateY(${parallaxMedium.y}px)`,
@@ -44,7 +41,7 @@ export default function Hero() {
         }}
       />
 
-      <div className="container-custom relative z-10 px-8 lg:px-12">
+      <div className="container-custom relative z-10 px-4 sm:px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left content */}
           <motion.div
@@ -73,7 +70,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
-                className="font-display text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4 text-slate-900 dark:text-white"
+                className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight mb-4 text-slate-900 dark:text-white"
               >
                 KSHITIZ
                 <br />
@@ -84,7 +81,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
-                className="text-xl md:text-2xl text-slate-600 dark:text-gray-300 leading-relaxed max-w-2xl min-h-[3rem]"
+                className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-gray-300 leading-relaxed max-w-2xl min-h-[3rem]"
               >
                 <TypingEffect
                   texts={[
@@ -127,21 +124,21 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8 }}
-              className="flex flex-wrap gap-8 pt-8 border-t border-slate-200 dark:border-white/10"
+              className="flex flex-wrap gap-4 sm:gap-6 md:gap-8 pt-6 sm:pt-8 border-t border-slate-200 dark:border-white/10"
             >
               <div>
-                <div className="text-3xl font-bold text-cyan-600 dark:text-cyan">
+                <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">
                   <AnimatedCounter end={6} suffix="+" />
                 </div>
-                <div className="text-sm text-slate-500 dark:text-gray-400">Projects</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Projects</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-cyan-600 dark:text-cyan">OWASP</div>
-                <div className="text-sm text-slate-500 dark:text-gray-400">Top 10 Expert</div>
+                <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">OWASP</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Top 10 Expert</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-cyan-600 dark:text-cyan">Burp Suite</div>
-                <div className="text-sm text-slate-500 dark:text-gray-400">Proficient</div>
+                <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">Burp Suite</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Proficient</div>
               </div>
             </motion.div>
           </motion.div>
@@ -153,13 +150,18 @@ export default function Hero() {
             transition={{ delay: 0.5, duration: 1, ease: 'easeOut' }}
             className="relative hidden lg:block lg:justify-self-center"
           >
-            <div className="relative w-80 xl:w-96 aspect-square mx-auto">
+            <div className="relative w-80 xl:w-96 aspect-square mx-auto z-10">
               {/* Glowing ring */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-600 via-sky-500 dark:from-cyan dark:via-cyan-secondary to-transparent opacity-20 blur-2xl animate-glow" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-600 via-sky-500 dark:from-cyan dark:via-cyan-secondary to-transparent opacity-20 blur-2xl animate-glow z-5" />
               
               {/* Base portrait container (circular frame) */}
               <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-cyan-600/30 dark:border-cyan/30 glow-cyan z-10">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/10 dark:from-cyan/10 to-transparent" />
+                {/* Particle Background - inside the circular frame */}
+                <div className="absolute inset-0 pointer-events-none z-0">
+                  <ParticleBackground particleCount={30} />
+                </div>
+                
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/10 dark:from-cyan/10 to-transparent z-5" />
                 <Image
                   src="/images/hero-portrait.png"
                   alt="Kshitiz Kumar - Cybersecurity Analyst"
@@ -200,16 +202,16 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2"
       >
-        <div className="flex flex-col items-center gap-2 text-slate-500 dark:text-gray-400">
-          <span className="text-xs uppercase tracking-wider">Scroll</span>
+        <div className="flex flex-col items-center gap-1 sm:gap-2 text-slate-500 dark:text-gray-400">
+          <span className="text-[10px] sm:text-xs uppercase tracking-wider">Scroll</span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
-            className="w-6 h-10 rounded-full border-2 border-cyan-600/30 dark:border-cyan/30 flex items-start justify-center p-2"
+            className="w-5 h-8 sm:w-6 sm:h-10 rounded-full border-2 border-cyan-600/30 dark:border-cyan/30 flex items-start justify-center p-1.5 sm:p-2"
           >
-            <motion.div className="w-1 h-2 bg-cyan-600 dark:bg-cyan rounded-full" />
+            <motion.div className="w-1 h-1.5 sm:h-2 bg-cyan-600 dark:bg-cyan rounded-full" />
           </motion.div>
         </div>
       </motion.div>

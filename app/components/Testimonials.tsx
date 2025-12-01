@@ -34,7 +34,7 @@ export default function Testimonials() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-display text-4xl md:text-5xl font-bold mt-4 text-slate-900 dark:text-white"
+            className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-4 text-slate-900 dark:text-white"
           >
             What <span className="text-gradient-cyan">People Say</span>
           </motion.h2>
@@ -43,14 +43,14 @@ export default function Testimonials() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-slate-600 dark:text-gray-300 text-lg mt-4 max-w-2xl mx-auto"
+            className="text-slate-600 dark:text-gray-300 text-base sm:text-lg mt-4 max-w-2xl mx-auto"
           >
             Feedback from colleagues and collaborators I&apos;ve worked with on security projects.
           </motion.p>
         </motion.div>
 
         {/* Testimonials grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {TESTIMONIALS.map((testimonial, index) => (
             <motion.div
               key={testimonial.id}

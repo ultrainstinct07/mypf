@@ -110,19 +110,19 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-4 left-4 right-4 z-40 rounded-2xl backdrop-blur-xl border transition-all duration-300 ${
+      className={`fixed top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-40 rounded-xl sm:rounded-2xl backdrop-blur-xl border transition-all duration-300 ${
         isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
       } bg-white/80 border-slate-200/50 dark:bg-dark/70 dark:border-white/10`}
       style={{
         boxShadow: 'var(--shadow-lg)',
       }}
     >
-      <div className="px-4 md:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 max-w-7xl mx-auto">
+      <div className="px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16 max-w-7xl mx-auto">
           {/* Logo */}
           <Link
             href="/"
-            className="font-display text-xl font-bold text-gradient-cyan hover:opacity-80 transition-opacity relative z-10"
+            className="font-display text-lg sm:text-xl font-bold text-gradient-cyan hover:opacity-80 transition-opacity relative z-10"
           >
             Kshitiz Kumar
           </Link>
@@ -175,8 +175,9 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-slate-600 hover:text-cyan-600 dark:text-gray-300 dark:hover:text-cyan transition-colors"
+            className="md:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-600 hover:text-cyan-600 dark:text-gray-300 dark:hover:text-cyan transition-colors touch-manipulation"
             aria-label="Toggle menu"
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -184,52 +185,60 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden border-t border-slate-200 dark:border-white/10 py-4 space-y-2 max-w-7xl mx-auto">
-            {navLinks.map((link) => {
-              const isActive =
-                link.href === pathname ||
-                (link.href.startsWith('/#') &&
-                  pathname === '/' &&
-                  activeSection === link.href.substring(2));
-              const Icon = link.icon;
+          <>
+            {/* Backdrop */}
+            <div 
+              className="md:hidden fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-[-1] top-[calc(3.5rem+0.5rem)] sm:top-[calc(4rem+1rem)]"
+              onClick={() => setIsOpen(false)}
+              aria-hidden="true"
+            />
+            <div className="md:hidden border-t border-slate-200 dark:border-white/10 py-2 space-y-1 max-w-7xl mx-auto">
+              {navLinks.map((link) => {
+                const isActive =
+                  link.href === pathname ||
+                  (link.href.startsWith('/#') &&
+                    pathname === '/' &&
+                    activeSection === link.href.substring(2));
+                const Icon = link.icon;
 
-              if (link.href.startsWith('/#')) {
+                if (link.href.startsWith('/#')) {
+                  return (
+                    <button
+                      key={link.href}
+                      onClick={() => smoothScrollTo(link.href)}
+                      className={`w-full px-4 py-3.5 min-h-[44px] rounded-lg text-left transition-colors flex items-center gap-3 touch-manipulation ${
+                        isActive
+                          ? 'bg-cyan-600/20 text-cyan-600 dark:bg-cyan/20 dark:text-cyan'
+                          : 'text-slate-600 hover:text-cyan-600 hover:bg-cyan-600/10 dark:text-gray-300 dark:hover:text-cyan dark:hover:bg-cyan/10 active:bg-cyan-600/10 dark:active:bg-cyan/10'
+                      }`}
+                    >
+                      <Icon size={18} />
+                      <span className="font-medium">{link.label}</span>
+                    </button>
+                  );
+                }
+
                 return (
-                  <button
+                  <Link
                     key={link.href}
-                    onClick={() => smoothScrollTo(link.href)}
-                    className={`w-full px-4 py-3 rounded-lg text-left transition-colors flex items-center gap-3 ${
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`block px-4 py-3.5 min-h-[44px] rounded-lg transition-colors flex items-center gap-3 touch-manipulation ${
                       isActive
                         ? 'bg-cyan-600/20 text-cyan-600 dark:bg-cyan/20 dark:text-cyan'
-                        : 'text-slate-600 hover:text-cyan-600 hover:bg-cyan-600/10 dark:text-gray-300 dark:hover:text-cyan dark:hover:bg-cyan/10'
+                        : 'text-slate-600 hover:text-cyan-600 hover:bg-cyan-600/10 dark:text-gray-300 dark:hover:text-cyan dark:hover:bg-cyan/10 active:bg-cyan-600/10 dark:active:bg-cyan/10'
                     }`}
                   >
                     <Icon size={18} />
-                    {link.label}
-                  </button>
-                );
-              }
-
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`block px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
-                    isActive
-                      ? 'bg-cyan-600/20 text-cyan-600 dark:bg-cyan/20 dark:text-cyan'
-                      : 'text-slate-600 hover:text-cyan-600 hover:bg-cyan-600/10 dark:text-gray-300 dark:hover:text-cyan dark:hover:bg-cyan/10'
-                  }`}
-                >
-                  <Icon size={18} />
-                  {link.label}
+                    <span className="font-medium">{link.label}</span>
                   </Link>
                 );
               })}
-              <div className="px-4 py-3">
+              <div className="px-4 py-3.5 min-h-[44px]">
                 <ThemeToggle />
               </div>
-          </div>
+            </div>
+          </>
         )}
       </div>
     </nav>

@@ -41,7 +41,7 @@ export default function CTA() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-dark mb-6 leading-tight"
+            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-dark mb-6 leading-tight"
           >
             Let&apos;s Whip Up
             <br />
@@ -52,7 +52,7 @@ export default function CTA() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-dark/80 text-xl md:text-2xl mb-12 font-medium"
+            className="text-dark/80 text-lg sm:text-xl md:text-2xl mb-8 sm:mb-12 font-medium"
           >
             Ready to enhance your security posture? Let&apos;s collaborate on your next project.
           </motion.p>
@@ -66,13 +66,13 @@ export default function CTA() {
           >
             <a
               href={`mailto:${SITE_CONFIG.email}`}
-              className="group bg-dark text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-dark/90 hover:scale-105 transition-all duration-300 inline-flex items-center gap-3 shadow-2xl"
+              className="group bg-dark text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:bg-dark/90 hover:scale-105 transition-all duration-300 inline-flex items-center gap-2 sm:gap-3 shadow-2xl min-h-[44px] touch-manipulation"
             >
-              <Mail size={24} />
+              <Mail size={20} className="sm:w-6 sm:h-6" />
               Get Started
               <ArrowRight
-                size={24}
-                className="group-hover:translate-x-1 transition-transform"
+                size={20}
+                className="sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform"
               />
             </a>
             
@@ -80,13 +80,14 @@ export default function CTA() {
               href={SITE_CONFIG.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-white/20 backdrop-blur-sm text-dark border-2 border-dark px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:scale-105 transition-all duration-300 inline-flex items-center gap-3"
+              className="group bg-white/20 backdrop-blur-sm text-dark border-2 border-dark px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:bg-white hover:scale-105 transition-all duration-300 inline-flex items-center gap-2 sm:gap-3 min-h-[44px] touch-manipulation"
             >
-              <Linkedin size={24} />
-              Connect on LinkedIn
+              <Linkedin size={20} className="sm:w-6 sm:h-6" />
+              <span className="hidden sm:inline">Connect on LinkedIn</span>
+              <span className="sm:hidden">LinkedIn</span>
               <ArrowRight
-                size={24}
-                className="group-hover:translate-x-1 transition-transform"
+                size={20}
+                className="sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform"
               />
             </a>
           </motion.div>

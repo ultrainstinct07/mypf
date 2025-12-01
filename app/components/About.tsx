@@ -36,7 +36,7 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="font-display text-4xl md:text-5xl font-bold leading-tight text-slate-900 dark:text-white"
+              className="font-display text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-slate-900 dark:text-white"
             >
               A Deep Dive into My{' '}
               <span className="text-gradient-cyan">Life&apos;s Experiences</span> and
@@ -47,7 +47,7 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="space-y-4 text-slate-600 dark:text-gray-300 text-lg leading-relaxed"
+              className="space-y-4 text-slate-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed"
             >
               <p>{SITE_CONFIG.bio.paragraph1}</p>
               <p>{SITE_CONFIG.bio.paragraph2}</p>
@@ -58,23 +58,23 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.7, duration: 0.8 }}
-              className="grid grid-cols-2 gap-4 pt-6"
+              className="grid grid-cols-2 gap-3 sm:gap-4 pt-4 sm:pt-6"
             >
               <div className="space-y-1">
-                <div className="text-2xl font-bold text-cyan-600 dark:text-cyan">Burp Suite</div>
-                <div className="text-sm text-slate-500 dark:text-gray-400">Professional</div>
+                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Burp Suite</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Professional</div>
               </div>
               <div className="space-y-1">
-                <div className="text-2xl font-bold text-cyan-600 dark:text-cyan">OWASP Top 10</div>
-                <div className="text-sm text-slate-500 dark:text-gray-400">Remediation</div>
+                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">OWASP Top 10</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Remediation</div>
               </div>
               <div className="space-y-1">
-                <div className="text-2xl font-bold text-cyan-600 dark:text-cyan">Python</div>
-                <div className="text-sm text-slate-500 dark:text-gray-400">Security Tools</div>
+                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Python</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Security Tools</div>
               </div>
               <div className="space-y-1">
-                <div className="text-2xl font-bold text-cyan-600 dark:text-cyan">Pentesting</div>
-                <div className="text-sm text-slate-500 dark:text-gray-400">Mobile & Web</div>
+                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Pentesting</div>
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Mobile & Web</div>
               </div>
             </motion.div>
           </div>
@@ -84,7 +84,7 @@ export default function About() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="relative lg:justify-self-end w-full max-w-md"
+            className="relative lg:justify-self-end w-full max-w-md mx-auto lg:mx-0"
           >
             <div className="relative">
               {/* Glow effect */}

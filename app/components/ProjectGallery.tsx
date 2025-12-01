@@ -53,7 +53,7 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
-                className="font-display text-4xl md:text-6xl font-bold mt-4 text-slate-900 dark:text-white"
+                className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4 text-slate-900 dark:text-white"
               >
                 My Best <span className="text-gradient-cyan">Projects</span>
               </motion.h2>
@@ -81,7 +81,7 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-slate-600 dark:text-gray-300 text-lg mt-6 max-w-3xl"
+            className="text-slate-600 dark:text-gray-300 text-base sm:text-lg mt-4 sm:mt-6 max-w-3xl"
           >
             Through a diverse portfolio spanning AI surveillance systems, security automation,
             and threat detection tools, I&apos;ve delivered practical solutions that balance
@@ -133,24 +133,24 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
           transition={{ delay: 0.8, duration: 0.8 }}
           className="mt-16 pt-16 border-t border-slate-200 dark:border-white/10"
         >
-          <div className="grid sm:grid-cols-3 gap-8 text-center">
+          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-cyan mb-2">
+              <div className="text-3xl sm:text-4xl font-bold text-cyan mb-2">
                 <AnimatedCounter end={6} suffix="+" />
               </div>
-              <div className="text-gray-400">Security Projects</div>
+              <div className="text-sm sm:text-base text-gray-400">Security Projects</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-cyan mb-2">
+              <div className="text-3xl sm:text-4xl font-bold text-cyan mb-2">
                 <AnimatedCounter end={3} suffix="+" />
               </div>
-              <div className="text-gray-400">AI/ML Integrations</div>
+              <div className="text-sm sm:text-base text-gray-400">AI/ML Integrations</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-cyan mb-2">
+              <div className="text-3xl sm:text-4xl font-bold text-cyan mb-2">
                 <AnimatedCounter end={100} suffix="%" />
               </div>
-              <div className="text-gray-400">Focus on Security</div>
+              <div className="text-sm sm:text-base text-gray-400">Focus on Security</div>
             </div>
           </div>
         </motion.div>

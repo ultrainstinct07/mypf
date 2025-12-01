@@ -125,6 +125,16 @@ body {
   }
 }
 
+/* Touch optimization */
+@media (hover: none) and (pointer: coarse) {
+  /* Improve touch interactions on mobile */
+  button,
+  a,
+  [role="button"] {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
 /* Utility classes */
 @layer utilities {
   .text-balance {
@@ -201,21 +211,22 @@ body {
 /* Custom component styles */
 @layer components {
   .container-custom {
-    @apply max-w-7xl mx-auto px-5 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-5 md:px-6 lg:px-8;
   }
 
   .section-padding {
-    @apply py-12 md:py-24 lg:py-32;
+    @apply py-12 sm:py-16 md:py-24 lg:py-32;
   }
 
   .page-padding-top {
-    @apply pt-28 md:pt-32;
+    @apply pt-24 sm:pt-28 md:pt-32;
   }
 
   .btn-primary {
-    @apply px-6 py-3 rounded-lg font-semibold;
+    @apply px-5 sm:px-6 py-3 rounded-lg font-semibold;
     @apply hover:glow-cyan transition-all duration-300;
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply min-h-[44px] touch-manipulation;
     background-color: var(--accent-primary);
     color: var(--bg-primary);
   }
@@ -229,9 +240,10 @@ body {
   }
 
   .btn-outline {
-    @apply border-2 px-6 py-3 rounded-lg font-semibold;
+    @apply border-2 px-5 sm:px-6 py-3 rounded-lg font-semibold;
     @apply transition-all duration-300;
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply min-h-[44px] touch-manipulation;
     border-color: var(--accent-primary);
     color: var(--accent-primary);
   }
