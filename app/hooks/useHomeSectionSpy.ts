@@ -19,6 +19,19 @@ function computeSectionProgress() {
   return Math.min(1, Math.max(0, window.scrollY / totalScrollableHeight));
 }
 
+function pickActiveSection(sectionRatios: Map<string, number>) {
+  let bestId = '';
+  let bestRatio = 0;
+  HOME_RAIL_SECTIONS.forEach(({ id }) => {
+    const ratio = sectionRatios.get(id) ?? 0;
+    if (ratio > bestRatio) {
+      bestRatio = ratio;
+      bestId = id;
+    }
+  });
+  return bestId && bestRatio > 0 ? bestId : '';
+}
+
 export function useHomeSectionSpy() {
   const pathname = usePathname();
   const isHome = pathname === '/';
@@ -30,12 +43,14 @@ export function useHomeSectionSpy() {
   const rafRef = useRef<number | null>(null);
   const lastProgressRef = useRef(-1);
   const lastPastHeroRef = useRef<boolean | null>(null);
+  const pastHeroRef = useRef(false);
 
   useEffect(() => {
     if (!isHome) {
       setPastHero(false);
       setActiveSection('');
       setSectionProgress(0);
+      pastHeroRef.current = false;
       return;
     }
 
@@ -43,21 +58,14 @@ export function useHomeSectionSpy() {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (!pastHeroRef.current) return;
+
         entries.forEach((entry) => {
           sectionRatios.set(entry.target.id, entry.intersectionRatio);
         });
 
-        let bestId = '';
-        let bestRatio = 0;
-        HOME_RAIL_SECTIONS.forEach(({ id }) => {
-          const ratio = sectionRatios.get(id) ?? 0;
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestId = id;
-          }
-        });
-
-        if (bestId && bestRatio > 0) {
+        const bestId = pickActiveSection(sectionRatios);
+        if (bestId) {
           setActiveSection(bestId);
         }
       },
@@ -72,9 +80,15 @@ export function useHomeSectionSpy() {
     const heroObserver = new IntersectionObserver(
       () => {
         const nextPastHero = computePastHero();
+        pastHeroRef.current = nextPastHero;
+
         if (lastPastHeroRef.current !== nextPastHero) {
           lastPastHeroRef.current = nextPastHero;
           setPastHero(nextPastHero);
+        }
+
+        if (!nextPastHero) {
+          setActiveSection('');
         }
       },
       { threshold: [0, 0.05, 0.15, 0.25, 0.5, 0.75, 1] }
@@ -87,9 +101,20 @@ export function useHomeSectionSpy() {
       rafRef.current = null;
 
       const nextPastHero = computePastHero();
+      pastHeroRef.current = nextPastHero;
+
       if (lastPastHeroRef.current !== nextPastHero) {
         lastPastHeroRef.current = nextPastHero;
         setPastHero(nextPastHero);
+      }
+
+      if (!nextPastHero) {
+        setActiveSection('');
+      } else {
+        const bestId = pickActiveSection(sectionRatios);
+        if (bestId) {
+          setActiveSection(bestId);
+        }
       }
 
       const progress = computeSectionProgress();

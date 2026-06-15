@@ -340,7 +340,7 @@ function ExpertisePills() {
 function StatCards() {
   return (
     <motion.div
-      className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3"
+      className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 [@media(max-height:740px)]:hidden"
       initial="hidden"
       animate="visible"
       variants={{
@@ -420,7 +420,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative min-h-[100dvh] flex flex-col overflow-x-hidden"
+      className="relative h-[100dvh] max-h-[100dvh] flex flex-col overflow-hidden"
       style={{ background: '#050505' }}
       onMouseMove={handleMouseMove}
     >
@@ -447,10 +447,10 @@ export default function Hero() {
         }
       >
         <motion.div className="w-full" style={{ x: springX, y: springY }}>
-        <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 pt-20 pb-16 lg:py-0">
+        <div className="w-full max-w-7xl mx-auto px-6 lg:px-16 pt-16 pb-10 lg:py-0">
           <div className="grid lg:grid-cols-[1fr_240px] gap-8 lg:gap-12 xl:gap-16 items-start lg:items-center">
 
-            <div className="space-y-4 lg:space-y-5 max-w-3xl">
+            <div className="space-y-3 lg:space-y-5 max-w-3xl">
 
               <motion.div
                 initial={{ opacity: 0, y: -18 }}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Send, Bot, RotateCcw } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -84,11 +85,16 @@ export default function ChatWidget() {
     return !sessionStorage.getItem(HINT_KEY);
   });
   const [lastEntryId, setLastEntryId] = useState<string | undefined>();
+  const [mounted, setMounted] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const serialized = serializeMessages(messages.slice(-MAX_MESSAGES));
@@ -216,7 +222,9 @@ export default function ChatWidget() {
 
   const motionEnabled = !prefersReducedMotion;
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <>
       <AnimatePresence>
         {!isOpen && (
@@ -230,7 +238,7 @@ export default function ChatWidget() {
             whileHover={motionEnabled ? { scale: 1.05 } : undefined}
             whileTap={motionEnabled ? { scale: 0.95 } : undefined}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 w-12 h-12 bg-crimson text-white border-2 border-black dark:border-white rounded-none shadow-[3px_3px_0px_#000000] hover:shadow-[5px_5px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all flex items-center justify-center z-40 touch-manipulation font-bold"
+            className="fixed left-4 sm:left-6 bottom-6 w-12 h-12 bg-crimson text-white border-2 border-black dark:border-white rounded-none shadow-[3px_3px_0px_#000000] hover:shadow-[5px_5px_0px_#000000] hover:translate-x-[2px] hover:translate-y-[-2px] transition-all flex items-center justify-center z-40 touch-manipulation font-bold"
             aria-label="Open chat"
           >
             <MessageCircle size={24} />
@@ -253,7 +261,7 @@ export default function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={motionEnabled ? { opacity: 0, y: 16, scale: 0.98 } : undefined}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-6 right-6 w-[calc(100vw-3rem)] sm:w-[28.75rem] h-[min(600px,calc(100dvh-6rem))] bg-white dark:bg-dark-card border-2 border-black dark:border-white rounded-none shadow-[6px_6px_0px_#000000] dark:shadow-[6px_6px_0px_#ffffff] flex flex-col z-40 overflow-hidden"
+            className="fixed left-4 sm:left-6 bottom-6 w-[calc(100vw-3rem)] sm:w-[28.75rem] h-[min(600px,calc(100dvh-6rem))] bg-white dark:bg-dark-card border-2 border-black dark:border-white rounded-none shadow-[6px_6px_0px_#000000] dark:shadow-[6px_6px_0px_#ffffff] flex flex-col z-40 overflow-hidden"
           >
             <div className="flex items-center justify-between p-4 border-b-2 border-black dark:border-white/10 bg-slate-100 dark:bg-black">
               <div className="flex items-center gap-3">
@@ -371,6 +379,7 @@ export default function ChatWidget() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </>,
+    document.body
   );
 }

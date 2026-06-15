@@ -56,6 +56,7 @@ export default function Navbar() {
     return (
       href.startsWith('/#') &&
       pathname === '/' &&
+      pastHero &&
       activeSection === href.substring(2)
     );
   };

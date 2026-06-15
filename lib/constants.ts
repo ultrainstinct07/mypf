@@ -6,7 +6,7 @@ export const SITE_CONFIG = {
   email: 'akshitizk21@gmail.com',
   phone: '+91-8178471289',
   linkedin: 'https://linkedin.com/in/kshitiz-kumar-void999',
-  github: 'https://github.com/ultrainstinct7',
+  github: 'https://github.com/ultrainstinct07',
   website: 'https://void999.space',
   location: 'Faridabad, Haryana, India',
   company: 'Levithan Technologies',
