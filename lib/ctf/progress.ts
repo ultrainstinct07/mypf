@@ -26,9 +26,7 @@ export function saveCtfProgress(progress: CtfProgress): void {
 
 export function markVoidDiscovered(progress: CtfProgress): CtfProgress {
   if (progress.voidDiscovered) return progress;
-  const next = { ...progress, voidDiscovered: true };
-  saveCtfProgress(next);
-  return next;
+  return { ...progress, voidDiscovered: true };
 }
 
 export function completeStage(
@@ -36,25 +34,25 @@ export function completeStage(
   stage: CtfStageId,
   proofToken?: string
 ): CtfProgress {
+  if (progress.completedStages.includes(stage) && !proofToken) {
+    return progress;
+  }
+
   const completedStages = progress.completedStages.includes(stage)
     ? progress.completedStages
     : [...progress.completedStages, stage].sort((a, b) => a - b);
 
-  const next: CtfProgress = {
+  return {
     ...progress,
     completedStages,
     proofToken: proofToken ?? progress.proofToken,
     completedAt: stage === 5 ? new Date().toISOString() : progress.completedAt,
   };
-
-  saveCtfProgress(next);
-  return next;
 }
 
 export function setTokenExported(progress: CtfProgress): CtfProgress {
-  const next = { ...progress, tokenExported: true };
-  saveCtfProgress(next);
-  return next;
+  if (progress.tokenExported) return progress;
+  return { ...progress, tokenExported: true };
 }
 
 export function getCurrentStage(progress: CtfProgress): number {
