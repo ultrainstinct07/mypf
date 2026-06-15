@@ -4,19 +4,24 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProjectCard from '../components/ProjectCard';
+import ConfidentialEngagementsSection from '../components/ConfidentialEngagementsSection';
 import ProjectSearch from '../components/ProjectSearch';
 import ProjectFilter from '../components/ProjectFilter';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Lock, FolderOpen } from 'lucide-react';
 import { searchProjects, filterProjects, getAllTags, getAllTechStack } from '@/lib/search';
 import { trackEvent } from '@/lib/analytics';
 import type { Project } from '@/types';
 import type { SearchFilters } from '@/types';
+import { CONFIDENTIAL_STATS } from '@/lib/confidential-engagements';
 
 interface ProjectsClientProps {
   projects: Project[];
 }
 
+type ProjectView = 'public' | 'confidential';
+
 export default function ProjectsClient({ projects: allProjects }: ProjectsClientProps) {
+  const [activeView, setActiveView] = useState<ProjectView>('public');
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<SearchFilters>({});
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -65,47 +70,82 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
   );
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-dark transition-colors duration-300">
+    <main className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
       {/* Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-dark dark:via-dark dark:to-dark-lighter border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-40 dark:opacity-20" />
+      <section className="relative overflow-hidden bg-white dark:bg-black border-b-2 border-black dark:border-white/10 transition-colors duration-300">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20 dark:opacity-30" />
         
         <div className="container-custom relative z-10 pt-20 sm:pt-24 md:pt-32 pb-12 sm:pb-16 md:pb-24">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-cyan-600 dark:text-cyan hover:text-sky-600 dark:hover:text-cyan-secondary transition-colors mb-6 sm:mb-8 group min-h-[44px] touch-manipulation"
+            className="inline-flex items-center gap-2 text-crimson hover:text-crimson-secondary font-bold uppercase tracking-wider text-xs transition-colors mb-6 sm:mb-8 group min-h-[44px] touch-manipulation"
           >
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
 
-          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 text-slate-900 dark:text-white">
-            All <span className="text-gradient-cyan">Projects</span>
+          <h1 className="font-syne text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold uppercase mb-6 text-black dark:text-white">
+            All <span className="text-crimson">Work</span>
           </h1>
           
-          <p className="text-slate-600 dark:text-gray-300 text-lg sm:text-xl max-w-3xl">
-            A comprehensive collection of my security research, automation tools, and AI-powered solutions.
+          <p className="text-slate-700 dark:text-gray-300 text-lg sm:text-xl font-medium max-w-3xl">
+            Open-source security tools and research alongside {CONFIDENTIAL_STATS.displayLabel}{' '}
+            professional engagements delivered under client confidentiality agreements.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-8 mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200 dark:border-white/10">
+          <div className="flex flex-wrap items-center gap-6 sm:gap-10 md:gap-12 mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-black/10 dark:border-white/10">
             <div>
-              <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">{allProjects.length}</div>
-              <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Total Projects</div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-crimson">{allProjects.length}</div>
+              <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-450">Public Projects</div>
             </div>
             <div>
-              <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">Security</div>
-              <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Primary Focus</div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-crimson">{CONFIDENTIAL_STATS.displayLabel}</div>
+              <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-450">Confidential Engagements</div>
             </div>
             <div>
-              <div className="text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan">AI/ML</div>
-              <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Integration</div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-crimson">NDA</div>
+              <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-450">Protected Scope</div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* View toggle */}
+      <section className="py-6 bg-white dark:bg-black border-b-2 border-black dark:border-white/10">
+        <div className="container-custom">
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => setActiveView('public')}
+              className={`inline-flex items-center gap-2 px-4 py-3 text-xs font-extrabold uppercase tracking-wider border-2 transition-all min-h-[44px] touch-manipulation ${
+                activeView === 'public'
+                  ? 'bg-crimson text-white border-black dark:border-white shadow-[3px_3px_0px_#000] dark:shadow-[3px_3px_0px_#fff]'
+                  : 'bg-white dark:bg-dark-card text-black dark:text-white border-black dark:border-white/20 hover:border-crimson'
+              }`}
+            >
+              <FolderOpen size={16} />
+              Public Projects ({allProjects.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveView('confidential')}
+              className={`inline-flex items-center gap-2 px-4 py-3 text-xs font-extrabold uppercase tracking-wider border-2 border-dashed transition-all min-h-[44px] touch-manipulation ${
+                activeView === 'confidential'
+                  ? 'bg-crimson text-white border-black dark:border-white shadow-[3px_3px_0px_#000] dark:shadow-[3px_3px_0px_#fff]'
+                  : 'bg-white dark:bg-dark-card text-black dark:text-white border-black dark:border-white/20 hover:border-crimson'
+              }`}
+            >
+              <Lock size={16} />
+              Confidential ({CONFIDENTIAL_STATS.displayLabel})
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {activeView === 'public' && (
+        <>
       {/* Search and Filter Section */}
-      <section className="section-padding border-b border-slate-200 dark:border-white/5">
+      <section className="py-8 bg-slate-50 dark:bg-dark-card border-b-2 border-black dark:border-white/10">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
             <div className="flex-1">
@@ -124,7 +164,7 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
           </div>
 
           {/* Results count */}
-          <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">
+          <div className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-550 dark:text-gray-400">
             Showing {filteredProjects.length} of {allProjects.length} projects
             {(searchQuery || filters.tags?.length || filters.techStack?.length) && (
               <button
@@ -132,7 +172,7 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
                   setSearchQuery('');
                   setFilters({});
                 }}
-                className="ml-2 text-cyan-600 dark:text-cyan hover:text-sky-600 dark:hover:text-cyan-secondary underline min-h-[44px] touch-manipulation"
+                className="ml-2 text-crimson hover:text-crimson-secondary font-bold uppercase tracking-wider text-xs underline min-h-[44px] touch-manipulation"
               >
                 Clear all
               </button>
@@ -196,6 +236,16 @@ export default function ProjectsClient({ projects: allProjects }: ProjectsClient
           )}
         </div>
       </section>
+        </>
+      )}
+
+      {activeView === 'confidential' && (
+        <section className="section-padding">
+          <div className="container-custom">
+            <ConfidentialEngagementsSection />
+          </div>
+        </section>
+      )}
     </main>
   );
 }

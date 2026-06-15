@@ -1,0 +1,57 @@
+---
+title: "Vulnessus — Enterprise Vulnerability Scanning Platform"
+description: "A high-performance full-stack vulnerability management platform utilizing a Rust (Axum) backend, Python dynamic plugin execution via PyO3, Elasticsearch, and AES-256-GCM credential encryption."
+tags: ["Security", "VAPT", "Rust", "Next.js"]
+image: "/images/projects/vulnessus.svg"
+repoUrl: "https://github.com/ultrainstinct7/vulnessus"
+techStack: ["Rust (Axum)", "Next.js", "Python (PyO3)", "Elasticsearch", "MongoDB", "AES-256-GCM"]
+featured: true
+---
+
+## Overview
+
+**Vulnessus** is an enterprise-grade vulnerability management and scanning platform designed for high-throughput, modularity, and strict cryptographic safety. It integrates a lightweight, memory-safe backend engine written in Rust with a Python-based dynamic plugin architecture, enabling security teams to compile, extend, and deploy custom signatures rapidly.
+
+---
+
+## Core Capabilities & Technical Architecture
+
+### 1. Hybrid Pipeline: Rust & PyO3
+To match performance with extensibility, Vulnessus wraps Python scanner logic directly inside a Rust orchestrator using **PyO3**:
+- **Host Engine (Rust/Axum)**: Manages concurrent scan schedules, schedules tasks using lock-free channels, and indexes assets.
+- **Plugin Module (Python via PyO3)**: Enables rapid signature additions using standard Python APIs. Scripts run within sandboxed interpreter threads managed by the Rust runtime.
+
+### 2. High-Performance Indexing
+Asset inventory, discovered open ports, vulnerability correlations, and scanning configurations are indexed inside an **Elasticsearch** cluster, supporting real-time search queries and structured dashboard generation in the Next.js frontend.
+
+### 3. Cryptographic Storage
+All system-wide scan credentials, SSH/WinRM private keys, and API tokens are encrypted at rest using **AES-256-GCM** inside **MongoDB**, preventing exposure in the event of database access compromise.
+
+---
+
+## Technical Specifications
+
+```
+  [ Next.js Dashboard UI ]
+            │ (REST APIs)
+            ▼
+   [ Rust / Axum API ] ──── (AES-256-GCM) ────► [ MongoDB (Secrets) ]
+            │
+            ▼ (Concurrency Pipeline)
+  [ Scanning Engine ] ◄─── (Elasticsearch) ───► [ Asset Index & Reports ]
+            │
+            ▼ (PyO3 Binding)
+  [ Python Plugins (e.g. DPDP Scanner) ]
+```
+
+### Key Technical Implementations
+- **Asset Indexing**: Real-time asset correlation mapping host metadata to discovered vulnerabilities.
+- **Concurrent Dispatch**: Worker thread pool implemented in Rust using `tokio` to execute thousands of simultaneous network probes without runtime blocking.
+- **Modular Signatures**: Supports hot-loading of YAML/Python signature configurations.
+
+---
+
+## Impact & Use Cases
+- Enterprise network assets discovery.
+- Custom security posture and data privacy checks (e.g., DPDP Act plugin).
+- Automated CI/CD security integration.

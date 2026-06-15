@@ -48,18 +48,18 @@ export default function ShareButton({
   return (
     <button
       onClick={handleShare}
-      className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] bg-dark-lighter border border-white/5 rounded-lg hover:border-cyan/50 hover:bg-cyan/10 transition-all touch-manipulation ${className}`}
+      className={`inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] bg-white dark:bg-dark-card border-2 border-black dark:border-white rounded-none hover:border-crimson hover:bg-crimson/10 dark:hover:border-crimson dark:hover:bg-crimson/10 shadow-[2px_2px_0px_#000000] dark:shadow-[2px_2px_0px_rgba(255,255,255,0.1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all font-bold uppercase tracking-wider text-xs touch-manipulation ${className}`}
       aria-label="Share"
     >
       {copied ? (
         <>
-          <Check size={18} className="text-green-400" />
-          <span className="text-sm text-green-400">Copied!</span>
+          <Check size={16} className="text-green-500" />
+          <span className="text-green-500">Copied!</span>
         </>
       ) : (
         <>
-          <Share2 size={18} className="text-gray-300" />
-          <span className="text-sm text-gray-300">Share</span>
+          <Share2 size={16} className="text-black dark:text-white" />
+          <span className="text-black dark:text-white">Share</span>
         </>
       )}
     </button>

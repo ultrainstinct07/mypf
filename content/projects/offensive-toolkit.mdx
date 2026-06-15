@@ -1,0 +1,59 @@
+---
+title: "Offensive Security Automation Toolkit"
+description: "A collection of reconnaissance and vulnerability correlation automation modules in Python and Bash, reducing manual effort by 30% across active VAPT engagements."
+tags: ["Automation", "Security", "Python", "Bash"]
+image: "/images/projects/offensive-toolkit.svg"
+repoUrl: "https://github.com/ultrainstinct7/offensive-toolkit"
+techStack: ["Python", "Bash", "API Integration", "Nmap API", "Shodan API", "Nessus API"]
+featured: false
+---
+
+## Overview
+
+The **Offensive Security Automation Toolkit** is a custom pipeline designed to streamline active reconnaissance, threat surface mapping, and vulnerability correlation. Built using Python and Bash, the toolkit aggregates scans and indexes vulnerability feeds from various public and proprietary APIs. In live security engagements, it reduces manual triaging effort by **30%**, letting analysts focus on complex manual exploitation.
+
+---
+
+## Architecture & Integration
+
+The toolkit operates as a modular workflow system that orchestrates network scans, extracts subdomains, and correlates discoveries against known exploit databases.
+
+```
+  [ Target Domains / IPs ]
+             │
+             ▼ (Bash / Nmap Recon Module)
+  [ Host Discovery & Service Map ]
+             │
+             ├─► Shodan API / Censys API (Internet Exposure)
+             ├─► subfinder / amass (Subdomain Enumeration)
+             └─► Vulners API / exploitdb (Vulnerability Correlation)
+             │
+             ▼ (Python Aggregator & Matcher)
+  [ Prioritized Vulnerability Report ] ───► [ Slack / Discord Webhook Alert ]
+```
+
+---
+
+## Core Modules
+
+### 1. Reconnaissance Pipeline
+Automates the initial phases of network penetration testing:
+- **Subdomain Finder**: Integrates utilities like `subfinder` and `crt.sh` to map the target's external attack surface.
+- **Port Scanner Orchestrator**: Wraps `nmap` using custom scripts to scan discovered hosts for open ports, mapping service versions asynchronously.
+
+### 2. Vulnerability Correlation
+Takes raw open-port results and matches service versions against active vulnerability databases:
+- Queries the **Vulners API** to search for relevant CVEs.
+- Correlates CVEs with public exploit proof-of-concept (PoC) repositories, tagging items with available public exploits.
+
+### 3. Reporting and Notifications
+Outputs structured data (JSON, Markdown) and sends real-time triage alerts:
+- Integrates Slack webhooks to notify team channels when high-severity vulnerabilities are verified.
+- Autogenerates baseline VAPT report sections, importing host details and CVSS scores directly into structured drafts.
+
+---
+
+## Live Engagements & Impact
+- Deployed across **Levithan Technologies** VAPT campaigns to scan large-scale external IP blocks.
+- Drastically reduced target assessment time from days to hours, ensuring immediate discovery of low-hanging zero-day vulnerabilities.
+- Integrated into local DevSecOps pipelines to run periodic external scans against client resources.

@@ -1,7 +1,8 @@
 'use client';
 
 import { SITE_CONFIG } from '@/lib/constants';
-import { Mail, Linkedin, Github, ArrowUp } from 'lucide-react';
+import { Mail, ArrowUp } from 'lucide-react';
+import { LinkedInLogoIcon as Linkedin, GitHubLogoIcon as Github } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import VisitorCounter from './VisitorCounter';
 
@@ -9,67 +10,67 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-100 border-t border-slate-200 dark:bg-dark dark:border-white/5 transition-colors duration-300">
+    <footer className="bg-slate-100 border-t-2 border-black dark:bg-black dark:border-white/10 transition-colors duration-300">
       <div className="container-custom py-8 sm:py-12 lg:py-16">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-12">
           {/* Brand column */}
           <div className="space-y-4">
-            <h3 className="font-display text-2xl font-bold text-gradient-cyan">
+            <h3 className="font-syne text-2xl font-extrabold uppercase tracking-tight text-crimson">
               {SITE_CONFIG.name}
             </h3>
-            <p className="text-slate-500 dark:text-gray-400 text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-gray-400 text-sm font-medium leading-relaxed">
               Cybersecurity analyst building resilient systems and pragmatic security solutions.
             </p>
-            <div className="flex gap-3 sm:gap-4">
+            <div className="flex gap-3">
               <a
                 href={`mailto:${SITE_CONFIG.email}`}
-                className="w-11 h-11 sm:w-10 sm:h-10 rounded-lg bg-white border border-slate-200 hover:border-cyan-600/50 hover:bg-cyan-600/10 dark:bg-dark-lighter dark:border-white/5 dark:hover:border-cyan/50 dark:hover:bg-cyan/10 flex items-center justify-center transition-all duration-300 group touch-manipulation"
+                className="w-10 h-10 rounded-none bg-white border-2 border-black hover:border-crimson hover:bg-crimson/10 dark:bg-dark-card dark:border-white/10 dark:hover:border-crimson dark:hover:bg-crimson/10 flex items-center justify-center transition-all duration-150 group touch-manipulation"
                 aria-label="Email"
               >
-                <Mail size={18} className="text-slate-500 group-hover:text-cyan-600 dark:text-gray-400 dark:group-hover:text-cyan" />
+                <Mail size={16} className="text-black group-hover:text-crimson dark:text-white" />
               </a>
               <a
                 href={SITE_CONFIG.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 sm:w-10 sm:h-10 rounded-lg bg-white border border-slate-200 hover:border-cyan-600/50 hover:bg-cyan-600/10 dark:bg-dark-lighter dark:border-white/5 dark:hover:border-cyan/50 dark:hover:bg-cyan/10 flex items-center justify-center transition-all duration-300 group touch-manipulation"
+                className="w-10 h-10 rounded-none bg-white border-2 border-black hover:border-crimson hover:bg-crimson/10 dark:bg-dark-card dark:border-white/10 dark:hover:border-crimson dark:hover:bg-crimson/10 flex items-center justify-center transition-all duration-150 group touch-manipulation"
                 aria-label="LinkedIn"
               >
-                <Linkedin size={18} className="text-slate-500 group-hover:text-cyan-600 dark:text-gray-400 dark:group-hover:text-cyan" />
+                <Linkedin width={16} height={16} className="text-black group-hover:text-crimson dark:text-white" />
               </a>
               <a
-                href="https://github.com"
+                href={SITE_CONFIG.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 sm:w-10 sm:h-10 rounded-lg bg-white border border-slate-200 hover:border-cyan-600/50 hover:bg-cyan-600/10 dark:bg-dark-lighter dark:border-white/5 dark:hover:border-cyan/50 dark:hover:bg-cyan/10 flex items-center justify-center transition-all duration-300 group touch-manipulation"
+                className="w-10 h-10 rounded-none bg-white border-2 border-black hover:border-crimson hover:bg-crimson/10 dark:bg-dark-card dark:border-white/10 dark:hover:border-crimson dark:hover:bg-crimson/10 flex items-center justify-center transition-all duration-150 group touch-manipulation"
                 aria-label="GitHub"
               >
-                <Github size={18} className="text-slate-500 group-hover:text-cyan-600 dark:text-gray-400 dark:group-hover:text-cyan" />
+                <Github width={16} height={16} className="text-black group-hover:text-crimson dark:text-white" />
               </a>
             </div>
           </div>
 
           {/* Services column */}
           <div>
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Services</h4>
-            <ul className="space-y-3">
+            <h4 className="font-extrabold uppercase text-xs tracking-wider text-black dark:text-white mb-4">Services</h4>
+            <ul className="space-y-3 font-semibold text-sm">
               <li>
-                <a href="#" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm">
+                <a href="#" className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   Penetration Testing
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm">
+                <a href="#" className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   Vulnerability Assessment
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm">
+                <a href="#" className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   Security Automation
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm">
+                <a href="#" className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   Threat Intelligence
                 </a>
               </li>
@@ -78,25 +79,25 @@ export default function Footer() {
 
           {/* Resources column */}
           <div>
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Resources</h4>
-            <ul className="space-y-3">
+            <h4 className="font-extrabold uppercase text-xs tracking-wider text-black dark:text-white mb-4">Resources</h4>
+            <ul className="space-y-3 font-semibold text-sm">
               <li>
-                <Link href="/projects" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm">
+                <Link href="/projects" className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   Projects
                 </Link>
               </li>
               <li>
-                <a href="#about" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm">
+                <a href="#about" className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   About
                 </a>
               </li>
               <li>
-                <a href="#expertise" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm">
+                <a href="#expertise" className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   Expertise
                 </a>
               </li>
               <li>
-                <a href={`mailto:${SITE_CONFIG.email}`} className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm">
+                <a href={`mailto:${SITE_CONFIG.email}`} className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   Contact
                 </a>
               </li>
@@ -105,12 +106,12 @@ export default function Footer() {
 
           {/* Connect column */}
           <div>
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Connect</h4>
-            <ul className="space-y-3">
+            <h4 className="font-extrabold uppercase text-xs tracking-wider text-black dark:text-white mb-4">Connect</h4>
+            <ul className="space-y-3 font-semibold text-sm">
               <li>
                 <a
                   href={`mailto:${SITE_CONFIG.email}`}
-                  className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm block"
+                  className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors block"
                 >
                   {SITE_CONFIG.email}
                 </a>
@@ -120,12 +121,12 @@ export default function Footer() {
                   href={SITE_CONFIG.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors text-sm block"
+                  className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors block"
                 >
                   LinkedIn Profile
                 </a>
               </li>
-              <li className="text-slate-500 dark:text-gray-400 text-sm pt-2">
+              <li className="text-slate-500 dark:text-gray-500 text-xs font-bold uppercase tracking-wider pt-2">
                 {SITE_CONFIG.location}
               </li>
             </ul>
@@ -133,30 +134,40 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 sm:pt-8 border-t border-slate-200 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="pt-6 sm:pt-8 border-t-2 border-black dark:border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left">
-            <p className="text-slate-500 dark:text-gray-400 text-xs sm:text-sm">
+            <p className="text-slate-600 dark:text-gray-500 text-xs font-bold uppercase tracking-wider">
               © {currentYear} {SITE_CONFIG.name}. All rights reserved.
             </p>
             <VisitorCounter />
           </div>
           
-          <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm">
-            <a href="#" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors min-h-[44px] flex items-center touch-manipulation">
-              Privacy Policy
+          <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm font-bold uppercase tracking-wider">
+            <a
+              href={SITE_CONFIG.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors min-h-[44px] flex items-center touch-manipulation"
+            >
+              GitHub
             </a>
-            <a href="#" className="text-slate-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan transition-colors min-h-[44px] flex items-center touch-manipulation">
-              Terms of Service
+            <a
+              href={SITE_CONFIG.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors min-h-[44px] flex items-center touch-manipulation"
+            >
+              LinkedIn
             </a>
           </div>
 
           {/* Scroll to top */}
           <a
             href="#"
-            className="w-11 h-11 sm:w-10 sm:h-10 rounded-lg bg-cyan-600/10 border border-cyan-600/30 hover:bg-cyan-600 hover:text-white text-cyan-600 dark:bg-cyan/10 dark:border-cyan/30 dark:hover:bg-cyan dark:hover:text-dark dark:text-cyan flex items-center justify-center transition-all duration-300 hover:glow-cyan group touch-manipulation"
+            className="w-10 h-10 rounded-none border-2 border-black text-black bg-white hover:bg-crimson hover:text-white dark:border-white/30 dark:bg-dark-card dark:text-white dark:hover:bg-crimson dark:hover:text-white flex items-center justify-center transition-all duration-150 group touch-manipulation"
             aria-label="Scroll to top"
           >
-            <ArrowUp size={18} className="group-hover:-translate-y-1 transition-transform" />
+            <ArrowUp size={16} className="group-hover:-translate-y-1 transition-transform" />
           </a>
         </div>
       </div>

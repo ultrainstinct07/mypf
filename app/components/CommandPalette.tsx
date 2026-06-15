@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Fuse, { type IFuseOptions } from 'fuse.js';
 import { Search, ArrowRight, X } from 'lucide-react';
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut';
+import { useCtfOptional } from './CtfProvider';
 
 interface CommandItem {
   id: string;
@@ -12,14 +13,21 @@ interface CommandItem {
   description?: string;
   href: string;
   keywords?: string[];
+  action?: 'open-terminal';
 }
 
-const commands: CommandItem[] = [
+const baseCommands: CommandItem[] = [
   { id: 'home', label: 'Go to Home', href: '/', keywords: ['home', 'main'] },
   { id: 'about', label: 'About Me', href: '/#about', keywords: ['about', 'bio'] },
   { id: 'expertise', label: 'Expertise', href: '/#expertise', keywords: ['skills', 'capabilities'] },
-  { id: 'projects', label: 'Projects', href: '/#projects', keywords: ['work', 'portfolio'] },
-  { id: 'all-projects', label: 'All Projects', href: '/projects', keywords: ['all', 'gallery'] },
+  { id: 'projects', label: 'Projects', href: '/projects', keywords: ['work', 'portfolio', 'all', 'gallery'] },
+  {
+    id: 'ad-void',
+    label: 'AD-Void Cheat Sheet',
+    description: 'Active Directory attack notes & scenarios',
+    href: 'https://ad-void.void999.space/',
+    keywords: ['active directory', 'ad', 'red team', 'kerberos', 'bloodhound', 'cheat sheet', 'blog'],
+  },
   { id: 'faq', label: 'FAQ', href: '/#faq', keywords: ['questions', 'help'] },
   { id: 'contact', label: 'Contact', href: '/#contact', keywords: ['email', 'reach'] },
 ];
@@ -38,8 +46,24 @@ export default function CommandPalette() {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const router = useRouter();
+  const ctf = useCtfOptional();
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+
+  const commands = useMemo(() => {
+    if (!ctf?.progress.voidDiscovered) return baseCommands;
+    return [
+      ...baseCommands,
+      {
+        id: 'void-terminal',
+        label: 'Open VOID Terminal',
+        description: 'Operation VOID999 infiltration shell',
+        href: '#terminal',
+        keywords: ['void', 'ctf', 'terminal', 'flag', 'hack'],
+        action: 'open-terminal' as const,
+      },
+    ];
+  }, [ctf?.progress.voidDiscovered]);
 
   useKeyboardShortcut(['mod+k'], () => {
     setIsOpen(true);
@@ -48,7 +72,9 @@ export default function CommandPalette() {
   useEffect(() => {
     if (isOpen) {
       inputRef.current?.focus();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery('');
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedIndex(0);
     }
   }, [isOpen]);
@@ -66,19 +92,22 @@ export default function CommandPalette() {
     }
   }, [isOpen]);
 
-  const fuse = new Fuse(commands, fuseOptions);
+  const fuse = useMemo(() => new Fuse(commands, fuseOptions), [commands]);
   const filteredCommands = query.trim()
     ? fuse.search(query).map((result) => result.item)
     : commands;
 
-  useEffect(() => {
-    if (selectedIndex >= filteredCommands.length) {
-      setSelectedIndex(0);
-    }
-  }, [filteredCommands.length, selectedIndex]);
 
   const handleSelect = (command: CommandItem) => {
     setIsOpen(false);
+    if (command.action === 'open-terminal') {
+      ctf?.openTerminal();
+      return;
+    }
+    if (command.href.startsWith('http://') || command.href.startsWith('https://')) {
+      window.open(command.href, '_blank', 'noopener,noreferrer');
+      return;
+    }
     if (command.href.startsWith('/#')) {
       const id = command.href.substring(2);
       const element = document.getElementById(id);
@@ -131,10 +160,9 @@ export default function CommandPalette() {
         onClick={() => setIsOpen(false)}
       />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl mx-4 z-50">
-        <div className="bg-dark-lighter border border-white/10 rounded-lg shadow-2xl overflow-hidden">
-          {/* Search Input */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
-            <Search className="text-gray-400" size={20} />
+        <div className="bg-white dark:bg-dark-card border-2 border-black dark:border-white rounded-none shadow-[8px_8px_0px_#000000] dark:shadow-[8px_8px_0px_#ffffff] overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3 border-b-2 border-black dark:border-white/10 bg-slate-50 dark:bg-black">
+            <Search className="text-slate-500 dark:text-gray-400" size={20} />
             <input
               ref={inputRef}
               type="text"
@@ -145,11 +173,11 @@ export default function CommandPalette() {
               }}
               onKeyDown={handleKeyDown}
               placeholder="Search commands..."
-              className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none"
+              className="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-slate-450 dark:placeholder-gray-500 outline-none font-bold uppercase tracking-wide text-sm"
             />
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1 text-gray-400 hover:text-cyan transition-colors"
+              className="p-1 text-slate-500 dark:text-gray-405 hover:text-crimson transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
               aria-label="Close"
             >
               <X size={18} />
@@ -159,29 +187,31 @@ export default function CommandPalette() {
           {/* Command List */}
           <div
             ref={listRef}
-            className="max-h-96 overflow-y-auto py-2"
+            className="max-h-96 overflow-y-auto py-2 bg-white dark:bg-dark-card"
           >
             {filteredCommands.length > 0 ? (
               filteredCommands.map((command, index) => (
                 <button
                   key={command.id}
                   onClick={() => handleSelect(command)}
-                  className={`w-full px-4 py-3 text-left hover:bg-cyan/10 transition-colors flex items-center gap-3 ${
+                  className={`w-full px-4 py-3 text-left hover:bg-crimson/10 transition-colors flex items-center gap-3 border-l-4 min-h-[44px] touch-manipulation ${
                     index === selectedIndex
-                      ? 'bg-cyan/20 text-cyan'
-                      : 'text-gray-300'
+                      ? 'bg-crimson text-white border-crimson'
+                      : 'text-slate-700 dark:text-gray-300 border-transparent'
                   }`}
                 >
                   <ArrowRight
                     size={16}
                     className={`transition-opacity ${
-                      index === selectedIndex ? 'opacity-100' : 'opacity-0'
+                      index === selectedIndex ? 'opacity-100 text-white' : 'opacity-0 text-crimson'
                     }`}
                   />
                   <div className="flex-1">
-                    <div className="font-medium">{command.label}</div>
+                    <div className="font-extrabold uppercase tracking-wide text-sm">{command.label}</div>
                     {command.description && (
-                      <div className="text-sm text-gray-400">
+                      <div className={`text-xs font-bold uppercase tracking-wider mt-0.5 ${
+                        index === selectedIndex ? 'text-white/80' : 'text-slate-500 dark:text-gray-400'
+                      }`}>
                         {command.description}
                       </div>
                     )}
@@ -189,30 +219,30 @@ export default function CommandPalette() {
                 </button>
               ))
             ) : (
-              <div className="px-4 py-8 text-center text-gray-400">
+              <div className="px-4 py-8 text-center text-slate-500 dark:text-gray-400 font-bold uppercase tracking-wider text-xs">
                 No commands found
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 border-t border-white/5 text-xs text-gray-400 flex items-center justify-between">
+          <div className="px-4 py-2 border-t-2 border-black dark:border-white/10 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400 flex items-center justify-between bg-slate-50 dark:bg-black">
             <div className="flex items-center gap-4">
               <span>
-                <kbd className="px-2 py-1 bg-dark border border-white/10 rounded">
+                <kbd className="px-1.5 py-0.5 bg-white dark:bg-dark border-2 border-black dark:border-white/20 rounded-none text-crimson font-extrabold">
                   ↑↓
                 </kbd>{' '}
                 Navigate
               </span>
               <span>
-                <kbd className="px-2 py-1 bg-dark border border-white/10 rounded">
+                <kbd className="px-1.5 py-0.5 bg-white dark:bg-dark border-2 border-black dark:border-white/20 rounded-none text-crimson font-extrabold">
                   Enter
                 </kbd>{' '}
                 Select
               </span>
             </div>
             <span>
-              <kbd className="px-2 py-1 bg-dark border border-white/10 rounded">
+              <kbd className="px-1.5 py-0.5 bg-white dark:bg-dark border-2 border-black dark:border-white/20 rounded-none text-crimson font-extrabold">
                 Esc
               </kbd>{' '}
               Close

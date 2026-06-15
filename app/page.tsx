@@ -1,4 +1,6 @@
 import Hero from './components/Hero';
+import ScrollAmbientBackground from './components/ScrollAmbientBackground';
+import HeroSectionDivider from './components/HeroSectionDivider';
 import About from './components/About';
 import ExpertiseGrid from './components/ExpertiseGrid';
 import ProjectGallery from './components/ProjectGallery';
@@ -10,9 +12,7 @@ import { SITE_CONFIG } from '@/lib/constants';
 import { getAllProjects } from '@/lib/mdx';
 
 export default function Home() {
-  // Fetch projects on server side
   const projects = getAllProjects();
-  // Structured data for SEO
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -35,22 +35,24 @@ export default function Home() {
 
   return (
     <>
+      <ScrollAmbientBackground />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <main id="main-content">
+      <main id="main-content" className="relative isolate">
         <Hero />
-        <About />
-        <ExpertiseGrid />
-        <ProjectGallery projects={projects} />
-        <Testimonials />
-        <FAQ />
-        <CTA />
+        <div className="relative">
+          <HeroSectionDivider />
+          <About />
+          <ExpertiseGrid />
+          <ProjectGallery projects={projects} />
+          <Testimonials />
+          <FAQ />
+          <CTA />
+        </div>
       </main>
       <Footer />
     </>
   );
 }
-
-

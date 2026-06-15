@@ -4,7 +4,7 @@ import ProjectsClient from './ProjectsClient';
 
 export const metadata: Metadata = {
   title: 'Projects | Kshitiz Kumar',
-  description: 'Explore my cybersecurity projects including Ark Surveillance, Collegia, phishing detection systems, and more.',
+  description: 'Open-source security tools and research, plus 50+ professional engagements delivered under client NDAs.',
 };
 
 // Enable ISR

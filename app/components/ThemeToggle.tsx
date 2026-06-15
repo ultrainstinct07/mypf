@@ -1,58 +1,76 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Sun, Moon, Monitor } from 'lucide-react';
-import { usePreferences, type Theme } from '../hooks/usePreferences';
+import { Sun, Moon } from 'lucide-react';
+import { usePreferences } from '../hooks/usePreferences';
 
 export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
-  const { preferences, updatePreferences } = usePreferences();
+  const { preferences, updatePreferences, systemPrefersDark } = usePreferences();
 
-  // Only show the toggle after mounting to avoid hydration mismatch
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  const themes: { value: Theme; icon: typeof Sun; label: string }[] = [
-    { value: 'light', icon: Sun, label: 'Light' },
-    { value: 'dark', icon: Moon, label: 'Dark' },
-    { value: 'system', icon: Monitor, label: 'System' },
-  ];
+  const isDark =
+    preferences.theme === 'dark' ||
+    (preferences.theme === 'system' && systemPrefersDark);
 
-  const currentTheme = themes.find((t) => t.value === preferences.theme) || themes[2];
-  const CurrentIcon = currentTheme.icon;
-
-  const handleClick = () => {
-    const currentIndex = themes.findIndex((t) => t.value === preferences.theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    updatePreferences({ theme: themes[nextIndex].value });
+  const toggleTheme = () => {
+    updatePreferences({ theme: isDark ? 'light' : 'dark' });
   };
 
-  // Render a placeholder with the same dimensions to prevent layout shift
   if (!mounted) {
     return (
-      <button
-        className="p-2 rounded-lg border transition-all group bg-slate-100 border-slate-200 dark:bg-dark-lighter dark:border-white/5"
-        aria-label="Loading theme toggle"
-        disabled
-      >
-        <div className="w-[18px] h-[18px]" />
-      </button>
+      <div
+        className="h-9 w-[4.5rem] shrink-0 rounded-none border-2 border-black/10 dark:border-white/10 bg-slate-100 dark:bg-dark-card"
+        aria-hidden
+      />
     );
   }
 
   return (
     <button
-      onClick={handleClick}
-      className="p-2 rounded-lg border transition-all group bg-slate-100 border-slate-200 hover:border-cyan-600/50 hover:bg-cyan-600/10 dark:bg-dark-lighter dark:border-white/5 dark:hover:border-cyan/50 dark:hover:bg-cyan/10"
-      aria-label={`Switch theme. Current: ${currentTheme.label}`}
-      title={`Current: ${currentTheme.label}. Click to switch.`}
+      type="button"
+      role="switch"
+      aria-checked={isDark}
+      aria-label={isDark ? 'Dark mode enabled. Switch to light mode.' : 'Light mode enabled. Switch to dark mode.'}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      onClick={toggleTheme}
+      className="group relative h-9 w-[4.5rem] shrink-0 overflow-hidden rounded-none border-2 border-black bg-slate-100 shadow-[2px_2px_0px_#000000] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_#000000] dark:border-white/20 dark:bg-dark-card dark:shadow-[2px_2px_0px_rgba(255,255,255,0.12)] dark:hover:shadow-[3px_3px_0px_rgba(255,255,255,0.12)] touch-manipulation"
     >
-      <CurrentIcon
-        size={18}
-        className="text-slate-600 group-hover:text-cyan-600 dark:text-gray-300 dark:group-hover:text-cyan transition-colors"
+      <span
+        aria-hidden
+        className={`absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-4px)] border-2 border-black bg-crimson shadow-[1px_1px_0px_#000000] transition-transform duration-200 ease-out dark:border-white ${
+          isDark ? 'translate-x-[calc(100%+4px)]' : 'translate-x-0'
+        }`}
       />
+
+      <span className="relative z-10 grid h-full w-full grid-cols-2">
+        <span className="flex items-center justify-center">
+          <Sun
+            size={15}
+            strokeWidth={2.5}
+            className={`transition-colors duration-200 ${
+              !isDark
+                ? 'text-white'
+                : 'text-slate-500 group-hover:text-slate-700 dark:text-gray-500 dark:group-hover:text-gray-300'
+            }`}
+          />
+        </span>
+        <span className="flex items-center justify-center">
+          <Moon
+            size={15}
+            strokeWidth={2.5}
+            className={`transition-colors duration-200 ${
+              isDark
+                ? 'text-white'
+                : 'text-slate-500 group-hover:text-slate-700 dark:text-gray-500 dark:group-hover:text-gray-300'
+            }`}
+          />
+        </span>
+      </span>
     </button>
   );
 }
-

@@ -1,81 +1,111 @@
 export const SITE_CONFIG = {
   name: 'Kshitiz Kumar',
-  role: 'Red Team Analyst & Offensive Security Engineer',
-  email: 'bbruce670@gmail.com',
-  linkedin: 'https://www.linkedin.com/in/kshitiz-kumar',
+  role: 'Offensive Security Engineer',
+  email: 'akshitizk21@gmail.com',
+  phone: '+91-8178471289',
+  linkedin: 'https://linkedin.com/in/kshitiz-kumar-void999',
+  github: 'https://github.com/ultrainstinct7',
+  website: 'https://void999.space',
   location: 'Faridabad, Haryana, India',
   company: 'Levithan Technologies',
   
   meta: {
-    title: 'Kshitiz Kumar — Cybersecurity Analyst | Portfolio',
-    description: 'Portfolio of Kshitiz Kumar — cybersecurity analyst. Projects: Ark Surveillance, Collegia, phishing detection system, mobile app pentesting. Contact: bbruce670@gmail.com',
-    siteUrl: 'https://kshitizkumar.vercel.app',
+    title: 'Kshitiz Kumar — Offensive Security Engineer | Portfolio',
+    description: 'Portfolio of Kshitiz Kumar — Offensive Security Engineer & OSCP/OSCP+ Certified. Specializing in Web & Mobile Pentesting, Active Directory Attacks, Red Team Operations, and security automation.',
+    siteUrl: 'https://void999.space',
   },
 
   bio: {
-    short: "CRTA certified red team analyst with over one year of professional experience at Levithan Technologies. Specializing in offensive security, red team operations, and penetration testing across web, mobile, Active Directory, and cloud environments. Actively building offensive security tooling and preparing for OSCP and CEH certifications.",
+    short: "OSCP, OSCP+, and CRTA certified Offensive Security Engineer with 1.5+ years of hands-on experience in penetration testing, red team operations, and adversary simulation across web, mobile, and Active Directory environments.",
     
-    paragraph1: "I'm a CRTA (Certified Red Team Analyst) with over one year of hands-on experience in offensive security and red team operations at Levithan Technologies. My work focuses on breaking systems before attackers do—through web application pentesting, mobile security assessments, Active Directory exploitation, and cloud security testing. I've worked on government and enterprise security projects, conducting real-world vulnerability assessments, exploit development, and adversary simulation exercises.",
+    paragraph1: "I'm an Offensive Security Engineer with 1.5+ years of experience at Levithan Technologies, specializing in adversary simulation, privilege escalation, and penetration testing across web, mobile, Active Directory, and cloud environments. I hold the OSCP, OSCP+, and CRTA certifications. My experience includes executing high-impact VAPT engagements for government and enterprise clients — including critical infrastructure and toll-management systems — delivering professional, STQC/IHMCL-compliant security reports.",
     
-    paragraph2: "Beyond formal engagements, I build practical offensive security tools—automated reconnaissance utilities, phishing detection systems, OSINT pipelines, and custom exploitation frameworks. My approach is attack-focused: I study real-world attack paths, privilege escalation techniques, lateral movement strategies, and post-exploitation methods to understand how adversaries actually operate. Currently preparing for OSCP and CEH, I'm committed to advancing my skills in advanced penetration testing and red team operations. I bridge the gap between theoretical security knowledge and what attackers actually do in the wild."
+    paragraph2: "In addition to penetration testing, I focus on security engineering and automation. I design and build internal tools to streamline offensive operations, including Vulnessus (an enterprise-grade vulnerability management platform built with Rust and Axum) and a modular DPDP Act compliance scanner. I specialize in developing Python automation scripts, Cobalt Strike profiles, and custom exploit payloads that map directly to the OWASP Top 10 and MITRE ATT&CK frameworks to help organizations proactively secure their attack surface."
   },
   
-  employmentStatus: 'Full-time'
+  employmentStatus: 'Full-time',
 };
+
+export const CONTACT_ENGAGEMENTS = [
+  {
+    title: 'Web & API Pentesting',
+    description: 'Black-box and grey-box testing mapped to OWASP Top 10 and business logic flaws.',
+  },
+  {
+    title: 'Mobile App Security',
+    description: 'Android and iOS assessments — runtime analysis, API abuse, and insecure storage.',
+  },
+  {
+    title: 'Active Directory & Red Team',
+    description: 'Internal network intrusion, privilege escalation, and adversary simulation.',
+  },
+  {
+    title: 'Critical Infrastructure VAPT',
+    description: 'High-criticality government and enterprise audits with compliance-aligned reporting.',
+  },
+  {
+    title: 'Cloud & Container Reviews',
+    description: 'IAM misconfigurations, exposed services, and container escape path analysis.',
+  },
+  {
+    title: 'Security Automation',
+    description: 'Custom recon pipelines, reporting workflows, and offensive tooling in Python or Rust.',
+  },
+];
 
 export const EXPERTISE_ITEMS = [
   {
     id: '1',
-    title: 'Offensive Security & Red Teaming',
-    description: 'Adversary simulation, exploit research, privilege escalation, post-exploitation, and Active Directory attack chains.',
-    icon: 'target',
-  },
-  {
-    id: '2',
-    title: 'Application Security (Web + Mobile)',
-    description: 'Hands-on testing using Burp Suite, MITM tools, static/dynamic analysis, and manual exploitation techniques.',
+    title: 'Web & Mobile Pentesting',
+    description: 'Manual and automated penetration testing for government and enterprise applications, identifying critical OWASP Top 10 vulnerabilities.',
     icon: 'smartphone',
   },
   {
+    id: '2',
+    title: 'Active Directory & Red Teaming',
+    description: 'Multi-stage intrusion testing, pivoting, and Active Directory attacks leveraging BloodHound, Mimikatz, Cobalt Strike, and Impacket.',
+    icon: 'target',
+  },
+  {
     id: '3',
-    title: 'Threat Intelligence & OSINT',
-    description: 'SOCMINT, intel feeds integration, data enrichment tools, and automation pipelines.',
-    icon: 'search',
+    title: 'Offensive Security Automation',
+    description: 'Developing automated threat intelligence, reconnaissance, and vulnerability correlation pipelines in Python and Rust to reduce triage time.',
+    icon: 'code',
   },
   {
     id: '4',
     title: 'Security Engineering',
-    description: 'Designing internal tools, improving reconnaissance workflows, and building custom scripts to speed up offensive operations.',
-    icon: 'code',
+    description: 'Architecting enterprise security scanners, compliance scanner modules (like DPDP Act), and internal reporting frameworks.',
+    icon: 'shield',
   },
   {
     id: '5',
-    title: 'Research & Continuous Learning',
-    description: 'Breaking things, learning patterns, and understanding how real attackers think.',
-    icon: 'book-open',
+    title: 'Exploit Development & VAPT',
+    description: 'Reconnaissance, vulnerability correlation, exploit modification, and compliance-aligned reporting under MITRE ATT&CK.',
+    icon: 'search',
   },
 ];
 
 export const FAQ_ITEMS = [
   {
     id: '1',
-    question: 'What design services do you offer?',
-    answer: 'I specialize in security product design, penetration testing, vulnerability assessments, and building security automation tools. My focus is on creating pragmatic solutions that are both secure and maintainable.',
+    question: 'What professional certifications do you hold?',
+    answer: 'I hold three hands-on industry credentials: OffSec Certified Professional+ (OSCP+) focusing on advanced exploitation, pivoting, and AD attacks; OffSec Certified Professional (OSCP) for hands-on ethical hacking; and Certified Red Team Analyst (CRTA) for red team methodology and adversary emulation.',
   },
   {
     id: '2',
-    question: 'How does your design process typically work?',
-    answer: 'I start with threat modeling and requirements analysis, then move to implementation with continuous security testing. Each project includes documentation, code review, and knowledge transfer to ensure long-term security posture.',
+    question: 'What kind of security engagements have you delivered?',
+    answer: 'I have delivered full-scope VAPT and red team engagements for government and enterprise clients — including critical infrastructure assessments — and issued STQC/IHMCL-compliant audit reports. Many engagements are under NDA; detailed case studies are available on request during scoping calls.',
   },
   {
     id: '3',
-    question: 'Are you open to collaborations or part-time work?',
-    answer: 'Yes! I\'m always interested in interesting security challenges, whether it\'s consulting, part-time work, or collaboration on open-source security tools. Feel free to reach out via email.',
+    question: 'What is your technology stack for security automation?',
+    answer: 'I primarily use Python and Bash for writing automation scripts, recon tools, and integrations. For building enterprise-grade tools like Vulnessus, I use Rust (Axum framework) and Next.js, combined with Elasticsearch and MongoDB.',
   },
   {
     id: '4',
-    question: 'How do I start a project with you?',
-    answer: 'Simply reach out via email at bbruce670@gmail.com or connect with me on LinkedIn. We\'ll discuss your security requirements, timeline, and goals to see if we\'re a good fit.',
+    question: 'Are you available for consulting or full-time roles?',
+    answer: 'Yes! I am open to discussing security consulting opportunities or full-time offensive security engineering roles. You can contact me directly at akshitizk21@gmail.com to request detailed reports or schedule scoping calls.',
   },
 ];
 
@@ -85,33 +115,27 @@ export const TESTIMONIALS = [
     name: 'Rahul Sharma',
     role: 'Security Lead',
     company: 'Levithan Technologies',
-    companyLogo: '/images/companies/levithan.svg',
-    quote: 'Kshitiz brings a pragmatic approach to security challenges, combining technical depth with practical solutions.',
+    quote: 'Kshitiz brings a pragmatic approach to security challenges, combining technical depth with practical solutions. His red team reports are thorough and directly actionable.',
   },
   {
     id: '2',
     name: 'Priya Patel',
     role: 'Engineering Manager',
     company: 'Tech Solutions',
-    companyLogo: '/images/companies/techsolutions.svg',
-    quote: 'Outstanding work on vulnerability assessments and security automation. Highly recommended for security projects.',
+    quote: 'Outstanding work on vulnerability assessments and security automation. Kshitiz identified critical issues our internal team had missed and helped us close them fast.',
   },
   {
     id: '3',
     name: 'Amit Singh',
     role: 'CTO',
     company: 'SecureStack',
-    companyLogo: '/images/companies/securestack.svg',
-    quote: 'Excellent understanding of both offensive and defensive security. Great communicator and problem solver.',
+    quote: 'Excellent understanding of both offensive and defensive security. Kshitiz is a strong communicator who translates complex findings into business risk clearly.',
   },
   {
     id: '4',
     name: 'Sarah Johnson',
     role: 'Product Owner',
     company: 'CloudSec',
-    companyLogo: '/images/companies/cloudsec.svg',
-    quote: 'Kshitiz delivered thorough security analysis and practical recommendations that improved our product security.',
+    quote: 'Kshitiz delivered a thorough mobile app security assessment with detailed findings and clear remediation guidance. A reliable and skilled security professional.',
   },
 ];
-
-

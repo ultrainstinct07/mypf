@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Inter, Space_Grotesk, Manrope, Syne, Instrument_Serif } from 'next/font/google';
 import './globals.css';
 import { SITE_CONFIG } from '@/lib/constants';
 import ThemeProvider from './providers/ThemeProvider';
+import { CtfProvider } from './components/CtfProvider';
+import CtfTerminal from './components/CtfTerminal';
 import Navbar from './components/Navbar';
 import ScrollProgress from './components/ScrollProgress';
 import CommandPalette from './components/CommandPalette';
@@ -25,6 +27,28 @@ const spaceGrotesk = Space_Grotesk({
   weight: ['400', '500', '600', '700'],
 });
 
+const manrope = Manrope({
+  subsets: ['latin'],
+  variable: '--font-manrope',
+  display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
+});
+
+const syne = Syne({
+  subsets: ['latin'],
+  variable: '--font-syne',
+  display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  variable: '--font-instrument',
+  display: 'swap',
+  weight: '400',
+  style: ['normal', 'italic'],
+});
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -33,6 +57,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_CONFIG.meta.siteUrl),
   title: SITE_CONFIG.meta.title,
   description: SITE_CONFIG.meta.description,
   authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.meta.siteUrl }],
@@ -80,9 +105,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
+  ...(process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION && {
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
+    },
+  }),
 };
 
 export default function RootLayout({
@@ -91,7 +118,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${manrope.variable} ${syne.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon.ico" />
@@ -117,6 +144,10 @@ export default function RootLayout({
                 } catch (e) {
                   document.documentElement.classList.add('dark');
                 }
+                if (!sessionStorage.getItem('void999-hint')) {
+                  sessionStorage.setItem('void999-hint', '1');
+                  console.info('%c[void999]%c curious minds welcome — check the crawl rules.', 'color:#D90429;font-weight:bold', 'color:inherit');
+                }
               })();
             `,
           }}
@@ -124,6 +155,7 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
+          <CtfProvider>
           <a href="#main-content" className="skip-link">
             Skip to main content
           </a>
@@ -135,8 +167,10 @@ export default function RootLayout({
           <CommandPalette />
           <ChatWidget />
           <KeyboardShortcuts />
+          <CtfTerminal />
           <BackToTop />
           <CursorGlow />
+          </CtfProvider>
         </ThemeProvider>
       </body>
     </html>

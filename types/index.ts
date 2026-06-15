@@ -10,6 +10,16 @@ export interface Project {
   featured?: boolean;
 }
 
+export interface ConfidentialEngagement {
+  id: string;
+  title: string;
+  sector: string;
+  description: string;
+  tags: string[];
+  techStack: string[];
+  count: number;
+}
+
 export interface Testimonial {
   id: string;
   name: string;

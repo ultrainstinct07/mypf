@@ -30,7 +30,7 @@ export default function ExperienceTimeline({
   return (
     <div ref={ref} className={`relative ${className}`}>
       {/* Timeline line */}
-      <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-600 dark:from-cyan via-sky-500 dark:via-cyan-secondary to-transparent opacity-30" />
+      <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-crimson dark:from-crimson via-crimson/40 dark:via-crimson/20 to-transparent opacity-30" />
 
       <div className="space-y-8">
         {items.map((item, index) => {
@@ -46,21 +46,21 @@ export default function ExperienceTimeline({
               className="relative pl-20"
             >
               {/* Timeline dot */}
-              <div className="absolute left-6 top-2 w-4 h-4 bg-cyan-600 dark:bg-cyan rounded-full border-4 border-white dark:border-dark glow-cyan" />
+              <div className="absolute left-6 top-2.5 w-4 h-4 bg-crimson dark:bg-crimson rounded-none border-2 border-black dark:border-white shadow-[2px_2px_0px_#000000] dark:shadow-[2px_2px_0px_#ffffff]" />
 
               {/* Content card */}
               <div
-                className="bg-white dark:bg-dark-lighter border border-slate-200 dark:border-white/5 rounded-lg p-6 hover:border-cyan-600/30 dark:hover:border-cyan/30 transition-all cursor-pointer shadow-sm dark:shadow-none"
+                className="bg-white dark:bg-dark-card border-2 border-black dark:border-white/10 rounded-none p-6 hover:border-crimson dark:hover:border-crimson hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all cursor-pointer shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_rgba(255,255,255,0.05)] hover:shadow-[5px_5px_0px_#D90429] dark:hover:shadow-[5px_5px_0px_#D90429]"
                 onClick={() => setExpandedId(isExpanded ? null : item.id)}
               >
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
+                    <h3 className="text-xl font-extrabold uppercase tracking-tight text-slate-900 dark:text-white mb-1">
                       {item.title}
                     </h3>
-                    <p className="text-cyan-600 dark:text-cyan font-medium">{item.organization}</p>
+                    <p className="text-crimson dark:text-crimson font-bold uppercase tracking-wider text-sm">{item.organization}</p>
                   </div>
-                  <div className="flex flex-col gap-1 text-sm text-slate-500 dark:text-gray-400">
+                  <div className="flex flex-col gap-1 text-sm text-slate-500 dark:text-gray-400 font-medium">
                     <div className="flex items-center gap-2">
                       <Calendar size={14} />
                       {item.period}
@@ -74,7 +74,7 @@ export default function ExperienceTimeline({
                   </div>
                 </div>
 
-                <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
+                <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed font-medium mb-4">
                   {item.description}
                 </p>
 
@@ -83,12 +83,12 @@ export default function ExperienceTimeline({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="flex flex-wrap gap-2 pt-4 border-t border-slate-200 dark:border-white/5"
+                    className="flex flex-wrap gap-2 pt-4 border-t-2 border-black/10 dark:border-white/10"
                   >
                     {item.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 bg-cyan-600/10 dark:bg-cyan/10 text-cyan-600 dark:text-cyan text-xs font-medium rounded-full border border-cyan-600/20 dark:border-cyan/20"
+                        className="px-3 py-1 bg-crimson/10 dark:bg-crimson/10 text-crimson dark:text-crimson text-xs font-bold uppercase tracking-wider rounded-none border border-crimson/20 dark:border-crimson/20"
                       >
                         {tag}
                       </span>

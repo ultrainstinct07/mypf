@@ -4,15 +4,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { getProjectBySlug, getAllProjectSlugs, getAllProjects } from '@/lib/mdx';
-import { ArrowLeft, ExternalLink, Github, Calendar, Tag } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Calendar, Tag } from 'lucide-react';
+import { GitHubLogoIcon as Github } from '@radix-ui/react-icons';
 import ShareButton from '@/app/components/ShareButton';
 import ProjectRecommendations from '@/app/components/ProjectRecommendations';
 import ReadingProgress from '@/app/components/ReadingProgress';
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -23,7 +24,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  const project = getProjectBySlug(params.slug);
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -42,8 +44,9 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   };
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
-  const project = getProjectBySlug(params.slug);
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
 
   if (!project) {
     notFound();
@@ -54,7 +57,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
   
   // Convert project to match Project type
   const currentProject = {
-    slug: params.slug,
+    slug: slug,
     title: frontmatter.title,
     description: frontmatter.description,
     tags: frontmatter.tags || [],
@@ -66,20 +69,20 @@ export default function ProjectPage({ params }: ProjectPageProps) {
   };
 
   return (
-    <main className="min-h-screen bg-dark">
+    <main className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
       {/* Reading Progress */}
       <ReadingProgress showReadingTime={true} />
       
       {/* Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-dark via-dark to-dark-lighter border-b border-white/5">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
+      <section className="relative overflow-hidden bg-white dark:bg-black border-b-2 border-black dark:border-white/10 pt-10 pb-8 transition-colors duration-300">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20 dark:opacity-30" />
         
         <div className="container-custom relative z-10 pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 text-cyan hover:text-cyan-secondary transition-colors mb-6 sm:mb-8 group min-h-[44px] touch-manipulation"
+            className="inline-flex items-center gap-2 text-crimson hover:text-crimson-secondary font-bold uppercase tracking-wider text-xs transition-colors mb-6 sm:mb-8 group min-h-[44px] touch-manipulation"
           >
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to Projects
           </Link>
 
@@ -89,18 +92,18 @@ export default function ProjectPage({ params }: ProjectPageProps) {
                 {frontmatter.tags?.map((tag: string) => (
                   <span
                     key={tag}
-                    className="px-2.5 sm:px-3 py-1 bg-cyan/20 text-cyan text-xs sm:text-sm font-semibold rounded-full border border-cyan/30"
+                    className="px-2.5 sm:px-3 py-1 bg-crimson/10 text-crimson text-xs sm:text-sm font-extrabold rounded-none border-2 border-black dark:border-white/20 uppercase tracking-wider shadow-[1px_1px_0px_#000000] dark:shadow-[1px_1px_0px_rgba(255,255,255,0.05)]"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
 
-              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
+              <h1 className="font-syne text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase mb-4 sm:mb-6 text-black dark:text-white">
                 {frontmatter.title}
               </h1>
               
-              <p className="text-gray-300 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 md:mb-8">
+              <p className="text-slate-700 dark:text-gray-400 font-medium text-base sm:text-lg md:text-xl mb-4 sm:mb-6 md:mb-8">
                 {frontmatter.description}
               </p>
 
@@ -110,9 +113,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
                     href={frontmatter.repoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-outline inline-flex items-center gap-2 text-sm sm:text-base"
+                    className="btn-outline inline-flex items-center gap-2 text-sm sm:text-base min-h-[44px] touch-manipulation"
                   >
-                    <Github size={18} className="sm:w-5 sm:h-5" />
+                    <Github width={18} height={18} className="sm:w-5 sm:h-5" />
                     View Code
                   </a>
                 )}
@@ -121,7 +124,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
                     href={frontmatter.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-primary inline-flex items-center gap-2 text-sm sm:text-base"
+                    className="btn-primary inline-flex items-center gap-2 text-sm sm:text-base min-h-[44px] touch-manipulation"
                   >
                     <ExternalLink size={18} className="sm:w-5 sm:h-5" />
                     Live Demo
@@ -133,7 +136,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
               </div>
             </div>
 
-            <div className="relative aspect-video rounded-xl sm:rounded-2xl overflow-hidden border border-cyan/20 glow-cyan mt-6 lg:mt-0">
+            <div className="relative aspect-video rounded-none overflow-hidden border-2 border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_rgba(255,255,255,0.25)] mt-6 lg:mt-0">
               <Image
                 src={frontmatter.image}
                 alt={frontmatter.title}
@@ -148,17 +151,17 @@ export default function ProjectPage({ params }: ProjectPageProps) {
       </section>
 
       {/* Tech Stack */}
-      <section className="border-b border-white/5 bg-dark-lighter">
+      <section className="border-b-2 border-black dark:border-white/10 bg-slate-50 dark:bg-dark-card">
         <div className="container-custom py-6 sm:py-8">
-          <div className="flex items-center gap-2 text-cyan mb-3 sm:mb-4">
+          <div className="flex items-center gap-2 text-crimson mb-3 sm:mb-4">
             <Tag size={18} className="sm:w-5 sm:h-5" />
-            <h2 className="font-semibold text-base sm:text-lg">Tech Stack</h2>
+            <h2 className="font-extrabold uppercase tracking-wider text-sm sm:text-base text-black dark:text-white">Tech Stack</h2>
           </div>
           <div className="flex flex-wrap gap-2 sm:gap-3">
             {frontmatter.techStack?.map((tech: string) => (
               <span
                 key={tech}
-                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-dark border border-white/10 text-gray-300 rounded-lg text-xs sm:text-sm font-medium hover:border-cyan/30 transition-colors"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white dark:bg-dark border-2 border-black dark:border-white/20 text-slate-800 dark:text-gray-300 rounded-none text-xs sm:text-sm font-extrabold uppercase tracking-wide hover:border-crimson dark:hover:border-crimson transition-colors shadow-[1px_1px_0px_#000000] dark:shadow-[1px_1px_0px_rgba(255,255,255,0.05)]"
               >
                 {tech}
               </span>
@@ -168,9 +171,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
       </section>
 
       {/* Content */}
-      <section className="section-padding">
+      <section className="section-padding bg-white dark:bg-black">
         <div className="container-custom max-w-4xl">
-          <article className="prose prose-invert prose-lg max-w-none">
+          <article className="prose prose-invert prose-lg max-w-none text-slate-800 dark:text-gray-300 font-medium">
             <div className="mdx-content">
               <MDXRemote source={content} />
             </div>
@@ -185,10 +188,10 @@ export default function ProjectPage({ params }: ProjectPageProps) {
       />
 
       {/* Back to projects */}
-      <section className="border-t border-white/5 bg-dark-lighter">
+      <section className="border-t-2 border-black dark:border-white/10 bg-slate-50 dark:bg-dark-card">
         <div className="container-custom py-8 sm:py-12 text-center">
-          <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Explore More Projects</h3>
-          <Link href="/projects" className="btn-primary inline-flex items-center gap-2">
+          <h3 className="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-black dark:text-white mb-3 sm:mb-4">Explore More Projects</h3>
+          <Link href="/projects" className="btn-primary inline-flex items-center gap-2 min-h-[44px] touch-manipulation">
             View All Projects
           </Link>
         </div>

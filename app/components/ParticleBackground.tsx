@@ -22,7 +22,7 @@ export default function ParticleBackground({
   className = '',
 }: ParticleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number>(0);
   const particlesRef = useRef<Particle[]>([]);
 
   useEffect(() => {

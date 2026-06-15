@@ -14,25 +14,38 @@ export default function VisitorCounter({
   showIcon = true,
 }: VisitorCounterProps) {
   const [count, setCount] = useState(0);
-  const [hasIncremented, setHasIncremented] = useState(false);
+  const [clicks, setClicks] = useState(0);
 
   useEffect(() => {
-    if (!hasIncremented) {
-      const newCount = incrementPageView();
-      setCount(newCount);
-      setHasIncremented(true);
-    } else {
-      setCount(getPageViewCount());
+    const newCount = incrementPageView();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCount(newCount);
+  }, []);
+
+  const handleClick = () => {
+    const next = clicks + 1;
+    setClicks(next);
+    if (next === 7) {
+      console.info(
+        '%c[void999]%c terminal uplink: Ctrl+Shift+` (after /void discovery)',
+        'color:#D90429;font-weight:bold',
+        'color:inherit'
+      );
     }
-  }, [hasIncremented]);
+  };
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <button
+      type="button"
+      onClick={handleClick}
+      className={`flex items-center gap-2 ${className}`}
+      aria-label={`${count.toLocaleString()} page views`}
+    >
       {showIcon && <Eye size={16} className="text-gray-400" />}
-      <span className="text-sm text-gray-400">
-        <span className="text-cyan font-semibold">{count.toLocaleString()}</span> views
+      <span className="text-sm text-gray-400 font-bold uppercase tracking-wider">
+        <span className="text-crimson font-extrabold">{count.toLocaleString()}</span> views
       </span>
-    </div>
+    </button>
   );
 }
 

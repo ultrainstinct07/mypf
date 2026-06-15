@@ -11,8 +11,7 @@ const navLinks = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/#about', label: 'About', icon: User },
   { href: '/#expertise', label: 'Expertise', icon: Briefcase },
-  { href: '/#projects', label: 'Projects', icon: Briefcase },
-  { href: '/projects', label: 'All Projects', icon: Briefcase },
+  { href: '/projects', label: 'Projects', icon: Briefcase },
   { href: '/#faq', label: 'FAQ', icon: HelpCircle },
   { href: '/#contact', label: 'Contact', icon: Mail },
 ];
@@ -23,22 +22,35 @@ export default function Navbar() {
   const pathname = usePathname();
   const { scrollDirection, scrollPosition } = useScrollPosition();
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     if (scrollPosition < 100) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsVisible(true);
       return;
     }
 
     if (scrollDirection === 'up') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsVisible(true);
     } else if (scrollDirection === 'down') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsVisible(false);
     }
 
-    setLastScrollY(scrollPosition);
   }, [scrollDirection, scrollPosition]);
+
+  // Helper: determine active state for a nav link
+  const isLinkActive = (href: string) => {
+    if (href === '/projects') {
+      return pathname === '/projects' || pathname.startsWith('/projects/');
+    }
+
+    return (
+      href === pathname ||
+      (href.startsWith('/#') && pathname === '/' && activeSection === href.substring(2))
+    );
+  };
 
   useEffect(() => {
     if (pathname === '/') {
@@ -110,31 +122,24 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-40 rounded-xl sm:rounded-2xl backdrop-blur-xl border transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-40 border-b-2 transition-all duration-300 ${
         isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-      } bg-white/80 border-slate-200/50 dark:bg-dark/70 dark:border-white/10`}
-      style={{
-        boxShadow: 'var(--shadow-lg)',
-      }}
+      } bg-white border-black dark:bg-black dark:border-white/10`}
     >
       <div className="px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16 max-w-7xl mx-auto">
           {/* Logo */}
           <Link
             href="/"
-            className="font-display text-lg sm:text-xl font-bold text-gradient-cyan hover:opacity-80 transition-opacity relative z-10"
+            className="font-syne text-lg sm:text-xl font-extrabold uppercase tracking-tighter text-crimson hover:text-crimson-secondary transition-colors relative z-10"
           >
-            Kshitiz Kumar
+            KSHITIZ KUMAR
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
-              const isActive =
-                link.href === pathname ||
-                (link.href.startsWith('/#') &&
-                  pathname === '/' &&
-                  activeSection === link.href.substring(2));
+              const isActive = isLinkActive(link.href);
               const Icon = link.icon;
 
               if (link.href.startsWith('/#')) {
@@ -142,13 +147,13 @@ export default function Navbar() {
                   <button
                     key={link.href}
                     onClick={() => smoothScrollTo(link.href)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
+                    className={`px-3 py-1.5 rounded-none text-sm font-semibold uppercase tracking-wider transition-all flex items-center gap-2 ${
                       isActive
-                        ? 'bg-cyan-600/20 text-cyan-600 dark:bg-cyan/20 dark:text-cyan'
-                        : 'text-slate-600 hover:text-cyan-600 hover:bg-cyan-600/10 dark:text-gray-300 dark:hover:text-cyan dark:hover:bg-cyan/10'
+                        ? 'bg-crimson text-white border border-black dark:border-white/20'
+                        : 'text-black hover:text-crimson hover:bg-black/5 dark:text-gray-300 dark:hover:text-white dark:hover:bg-white/5'
                     }`}
                   >
-                    <Icon size={16} />
+                    <Icon size={14} />
                     {link.label}
                   </button>
                 );
@@ -158,24 +163,26 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
+                  className={`px-3 py-1.5 rounded-none text-sm font-semibold uppercase tracking-wider transition-all flex items-center gap-2 ${
                     isActive
-                      ? 'bg-cyan-600/20 text-cyan-600 dark:bg-cyan/20 dark:text-cyan'
-                      : 'text-slate-600 hover:text-cyan-600 hover:bg-cyan-600/10 dark:text-gray-300 dark:hover:text-cyan dark:hover:bg-cyan/10'
+                      ? 'bg-crimson text-white border border-black dark:border-white/20'
+                      : 'text-black hover:text-crimson hover:bg-black/5 dark:text-gray-300 dark:hover:text-white dark:hover:bg-white/5'
                   }`}
                 >
-                  <Icon size={16} />
+                  <Icon size={14} />
                   {link.label}
                 </Link>
               );
             })}
-            <ThemeToggle />
+            <div className="pl-2">
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-600 hover:text-cyan-600 dark:text-gray-300 dark:hover:text-cyan transition-colors touch-manipulation"
+            className="md:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-black hover:text-crimson dark:text-gray-300 dark:hover:text-white transition-colors touch-manipulation"
             aria-label="Toggle menu"
             aria-expanded={isOpen}
           >
@@ -188,17 +195,13 @@ export default function Navbar() {
           <>
             {/* Backdrop */}
             <div 
-              className="md:hidden fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-[-1] top-[calc(3.5rem+0.5rem)] sm:top-[calc(4rem+1rem)]"
+              className="md:hidden fixed inset-0 bg-black/40 dark:bg-black/70 backdrop-blur-xs z-[-1] top-14 sm:top-16"
               onClick={() => setIsOpen(false)}
               aria-hidden="true"
             />
-            <div className="md:hidden border-t border-slate-200 dark:border-white/10 py-2 space-y-1 max-w-7xl mx-auto">
+            <div className="md:hidden border-t-2 border-black dark:border-white/10 py-2 space-y-1 max-w-7xl mx-auto bg-white dark:bg-black">
               {navLinks.map((link) => {
-                const isActive =
-                  link.href === pathname ||
-                  (link.href.startsWith('/#') &&
-                    pathname === '/' &&
-                    activeSection === link.href.substring(2));
+                const isActive = isLinkActive(link.href);
                 const Icon = link.icon;
 
                 if (link.href.startsWith('/#')) {
@@ -206,14 +209,14 @@ export default function Navbar() {
                     <button
                       key={link.href}
                       onClick={() => smoothScrollTo(link.href)}
-                      className={`w-full px-4 py-3.5 min-h-[44px] rounded-lg text-left transition-colors flex items-center gap-3 touch-manipulation ${
+                      className={`w-full px-4 py-3 min-h-[44px] rounded-none text-left transition-colors flex items-center gap-3 touch-manipulation ${
                         isActive
-                          ? 'bg-cyan-600/20 text-cyan-600 dark:bg-cyan/20 dark:text-cyan'
-                          : 'text-slate-600 hover:text-cyan-600 hover:bg-cyan-600/10 dark:text-gray-300 dark:hover:text-cyan dark:hover:bg-cyan/10 active:bg-cyan-600/10 dark:active:bg-cyan/10'
+                          ? 'bg-crimson text-white border-l-4 border-black dark:border-white'
+                          : 'text-black hover:text-crimson hover:bg-black/5 dark:text-gray-300 dark:hover:bg-white/5'
                       }`}
                     >
-                      <Icon size={18} />
-                      <span className="font-medium">{link.label}</span>
+                      <Icon size={16} />
+                      <span className="font-semibold uppercase tracking-wider text-sm">{link.label}</span>
                     </button>
                   );
                 }
@@ -223,18 +226,18 @@ export default function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`block px-4 py-3.5 min-h-[44px] rounded-lg transition-colors flex items-center gap-3 touch-manipulation ${
+                    className={`block px-4 py-3 min-h-[44px] rounded-none transition-colors flex items-center gap-3 touch-manipulation ${
                       isActive
-                        ? 'bg-cyan-600/20 text-cyan-600 dark:bg-cyan/20 dark:text-cyan'
-                        : 'text-slate-600 hover:text-cyan-600 hover:bg-cyan-600/10 dark:text-gray-300 dark:hover:text-cyan dark:hover:bg-cyan/10 active:bg-cyan-600/10 dark:active:bg-cyan/10'
+                        ? 'bg-crimson text-white border-l-4 border-black dark:border-white'
+                        : 'text-black hover:text-crimson hover:bg-black/5 dark:text-gray-300 dark:hover:bg-white/5'
                     }`}
                   >
-                    <Icon size={18} />
-                    <span className="font-medium">{link.label}</span>
+                    <Icon size={16} />
+                    <span className="font-semibold uppercase tracking-wider text-sm">{link.label}</span>
                   </Link>
                 );
               })}
-              <div className="px-4 py-3.5 min-h-[44px]">
+              <div className="px-4 py-2 min-h-[44px] flex items-center">
                 <ThemeToggle />
               </div>
             </div>

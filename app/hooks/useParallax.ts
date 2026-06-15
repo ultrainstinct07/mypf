@@ -35,6 +35,7 @@ export function useParallax(options: ParallaxOptions = {}): ParallaxValue {
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion || disabled) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setParallaxValue({ y: 0, opacity: 1 });
       return;
     }
@@ -42,6 +43,7 @@ export function useParallax(options: ParallaxOptions = {}): ParallaxValue {
     // Check if mobile (disable parallax on small screens for performance)
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setParallaxValue({ y: 0, opacity: 1 });
       return;
     }
@@ -83,6 +85,7 @@ export function useMultiParallax(layers: ParallaxOptions[]): ParallaxValue[] {
     const isMobile = window.innerWidth < 768;
     
     if (prefersReducedMotion || isMobile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValues(layers.map(() => ({ y: 0, opacity: 1 })));
       return;
     }

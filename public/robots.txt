@@ -1,6 +1,7 @@
 # Allow all crawlers
 User-agent: *
 Allow: /
+Disallow: /void
 
 # Sitemap location
 Sitemap: https://kshitizkumar.vercel.app/sitemap.xml

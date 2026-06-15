@@ -46,16 +46,16 @@ export default function KeyboardShortcuts() {
         onClick={() => setIsOpen(false)}
       />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg mx-4 z-50">
-        <div className="bg-dark-lighter border border-white/10 rounded-lg shadow-2xl overflow-hidden">
+        <div className="bg-white dark:bg-dark-card border-2 border-black dark:border-white rounded-none shadow-[6px_6px_0px_#000000] dark:shadow-[6px_6px_0px_#ffffff] overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/5">
+          <div className="flex items-center justify-between p-6 border-b-2 border-black dark:border-white/10">
             <div className="flex items-center gap-3">
-              <Keyboard className="text-cyan" size={24} />
-              <h2 className="text-xl font-bold text-white">Keyboard Shortcuts</h2>
+              <Keyboard className="text-crimson" size={24} />
+              <h2 className="text-xl font-extrabold uppercase tracking-tight text-black dark:text-white">Keyboard Shortcuts</h2>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-2 text-gray-400 hover:text-cyan transition-colors rounded-lg hover:bg-cyan/10"
+              className="p-2 text-gray-500 hover:text-crimson transition-colors rounded-none hover:bg-crimson/10 border border-transparent hover:border-black dark:hover:border-white min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
               aria-label="Close"
             >
               <X size={20} />
@@ -67,17 +67,17 @@ export default function KeyboardShortcuts() {
             {shortcuts.map((shortcut, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between py-3 border-b border-white/5 last:border-0"
+                className="flex items-center justify-between py-3 border-b border-black/10 dark:border-white/5 last:border-0"
               >
-                <span className="text-gray-300">{shortcut.description}</span>
+                <span className="text-slate-800 dark:text-gray-300 font-bold uppercase tracking-wide text-sm">{shortcut.description}</span>
                 <div className="flex items-center gap-1">
                   {formatKeys(shortcut.keys).map((key, keyIndex) => (
-                    <span key={keyIndex}>
-                      <kbd className="px-2.5 py-1.5 bg-dark border border-white/10 rounded text-xs font-mono text-cyan">
+                    <span key={keyIndex} className="inline-flex items-center">
+                      <kbd className="px-2.5 py-1.5 bg-slate-100 dark:bg-dark border-2 border-black dark:border-white/20 rounded-none text-xs font-mono text-crimson font-extrabold shadow-[1px_1px_0px_#000000] dark:shadow-[1px_1px_0px_#ffffff]">
                         {key}
                       </kbd>
                       {keyIndex < formatKeys(shortcut.keys).length - 1 && (
-                        <span className="mx-1 text-gray-500">+</span>
+                        <span className="mx-1 text-gray-500 font-bold">+</span>
                       )}
                     </span>
                   ))}
@@ -87,8 +87,8 @@ export default function KeyboardShortcuts() {
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-white/5 bg-dark text-center text-sm text-gray-400">
-            Press <kbd className="px-2 py-1 bg-dark-lighter border border-white/10 rounded">Esc</kbd> to close
+          <div className="p-4 border-t-2 border-black dark:border-white/10 bg-slate-50 dark:bg-dark text-center text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
+            Press <kbd className="px-2 py-1 bg-white dark:bg-dark-lighter border-2 border-black dark:border-white/20 rounded-none text-crimson">Esc</kbd> to close
           </div>
         </div>
       </div>

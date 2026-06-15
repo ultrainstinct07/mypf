@@ -1,97 +1,59 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
 import { SITE_CONFIG } from '@/lib/constants';
+import ScrollReveal from './ScrollReveal';
 
 export default function About() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-
   return (
-    <section id="about" ref={ref} className="section-padding bg-white dark:bg-dark-lighter transition-colors duration-300">
+    <ScrollReveal
+      id="about"
+      className="section-padding bg-white dark:bg-black transition-colors duration-300"
+    >
       <div className="container-custom">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8 }}
-          className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center"
-        >
-          {/* Left content */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-block"
-            >
-              <span className="text-cyan-600 dark:text-cyan text-sm font-semibold uppercase tracking-wider">
-                About Me
-              </span>
-            </motion.div>
+            <span className="inline-block text-crimson text-sm font-extrabold uppercase tracking-wider">
+              About Me
+            </span>
 
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="font-display text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-slate-900 dark:text-white"
-            >
+            <h2 className="font-syne text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase leading-tight text-black dark:text-white">
               Red Team Analyst &{' '}
-              <span className="text-gradient-cyan">Offensive Security</span>{' '}
+              <span className="text-crimson">Offensive Security</span>{' '}
               Engineer
-            </motion.h2>
+            </h2>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="space-y-4 text-slate-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed"
-            >
+            <div className="space-y-4 text-black dark:text-gray-300 text-base leading-relaxed font-medium">
               <p>{SITE_CONFIG.bio.paragraph1}</p>
               <p>{SITE_CONFIG.bio.paragraph2}</p>
-            </motion.div>
+            </div>
 
-            {/* Key highlights */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.7, duration: 0.8 }}
-              className="grid grid-cols-2 gap-3 sm:gap-4 pt-4 sm:pt-6"
-            >
-              <div className="space-y-1">
-                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">CRTA</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Certified</div>
+            <div className="grid grid-cols-2 gap-3 pt-4 sm:pt-6">
+              <div className="border-2 border-black dark:border-white/10 p-3 sm:p-4 rounded-none bg-secondary dark:bg-dark-lighter">
+                <div className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-crimson">OSCP & OSCP+</div>
+                <div className="text-xs text-slate-600 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">Certified</div>
               </div>
-              <div className="space-y-1">
-                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Red Teaming</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">AD, Lateral Movement</div>
+              <div className="border-2 border-black dark:border-white/10 p-3 sm:p-4 rounded-none bg-secondary dark:bg-dark-lighter">
+                <div className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-crimson">Red Team</div>
+                <div className="text-xs text-slate-600 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">AD & Lateral</div>
               </div>
-              <div className="space-y-1">
-                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Pentesting</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Web, Mobile, Cloud</div>
+              <div className="border-2 border-black dark:border-white/10 p-3 sm:p-4 rounded-none bg-secondary dark:bg-dark-lighter">
+                <div className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-crimson">Pentesting</div>
+                <div className="text-xs text-slate-600 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">Web, Mobile, Cloud</div>
               </div>
-              <div className="space-y-1">
-                <div className="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan">Tools</div>
-                <div className="text-xs sm:text-sm text-slate-500 dark:text-gray-400">Burp, Cobalt Strike</div>
+              <div className="border-2 border-black dark:border-white/10 p-3 sm:p-4 rounded-none bg-secondary dark:bg-dark-lighter">
+                <div className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-crimson">Pentest Tools</div>
+                <div className="text-xs text-slate-600 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">Cobalt Strike</div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Right content - Portrait card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="relative lg:justify-self-end w-full max-w-md mx-auto lg:mx-0"
-          >
+          <div className="relative lg:justify-self-end w-full max-w-md mx-auto lg:mx-0">
             <div className="relative">
-              {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-br from-cyan-600/20 to-sky-500/20 dark:from-cyan/20 dark:to-cyan-secondary/20 rounded-3xl blur-2xl opacity-50" />
-              
-              {/* Portrait card */}
-              <div className="relative bg-slate-50 dark:bg-dark rounded-3xl overflow-hidden border border-cyan-600/20 dark:border-cyan/20 glow-cyan shadow-xl dark:shadow-none">
+              <div
+                className="relative bg-white dark:bg-dark rounded-none overflow-hidden border-2 border-black dark:border-white"
+                style={{ boxShadow: '8px 8px 0px #D90429' }}
+              >
                 <div className="aspect-[3/4] relative">
                   <Image
                     src="/images/about-portrait.png"
@@ -100,30 +62,23 @@ export default function About() {
                     className="object-contain"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-dark via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-dark via-transparent to-transparent" />
                 </div>
 
-                {/* Info overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-50 dark:from-dark to-transparent">
-                  <h3 className="text-xl font-bold mb-1 text-slate-900 dark:text-white">{SITE_CONFIG.name}</h3>
-                  <p className="text-cyan-600 dark:text-cyan text-sm font-medium mb-2">
+                <div className="absolute bottom-0 left-0 right-0 p-5 border-t border-black/10 dark:border-white/10 bg-white/90 dark:bg-black/90 backdrop-blur-xs">
+                  <h3 className="text-lg font-extrabold uppercase tracking-wider mb-0.5 text-black dark:text-white">{SITE_CONFIG.name}</h3>
+                  <p className="text-crimson text-xs font-bold uppercase tracking-wider mb-1">
                     {SITE_CONFIG.role}
                   </p>
-                  <p className="text-slate-500 dark:text-gray-400 text-sm">
+                  <p className="text-slate-600 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">
                     {SITE_CONFIG.employmentStatus || 'Full-time'} @ {SITE_CONFIG.company}
                   </p>
                 </div>
               </div>
-
-              {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-cyan-600/10 dark:bg-cyan/10 rounded-full blur-2xl" />
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-sky-500/10 dark:bg-cyan-secondary/10 rounded-full blur-2xl" />
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
-    </section>
+    </ScrollReveal>
   );
 }
-
-

@@ -89,12 +89,12 @@ export default function ReadingProgress({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
-          className="fixed top-[72px] left-0 right-0 z-30"
+          className="fixed top-14 sm:top-16 left-0 right-0 z-30"
         >
           {/* Progress bar */}
-          <div className="h-1 bg-dark-lighter/80 backdrop-blur-sm">
+          <div className="h-1.5 bg-slate-200 dark:bg-dark border-b-2 border-black dark:border-white/10">
             <motion.div
-              className="h-full bg-gradient-to-r from-cyan via-cyan to-cyan-secondary"
+              className="h-full bg-crimson"
               style={{ width: `${progress}%` }}
               transition={{ duration: 0.1, ease: 'linear' }}
             />
@@ -105,16 +105,16 @@ export default function ReadingProgress({
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="absolute right-4 top-3 flex items-center gap-2 px-3 py-1.5 bg-dark-lighter/90 backdrop-blur-sm border border-white/10 rounded-full text-xs text-gray-400"
+              className="absolute right-4 top-3 flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-dark-card border-2 border-black dark:border-white rounded-none text-xs font-bold uppercase tracking-wider text-slate-850 dark:text-gray-300 shadow-[2px_2px_0px_#000000] dark:shadow-[2px_2px_0px_#ffffff]"
             >
-              <Clock size={12} className="text-cyan" />
+              <Clock size={12} className="text-crimson" />
               <span>
                 {timeRemaining > 0 
                   ? `${timeRemaining} min left`
                   : 'Almost done!'
                 }
               </span>
-              <span className="text-cyan font-medium ml-1">
+              <span className="text-crimson font-extrabold ml-1">
                 {Math.round(progress)}%
               </span>
             </motion.div>

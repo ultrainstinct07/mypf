@@ -1,149 +1,89 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
 import { EXPERTISE_ITEMS } from '@/lib/constants';
-import { Target, Smartphone, Search, Code, BookOpen } from 'lucide-react';
+import { Target, Smartphone, Search, Code, Shield, BookOpen, type LucideIcon } from 'lucide-react';
+import ScrollReveal from './ScrollReveal';
 
-const iconMap: { [key: string]: any } = {
+const iconMap: Record<string, LucideIcon> = {
   'target': Target,
   'smartphone': Smartphone,
   'search': Search,
   'code': Code,
+  'shield': Shield,
   'book-open': BookOpen,
 };
 
 export default function ExpertiseGrid() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-
   return (
-    <section id="expertise" ref={ref} className="section-padding bg-slate-50 dark:bg-dark transition-colors duration-300">
+    <ScrollReveal
+      id="expertise"
+      className="section-padding bg-slate-50 dark:bg-black transition-colors duration-300"
+    >
       <div className="container-custom">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-cyan-600 dark:text-cyan text-sm font-semibold uppercase tracking-wider"
-          >
+        <div className="text-center mb-16">
+          <span className="text-crimson text-sm font-extrabold uppercase tracking-wider">
             What I Do
-          </motion.span>
-          
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mt-4 mb-4 sm:mb-6 text-slate-900 dark:text-white"
-          >
-            My{' '}
-            <span className="text-gradient-cyan">Expertise</span>
-          </motion.h2>
+          </span>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-slate-600 dark:text-gray-300 text-base sm:text-lg max-w-2xl mx-auto"
-          >
+          <h2 className="font-syne text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase mt-4 mb-4 sm:mb-6 text-black dark:text-white">
+            My <span className="text-crimson">Expertise</span>
+          </h2>
+
+          <p className="text-slate-700 dark:text-gray-300 text-base max-w-2xl mx-auto font-medium">
             Specializing in offensive security, application testing, threat intelligence, security engineering, and continuous research.
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
 
-        {/* Expertise cards grid with staggered animations */}
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8"
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.2,
-              }
-            }
-          }}
-        >
-          {EXPERTISE_ITEMS.map((item) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          {EXPERTISE_ITEMS.map((item, index) => {
             const Icon = iconMap[item.icon];
-            
+
             return (
               <motion.div
                 key={item.id}
-                variants={{
-                  hidden: { opacity: 0, y: 40, scale: 0.95 },
-                  visible: { 
-                    opacity: 1, 
-                    y: 0, 
-                    scale: 1,
-                    transition: {
-                      type: "spring",
-                      stiffness: 100,
-                      damping: 15,
-                    }
-                  }
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{
+                  delay: index * 0.06,
+                  duration: 0.5,
+                  ease: [0.16, 1, 0.3, 1],
                 }}
                 className="group"
               >
                 <div className="relative">
-                  {/* Glow effect */}
-                  <div className="absolute inset-0 bg-cyan-600/10 dark:bg-cyan/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  {/* Card */}
-                  <div className="relative bg-white dark:bg-dark-lighter rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200 dark:border-cyan/20 hover:border-cyan-600/40 dark:hover:border-cyan/40 transition-all duration-300 hover:glow-cyan group-hover:scale-105 transform shadow-md dark:shadow-none">
-                    {/* Icon circle */}
-                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6">
-                      <div className="absolute inset-0 bg-cyan-600/20 dark:bg-cyan/20 rounded-full animate-pulse" />
-                      <div className="relative w-full h-full bg-gradient-to-br from-cyan-600 to-sky-500 dark:from-cyan dark:to-cyan-secondary rounded-full flex items-center justify-center">
-                        <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-white dark:text-dark" strokeWidth={2} />
+                  <div className="relative bg-white dark:bg-dark-card rounded-none p-6 sm:p-8 border-2 border-black dark:border-white/10 hover:border-crimson dark:hover:border-crimson transition-all duration-200 hover:-translate-y-1 shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_rgba(255,255,255,0.05)] hover:shadow-[6px_6px_0px_#D90429] dark:hover:shadow-[6px_6px_0px_#D90429]">
+                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-6">
+                      <div className="relative w-full h-full bg-crimson border-2 border-black dark:border-white rounded-none flex items-center justify-center">
+                        <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" strokeWidth={2.5} />
                       </div>
                     </div>
 
-                    {/* Content */}
-                    <h3 className="text-lg sm:text-xl font-bold text-center mb-2 sm:mb-3 text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan transition-colors">
+                    <h3 className="text-base sm:text-lg font-extrabold uppercase text-center mb-3 text-black dark:text-white group-hover:text-crimson dark:group-hover:text-crimson transition-colors">
                       {item.title}
                     </h3>
-                    <p className="text-slate-500 dark:text-gray-400 text-center text-xs sm:text-sm leading-relaxed">
+                    <p className="text-slate-600 dark:text-gray-400 text-center text-xs sm:text-sm font-medium leading-relaxed">
                       {item.description}
                     </p>
 
-                    {/* Decorative corner accent */}
-                    <div className="absolute top-4 right-4 w-2 h-2 bg-cyan-600 dark:bg-cyan rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute top-4 right-4 w-2 h-2 bg-crimson rounded-none opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </div>
               </motion.div>
             );
           })}
-        </motion.div>
+        </div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="text-center mt-16"
-        >
-          <p className="text-gray-400 mb-6">
+        <div className="text-center mt-16">
+          <p className="text-slate-600 dark:text-gray-400 mb-6 font-bold uppercase tracking-wider text-xs">
             Want to learn more about my security approach?
           </p>
-          <a
-            href="#projects"
-            className="btn-outline inline-flex items-center gap-2"
-          >
+          <a href="/projects" className="btn-outline inline-flex items-center gap-2">
             View My Work
           </a>
-        </motion.div>
+        </div>
       </div>
-    </section>
+    </ScrollReveal>
   );
 }
-
-

@@ -33,7 +33,9 @@ export function usePreferences() {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSystemPrefersDark(mediaQuery.matches);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setReducedMotion(motionQuery.matches);
 
     const handleThemeChange = (e: MediaQueryListEvent) => {

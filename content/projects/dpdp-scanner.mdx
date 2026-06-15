@@ -1,0 +1,66 @@
+---
+title: "DPDP Act Compliance Scanner"
+description: "A Python-based automated privacy scanner architecture implementing a 23-rule coverage matrix, analogous CVSS scoring, and seamless integration as a Vulnessus plugin."
+tags: ["Compliance", "Privacy", "Python", "Security"]
+image: "/images/projects/dpdp-scanner.svg"
+repoUrl: "https://github.com/ultrainstinct7/dpdp-compliance-scanner"
+techStack: ["Python", "CVSS-like Scoring", "Plugin Architecture", "Regex Engine"]
+featured: true
+---
+
+## Overview
+
+The **DPDP (Digital Personal Data Protection) Act Compliance Scanner** is a specialized offensive security and data audit utility. Designed as a modular plugin for the Vulnessus vulnerability management ecosystem, it automatically scans web platforms, API payloads, and database schemas for violations of India's DPDP Act compliance rules.
+
+It covers a **23-rule compliance matrix** with an estimated **55–65% automation capability**, mapping digital workflows to statutory data protection regulations.
+
+---
+
+## Core Capabilities & Technical Architecture
+
+### 1. 23-Rule Coverage Matrix
+The scanner audits digital infrastructure against 23 technical compliance rules derived from the DPDP Act mandate, including:
+- **Consent Collection Flow**: Scans HTML forms and client-side scripts to verify the presence of clear consent notices and explicit opt-ins.
+- **Data Minimization Audits**: Identifies excessive or unvalidated telemetry endpoints gathering unnecessary personal identifiers.
+- **Right to Erasure Checkers**: Verifies the implementation and accessibility of API endpoints handling user account deletion and data deletion requests.
+- **Cross-Border Transfer Analysis**: Monitors network requests and DNS routing of personal data to identify non-compliant geo-locations.
+
+### 2. CVSS-like Scoring System
+To help security teams prioritize issues, the scanner features a risk scoring engine analogous to CVSS (Common Vulnerability Scoring System):
+- **Base Metrics**: Evaluate data sensitivity, consent status, and logging adequacy.
+- **Temporal Metrics**: Assess the lifespan of personal data store logs and the status of system remediation.
+- **Environmental Metrics**: Map specific risks according to company data controller/processor definitions.
+
+### 3. Vulnessus Plugin Architecture
+The scanner operates as a dynamic plugin inside Vulnessus, utilizing **Python-based pluggable modules**. It allows target websites and APIs to be audited concurrently, outputting STQC-aligned reports for compliance validation.
+
+---
+
+## Technical Specifications
+
+```
+  [ Vulnessus Engine ]
+           │
+           ▼ (Trigger Scan)
+  [ DPDP Scanner Engine ] ─── (Automated Rules Engine)
+           │
+           ├─► Consent & Cookie Auditor (DOM Parser)
+           ├─► Personal Data Leaks Check (PII Regex Parser)
+           ├─► Privacy Policy Checker (NLP Parser)
+           └─► Cross-Border Transfers Tracer (IP Geolocation)
+           │
+           ▼
+  [ CVSS-like Risk Analyzer ] ───► [ JSON / PDF Audit Report ]
+```
+
+### Key Modules
+* **PII Leak Detector**: Employs regex signatures and entropy thresholds to flag exposed PII (e.g., phone numbers, Aadhaar cards, PAN, emails) in API responses.
+* **Security Headers Audit**: Verifies CORS headers, secure cookie flags (`Secure`, `HttpOnly`, `SameSite`), and SSL configurations protecting personal data in transit.
+* **Consent Notice Verifier**: Validates if notice forms are served in official languages and present explicit consent agreements before cookies or tracking scripts trigger.
+
+---
+
+## Real-World Impact
+- Provides automated compliance testing during CI/CD security validation cycles.
+- Translates vague legislative clauses into actionable, technical remediation lists.
+- Generates instant risk reports for data privacy officers (DPOs) ahead of regulatory audits.

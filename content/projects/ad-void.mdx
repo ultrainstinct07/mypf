@@ -1,0 +1,51 @@
+---
+title: "AD-Void — Active Directory Attack Cheat Sheet"
+description: "A living reference for Active Directory offensive security — attack notes, Kerberos and LDAP abuse paths, scenario walkthroughs, and red team blog posts mapped to real-world AD engagements."
+tags: ["Active Directory", "Red Team", "Offensive Security"]
+image: "/images/projects/ad-void.svg"
+liveUrl: "https://ad-void.void999.space/"
+techStack: ["Active Directory", "Kerberos", "BloodHound", "Impacket", "MITRE ATT&CK"]
+featured: true
+---
+
+## Overview
+
+**[AD-Void](https://ad-void.void999.space/)** is a public offensive security knowledge base focused on Active Directory attack chains. It consolidates field notes, technique references, and scenario-driven write-ups into a single cheat sheet-style site — built to be useful during internal assessments, OSCP+/CRTA prep, and red team planning.
+
+The site is organized around practical AD tradecraft rather than theory alone: how attacks chain together, what tooling to reach for, and how common enterprise misconfigurations become full domain compromise paths.
+
+---
+
+## What's Inside
+
+### Attack Notes & Cheat Sheets
+
+Structured reference material covering core AD offensive topics:
+
+- **Kerberos abuse** — AS-REP roasting, Kerberoasting, delegation misconfigurations, and ticket manipulation
+- **LDAP & ACL attacks** — DCSync prerequisites, shadow credentials, and dangerous permission chains
+- **Lateral movement** — Pass-the-Hash, Pass-the-Ticket, WMI/WinRM pivoting, and relay scenarios
+- **Privilege escalation** — local and domain escalation paths from standard user to Domain Admin
+- **Persistence & evasion** — golden/silver tickets, SID history, and detection-aware tradecraft notes
+
+### Scenario Walkthroughs
+
+End-to-end attack scenarios that mirror real internal network assessments — from initial foothold through enumeration, privilege escalation, and domain dominance. Each scenario documents the decision points, tooling commands, and MITRE ATT&CK mappings an operator would use on engagement.
+
+### Blog & Research Posts
+
+Longer-form write-ups on AD-specific topics: novel misconfiguration patterns, tool comparisons, post-exploitation workflows, and lessons learned from professional red team and VAPT work (sanitized for public release).
+
+---
+
+## Why It Exists
+
+Active Directory remains the dominant identity and access layer in enterprise environments — and the most common path to high-impact compromise in internal assessments. AD-Void exists as an open, continuously updated reference that bridges certification lab knowledge with real engagement tradecraft.
+
+Whether you're preparing for OSCP+ AD modules, building an internal red team playbook, or reviewing defensive controls, the site is designed to be scannable under time pressure and deep enough for study sessions.
+
+---
+
+## Live Site
+
+Visit **[ad-void.void999.space](https://ad-void.void999.space/)** for the full cheat sheet, scenarios, and blog content.

@@ -81,36 +81,7 @@ export default function CursorGlow() {
 
   return (
     <>
-      {/* Main glow effect */}
-      <motion.div
-        className="fixed pointer-events-none z-[9999] mix-blend-multiply dark:mix-blend-screen"
-        style={{
-          x: smoothX,
-          y: smoothY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-      >
-        {/* Outer glow */}
-        <motion.div
-          className="rounded-full bg-cyan-600/20 dark:bg-cyan/10"
-          animate={{
-            width: isHovering ? 150 : 100,
-            height: isHovering ? 150 : 100,
-            opacity: isVisible ? (isHovering ? 0.4 : 0.2) : 0,
-          }}
-          transition={{
-            width: { type: 'spring', stiffness: 300, damping: 25 },
-            height: { type: 'spring', stiffness: 300, damping: 25 },
-            opacity: { duration: 0.2 },
-          }}
-          style={{
-            filter: 'blur(30px)',
-          }}
-        />
-      </motion.div>
-
-      {/* Inner dot */}
+      {/* Inner square pointer */}
       <motion.div
         className="fixed pointer-events-none z-[9999]"
         style={{
@@ -121,11 +92,11 @@ export default function CursorGlow() {
         }}
       >
         <motion.div
-          className="rounded-full bg-cyan-600 dark:bg-cyan"
+          className="rounded-none bg-crimson"
           animate={{
-            width: isHovering ? 12 : 8,
-            height: isHovering ? 12 : 8,
-            opacity: isVisible ? 0.8 : 0,
+            width: isHovering ? 10 : 6,
+            height: isHovering ? 10 : 6,
+            opacity: isVisible ? 1 : 0,
           }}
           transition={{
             type: 'spring',
@@ -135,7 +106,7 @@ export default function CursorGlow() {
         />
       </motion.div>
 
-      {/* Interactive ring */}
+      {/* Interactive square border */}
       <motion.div
         className="fixed pointer-events-none z-[9999]"
         style={{
@@ -146,12 +117,12 @@ export default function CursorGlow() {
         }}
       >
         <motion.div
-          className="rounded-full border-2 border-cyan-600/50 dark:border-cyan/50"
+          className="rounded-none border-2 border-crimson"
           animate={{
-            width: isHovering ? 40 : 24,
-            height: isHovering ? 40 : 24,
-            opacity: isVisible ? (isHovering ? 0.8 : 0.4) : 0,
-            scale: isHovering ? 1.2 : 1,
+            width: isHovering ? 36 : 22,
+            height: isHovering ? 36 : 22,
+            opacity: isVisible ? (isHovering ? 1 : 0.6) : 0,
+            rotate: isHovering ? 45 : 0,
           }}
           transition={{
             type: 'spring',

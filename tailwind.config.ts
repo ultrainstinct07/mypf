@@ -12,34 +12,37 @@ const config: Config = {
       colors: {
         // Dark mode colors
         dark: {
-          DEFAULT: '#0A0A0A',
-          lighter: '#1F1F1F',
-          card: '#151515',
+          DEFAULT: '#000000',
+          lighter: '#0A0A0A',
+          card: '#0D0D0D',
         },
         // Light mode colors
         light: {
-          DEFAULT: '#F8FAFC',
-          surface: '#FFFFFF',
-          alt: '#F1F5F9',
-          border: '#E2E8F0',
+          DEFAULT: '#FFFFFF',
+          surface: '#F5F5F5',
+          alt: '#E5E5E5',
+          border: '#000000',
         },
         // Accent colors (work for both themes)
-        cyan: {
-          DEFAULT: '#00D9FF',
-          secondary: '#0EA5E9',
-          glow: 'rgba(0, 217, 255, 0.15)',
-          light: '#0891B2', // Darker cyan for light mode
+        crimson: {
+          DEFAULT: '#D90429',
+          secondary: '#9B0218',
+          glow: 'rgba(217, 4, 41, 0.15)',
+          light: '#D90429',
         },
         // Text colors for light mode
         slate: {
-          900: '#0F172A',
-          600: '#475569',
-          500: '#64748B',
+          900: '#000000',
+          600: '#1C1C1C',
+          500: '#5E5E5E',
         },
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         display: ['var(--font-space-grotesk)', 'system-ui', 'sans-serif'],
+        syne: ['var(--font-syne)', 'system-ui', 'sans-serif'],
+        manrope: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+        instrument: ['var(--font-instrument)', 'Georgia', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out forwards',
@@ -58,8 +61,8 @@ const config: Config = {
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         glow: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(0, 217, 255, 0.2)' },
-          '50%': { boxShadow: '0 0 40px rgba(0, 217, 255, 0.4)' },
+          '0%, 100%': { boxShadow: '2px 2px 0px var(--border-color)' },
+          '50%': { boxShadow: '4px 4px 0px var(--accent-primary)' },
         },
         slideDown: {
           '0%': { height: '0', opacity: '0' },

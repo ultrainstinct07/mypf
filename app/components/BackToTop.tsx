@@ -64,23 +64,10 @@ export default function BackToTop() {
           className="fixed bottom-20 sm:bottom-28 right-4 sm:right-6 z-50 group touch-manipulation"
           aria-label="Scroll to top"
         >
-          {/* Glow effect background */}
-          <motion.div
-            className="absolute inset-0 bg-cyan-600/30 dark:bg-cyan/30 rounded-full blur-xl"
-            animate={{
-              scale: isHovered ? 1.5 : 1,
-              opacity: isHovered ? 0.6 : 0.3,
-            }}
-            transition={{ duration: 0.3 }}
-          />
-          
           {/* Button */}
           <motion.div
-            className="relative w-12 h-12 sm:w-11 sm:h-11 bg-white border-2 border-cyan-600/50 dark:bg-dark-lighter dark:border-cyan/50 rounded-full flex items-center justify-center backdrop-blur-sm shadow-lg dark:shadow-none touch-manipulation"
-            whileHover={{ 
-              boxShadow: '0 0 30px rgba(8, 145, 178, 0.5)',
-            }}
-            whileTap={{ scale: 0.9 }}
+            className="relative w-10 h-10 sm:w-11 sm:h-11 bg-white dark:bg-dark-card border-2 border-black dark:border-white rounded-none flex items-center justify-center shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_rgba(255,255,255,0.25)] hover:shadow-[5px_5px_0px_#D90429] dark:hover:shadow-[5px_5px_0px_#D90429] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all touch-manipulation"
+            whileTap={{ scale: 0.95 }}
           >
             <motion.div
               animate={{ y: isHovered ? -2 : 0 }}
@@ -92,7 +79,7 @@ export default function BackToTop() {
             >
               <ArrowUp 
                 size={20} 
-                className="text-cyan-600 group-hover:text-cyan-700 dark:text-cyan dark:group-hover:text-white transition-colors duration-300" 
+                className="text-black dark:text-white group-hover:text-crimson dark:group-hover:text-crimson transition-colors duration-300" 
               />
             </motion.div>
           </motion.div>
@@ -104,7 +91,7 @@ export default function BackToTop() {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-white border border-cyan-600/30 dark:bg-dark-lighter dark:border-cyan/30 rounded-lg text-sm text-cyan-600 dark:text-cyan whitespace-nowrap shadow-md dark:shadow-none"
+                className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-white border-2 border-black dark:bg-dark-card dark:border-white rounded-none text-xs font-bold uppercase tracking-wider text-black dark:text-white whitespace-nowrap shadow-[2px_2px_0px_#000000] dark:shadow-[2px_2px_0px_#ffffff]"
               >
                 Back to top
               </motion.span>

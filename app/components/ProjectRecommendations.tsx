@@ -39,7 +39,7 @@ export default function ProjectRecommendations({
   }
 
   return (
-    <section className="section-padding bg-dark border-t border-white/5">
+    <section className="section-padding bg-black border-t-2 border-black dark:border-white/10">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -49,18 +49,18 @@ export default function ProjectRecommendations({
           className="mb-12"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-3xl md:text-4xl font-bold">
-              Similar <span className="text-gradient-cyan">Projects</span>
+            <h2 className="font-syne text-2xl sm:text-3xl md:text-4xl font-extrabold uppercase text-black dark:text-white">
+              Similar <span className="text-crimson">Projects</span>
             </h2>
             <Link
               href="/projects"
-              className="text-cyan hover:text-cyan-secondary flex items-center gap-2 transition-colors"
+              className="text-crimson hover:text-crimson-secondary flex items-center gap-2 font-bold uppercase tracking-wider text-sm transition-colors min-h-[44px] touch-manipulation"
             >
               View All
-              <ArrowRight size={18} />
+              <ArrowRight size={16} />
             </Link>
           </div>
-          <p className="text-gray-400">
+          <p className="text-slate-600 dark:text-gray-400 font-medium">
             Explore related projects that share similar technologies or concepts
           </p>
         </motion.div>

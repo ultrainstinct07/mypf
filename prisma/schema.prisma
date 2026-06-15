@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CtfLeaderboardEntry {
+  id          String   @id @default(cuid())
+  handle      String   @unique @db.VarChar(20)
+  completedAt DateTime @default(now())
+
+  @@index([completedAt])
+  @@map("ctf_leaderboard")
+}
