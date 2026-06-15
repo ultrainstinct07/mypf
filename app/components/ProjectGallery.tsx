@@ -21,7 +21,7 @@ export default function ProjectGallery({ projects = [] }: ProjectGalleryProps) {
   return (
     <ScrollReveal
       id="projects"
-      className="section-padding bg-white dark:bg-black relative overflow-hidden transition-colors duration-300"
+      className="section-padding bg-transparent relative overflow-hidden transition-colors duration-300"
     >
       <div className="container-custom relative z-10">
         <div className="mb-16">

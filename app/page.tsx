@@ -1,5 +1,6 @@
 import Hero from './components/Hero';
-import ScrollAmbientBackground from './components/ScrollAmbientBackground';
+import PostHeroParticleBackground from './components/PostHeroParticleBackground';
+import SectionIndicatorRail from './components/SectionIndicatorRail';
 import HeroSectionDivider from './components/HeroSectionDivider';
 import About from './components/About';
 import ExpertiseGrid from './components/ExpertiseGrid';
@@ -7,6 +8,7 @@ import ProjectGallery from './components/ProjectGallery';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import CTA from './components/CTA';
+import CtfHintCallout from './components/CtfHintCallout';
 import Footer from './components/Footer';
 import { SITE_CONFIG } from '@/lib/constants';
 import { getAllProjects } from '@/lib/mdx';
@@ -35,7 +37,8 @@ export default function Home() {
 
   return (
     <>
-      <ScrollAmbientBackground />
+      <PostHeroParticleBackground />
+      <SectionIndicatorRail />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -52,6 +55,7 @@ export default function Home() {
           <CTA />
         </div>
       </main>
+      <CtfHintCallout />
       <Footer />
     </>
   );

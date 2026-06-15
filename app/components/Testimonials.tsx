@@ -11,7 +11,7 @@ export default function Testimonials() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="testimonials" ref={ref} className="section-padding bg-white dark:bg-black transition-colors duration-300">
+    <section id="testimonials" ref={ref} className="section-padding bg-transparent transition-colors duration-300">
       <div className="container-custom">
         {/* Section header */}
         <motion.div

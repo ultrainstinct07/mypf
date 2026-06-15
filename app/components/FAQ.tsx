@@ -12,7 +12,7 @@ export default function FAQ() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="faq" ref={ref} className="section-padding bg-slate-50 dark:bg-black transition-colors duration-300">
+    <section id="faq" ref={ref} className="section-padding bg-transparent transition-colors duration-300">
       <div className="container-custom max-w-4xl">
         {/* Section header */}
         <motion.div

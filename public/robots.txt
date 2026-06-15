@@ -1,3 +1,4 @@
+# Hint: disallowed paths are worth a manual visit
 # Allow all crawlers
 User-agent: *
 Allow: /

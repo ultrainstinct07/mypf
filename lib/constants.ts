@@ -1,3 +1,5 @@
+import { CTF_CHAT_HINT_QUESTION, CTF_FAQ_ANSWER } from '@/lib/ctf/public-hints';
+
 export const SITE_CONFIG = {
   name: 'Kshitiz Kumar',
   role: 'Offensive Security Engineer',
@@ -106,6 +108,11 @@ export const FAQ_ITEMS = [
     id: '4',
     question: 'Are you available for consulting or full-time roles?',
     answer: 'Yes! I am open to discussing security consulting opportunities or full-time offensive security engineering roles. You can contact me directly at akshitizk21@gmail.com to request detailed reports or schedule scoping calls.',
+  },
+  {
+    id: '5',
+    question: CTF_CHAT_HINT_QUESTION,
+    answer: CTF_FAQ_ANSWER,
   },
 ];
 

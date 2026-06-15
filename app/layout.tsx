@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk, Manrope, Syne, Instrument_Serif } from 'next/font
 import './globals.css';
 import { SITE_CONFIG } from '@/lib/constants';
 import ThemeProvider from './providers/ThemeProvider';
+import ParticleCloudShell from './components/ParticleCloudShell';
 import { CtfProvider } from './components/CtfProvider';
 import CtfTerminal from './components/CtfTerminal';
 import Navbar from './components/Navbar';
@@ -155,6 +156,7 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
+          <ParticleCloudShell>
           <CtfProvider>
           <a href="#main-content" className="skip-link">
             Skip to main content
@@ -171,6 +173,7 @@ export default function RootLayout({
           <BackToTop />
           <CursorGlow />
           </CtfProvider>
+          </ParticleCloudShell>
         </ThemeProvider>
       </body>
     </html>

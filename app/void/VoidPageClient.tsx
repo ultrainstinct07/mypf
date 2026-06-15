@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { Terminal, ArrowLeft } from 'lucide-react';
 import { useCtf } from '@/app/components/CtfProvider';
 import CtfLeaderboard from '@/app/components/CtfLeaderboard';
+import { CTF_STAGES } from '@/lib/ctf/challenges';
+import { CTF_START_HINT, CTF_STAGE_HINTS, CTF_TITLE } from '@/lib/ctf/public-hints';
+import type { CtfStageId } from '@/types/ctf';
 
 export default function VoidPageClient() {
   const { discoverVoid, openTerminal, canOpenTerminal, progress } = useCtf();
@@ -12,6 +15,8 @@ export default function VoidPageClient() {
   useEffect(() => {
     discoverVoid();
   }, [discoverVoid]);
+
+  const stageIds = Object.keys(CTF_STAGE_HINTS).map(Number) as CtfStageId[];
 
   return (
     <main className="min-h-screen bg-black text-gray-300 font-mono">
@@ -31,20 +36,56 @@ export default function VoidPageClient() {
           </h1>
           <p className="text-gray-400 max-w-2xl text-sm leading-relaxed">
             You found a path the crawlers were told to ignore. This sector holds infiltration
-            artifacts for Operation VOID999. Inspect everything — source, terminal, assistant.
+            artifacts for {CTF_TITLE}. Inspect everything — source, terminal, assistant.
+          </p>
+          <p className="text-gray-500 max-w-2xl text-xs leading-relaxed border-l-2 border-crimson/40 pl-4">
+            {CTF_START_HINT}
           </p>
         </div>
 
-        <div className="border-2 border-white/10 p-6 space-y-4 bg-white/5">
+        <div className="border-2 border-white/10 p-6 space-y-5 bg-white/5">
           <div className="flex items-center gap-2 text-crimson">
             <Terminal size={18} />
-            <span className="text-xs uppercase tracking-wider">Operator Briefing</span>
+            <span className="text-xs uppercase tracking-wider">Operator Briefing — 5 Stages</span>
           </div>
-          <ul className="text-sm space-y-2 text-gray-400 list-disc list-inside">
-            <li>Stage 1 flag is embedded in this page&apos;s HTML comments.</li>
-            <li>Open the VOID terminal with Ctrl+Shift+` after extracting recon intel.</li>
-            <li>Submit flags via the terminal to advance through all five stages.</li>
-          </ul>
+
+          <ol className="space-y-4">
+            {stageIds.map((stageId) => {
+              const stage = CTF_STAGES.find((item) => item.id === stageId);
+              const complete = progress.completedStages.includes(stageId);
+
+              return (
+                <li
+                  key={stageId}
+                  className={`border-l-2 pl-4 ${complete ? 'border-[#00ff78]/60' : 'border-white/15'}`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] uppercase tracking-wider text-gray-500">
+                      Stage {stageId}
+                    </span>
+                    {stage && (
+                      <span className="text-[10px] uppercase tracking-wider text-crimson">
+                        {stage.name}
+                      </span>
+                    )}
+                    {complete && (
+                      <span className="text-[10px] uppercase tracking-wider text-[#00ff78]">
+                        [ cleared ]
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-400 leading-relaxed">{CTF_STAGE_HINTS[stageId]}</p>
+                </li>
+              );
+            })}
+          </ol>
+
+          <p className="text-xs text-gray-500 uppercase tracking-wider">
+            Terminal uplink: Ctrl+Shift+` — submit flags with{' '}
+            <code className="text-gray-300">submit &lt;flag&gt;</code> or{' '}
+            <code className="text-gray-300">submit --final &lt;flag&gt;</code> for stage 5.
+          </p>
+
           {canOpenTerminal && (
             <button
               type="button"

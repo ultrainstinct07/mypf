@@ -8,7 +8,7 @@ export default function About() {
   return (
     <ScrollReveal
       id="about"
-      className="section-padding bg-white dark:bg-black transition-colors duration-300"
+      className="section-padding bg-transparent transition-colors duration-300"
     >
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">

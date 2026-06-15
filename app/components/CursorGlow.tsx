@@ -80,23 +80,39 @@ export default function CursorGlow() {
   if (isTouch) return null;
 
   return (
-    <>
-      {/* Inner square pointer */}
+    <motion.div
+      className="fixed top-0 left-0 pointer-events-none z-[9999]"
+      style={{
+        x: smoothX,
+        y: smoothY,
+      }}
+    >
       <motion.div
-        className="fixed pointer-events-none z-[9999]"
-        style={{
-          x: smoothX,
-          y: smoothY,
-          translateX: '-50%',
-          translateY: '-50%',
+        className="rounded-none border-2 border-crimson -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+        animate={{
+          width: isHovering ? 36 : 22,
+          height: isHovering ? 36 : 22,
+          opacity: isVisible ? (isHovering ? 1 : 0.6) : 0,
+          rotate: isHovering ? 45 : 0,
+          boxShadow: isHovering
+            ? '0 0 14px rgba(217, 4, 41, 0.7), 0 0 28px rgba(217, 4, 41, 0.35)'
+            : '0 0 8px rgba(217, 4, 41, 0.45), 0 0 16px rgba(217, 4, 41, 0.2)',
+        }}
+        transition={{
+          type: 'spring',
+          stiffness: 300,
+          damping: 20,
         }}
       >
         <motion.div
-          className="rounded-none bg-crimson"
+          className="rounded-none bg-crimson shrink-0"
           animate={{
-            width: isHovering ? 10 : 6,
-            height: isHovering ? 10 : 6,
+            width: isHovering ? 8 : 5,
+            height: isHovering ? 8 : 5,
             opacity: isVisible ? 1 : 0,
+            boxShadow: isHovering
+              ? '0 0 8px rgba(217, 4, 41, 0.9)'
+              : '0 0 5px rgba(217, 4, 41, 0.75)',
           }}
           transition={{
             type: 'spring',
@@ -105,33 +121,7 @@ export default function CursorGlow() {
           }}
         />
       </motion.div>
-
-      {/* Interactive square border */}
-      <motion.div
-        className="fixed pointer-events-none z-[9999]"
-        style={{
-          x: smoothX,
-          y: smoothY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-      >
-        <motion.div
-          className="rounded-none border-2 border-crimson"
-          animate={{
-            width: isHovering ? 36 : 22,
-            height: isHovering ? 36 : 22,
-            opacity: isVisible ? (isHovering ? 1 : 0.6) : 0,
-            rotate: isHovering ? 45 : 0,
-          }}
-          transition={{
-            type: 'spring',
-            stiffness: 300,
-            damping: 20,
-          }}
-        />
-      </motion.div>
-    </>
+    </motion.div>
   );
 }
 

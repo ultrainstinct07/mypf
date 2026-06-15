@@ -197,6 +197,52 @@ body {
   }
 }
 
+@keyframes sectionDotPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(217, 4, 41, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(217, 4, 41, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(217, 4, 41, 0);
+  }
+}
+
+.section-dot-pulse {
+  animation: sectionDotPulse 2s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-dot-pulse {
+    animation: none;
+    box-shadow: 0 0 0 2px rgba(217, 4, 41, 0.35);
+  }
+}
+
+@keyframes ambientScanSweep {
+  0% {
+    transform: translateY(-5vh);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh);
+    opacity: 0;
+  }
+}
+
+.ambient-scan-sweep {
+  top: 0;
+  animation: ambientScanSweep 4.5s linear infinite;
+  will-change: transform, opacity;
+}
+
 /* Shimmer animation for loading states */
 @keyframes shimmer {
   0% {

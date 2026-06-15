@@ -18,7 +18,7 @@ export default function ExpertiseGrid() {
   return (
     <ScrollReveal
       id="expertise"
-      className="section-padding bg-slate-50 dark:bg-black transition-colors duration-300"
+      className="section-padding bg-transparent transition-colors duration-300"
     >
       <div className="container-custom">
         <div className="text-center mb-16">

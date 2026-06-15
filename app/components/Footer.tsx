@@ -1,9 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { SITE_CONFIG } from '@/lib/constants';
+import { CTF_FOOTER_HINT, CTF_TITLE } from '@/lib/ctf/public-hints';
 import { Mail, ArrowUp } from 'lucide-react';
 import { LinkedInLogoIcon as Linkedin, GitHubLogoIcon as Github } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import VisitorCounter from './VisitorCounter';
 
 export default function Footer() {
@@ -95,6 +96,18 @@ export default function Footer() {
                 <a href="#expertise" className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
                   Expertise
                 </a>
+              </li>
+              <li>
+                <Link
+                  href="/void"
+                  title={CTF_FOOTER_HINT}
+                  className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors"
+                >
+                  {CTF_TITLE}
+                </Link>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500 mt-1">
+                  {CTF_FOOTER_HINT}
+                </p>
               </li>
               <li>
                 <a href={`mailto:${SITE_CONFIG.email}`} className="text-slate-600 hover:text-crimson dark:text-gray-400 dark:hover:text-crimson transition-colors">
