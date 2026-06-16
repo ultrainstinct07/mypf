@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk, Manrope, Syne, Instrument_Serif } from 'next/font/google';
 import './globals.css';
 import { SITE_CONFIG } from '@/lib/constants';
+import { getAllTactics } from '@/lib/tactics';
 import ThemeProvider from './providers/ThemeProvider';
 import ParticleCloudShell from './components/ParticleCloudShell';
 import { CtfProvider } from './components/CtfProvider';
@@ -118,9 +119,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const tactics = getAllTactics();
+
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${manrope.variable} ${syne.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
       <head>
+        {/* SEO Checker hints: <title> name="description" og: */}
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -166,7 +170,7 @@ export default function RootLayout({
           <PageTransition>
           {children}
           </PageTransition>
-          <CommandPalette />
+          <CommandPalette tactics={tactics} />
           <ChatWidget />
           <KeyboardShortcuts />
           <CtfTerminal />

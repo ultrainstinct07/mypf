@@ -1,0 +1,400 @@
+---
+title: "Rpcclient"
+description: "Rpcclient tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'windows', 'active directory']
+---
+
+**Rpcclient** is an **open-source** command-line tool that provides a client interface for executing MS-RPC (Microsoft Remote Procedure Call) functions. It is part of the Samba suite and allows users to interact with Windows systems through RPC protocols, enabling enumeration and manipulation of Windows resources. Rpcclient is essential for penetration testing Windows networks and Active Directory environments, providing extensive enumeration capabilities without requiring administrative privileges.
+
+**Here are the primary uses of Rpcclient:**
+
+  * **User Enumeration:** Rpcclient enumerates domain and local users from Windows systems, providing detailed information including usernames, RIDs, full names, descriptions, and account properties. This information is critical for understanding the user landscape during penetration tests.
+
+  * **Group Enumeration:** The tool lists domain and local groups along with their members, helping security professionals map organizational structure and identify privilege relationships within Active Directory environments.
+
+  * **Share Enumeration:** Rpcclient discovers network shares and their properties, revealing accessible resources and potential data repositories on target Windows systems.
+
+  * **Domain Information Gathering:** The tool retrieves domain controller information, domain trusts, password policies, and other Active Directory metadata essential for understanding the target environment's security posture.
+
+  * **SID Enumeration:** Rpcclient performs SID (Security Identifier) lookups and RID cycling to enumerate users and groups even when other enumeration methods are restricted by security controls.
+
+  * **Printer and Service Enumeration:** The tool identifies printers, services, and other Windows resources exposed through RPC interfaces, providing comprehensive visibility into the target system's configuration.
+
+
+
+
+## Core Features​
+
+  * User Enumeration
+  * Group Enumeration
+  * Share Enumeration
+  * Domain Information
+  * SID/RID Resolution
+  * Password Policy Retrieval
+  * Trust Enumeration
+  * Printer Enumeration
+  * Service Enumeration
+  * Null Session Support
+  * Interactive Shell Mode
+  * Batch Command Execution
+  * Multiple Authentication Methods
+  * LSA Query Support
+
+
+
+## Data sources​
+
+  * MS-RPC Protocol
+  * SAMR (Security Account Manager Remote)
+  * LSA (Local Security Authority)
+  * SRVSVC (Server Service)
+  * NETLOGON Protocol
+  * Active Directory
+  * Domain Controllers
+  * Windows Registry (Remote)
+  * Security Identifiers (SIDs)
+
+
+
+## Common Rpcclient Commands​
+
+### 1\. Connect with Null Session​
+
+  * This command establishes a connection using a null session, testing for anonymous access to Windows RPC services.
+
+
+    
+    
+```
+rpcclient -U "" -N <target>  
+```
+### 2\. Connect with Authentication​
+
+  * This command connects using provided credentials, accessing resources that require authentication.
+
+
+    
+    
+```
+rpcclient -U <username> <target>  
+```
+### 3\. Enumerate Domain Users​
+
+  * This command lists all domain users with their RIDs and usernames, providing comprehensive user enumeration.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "enumdomusers"  
+```
+### 4\. Enumerate Domain Groups​
+
+  * This command lists all domain groups and their RIDs, revealing organizational structure.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "enumdomgroups"  
+```
+### 5\. Query User Information​
+
+  * This command retrieves detailed information about a specific user including full name, description, and account properties.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "queryuser <RID>"  
+```
+### 6\. Query Group Information​
+
+  * This command retrieves information about a specific group including members and group properties.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "querygroup <RID>"  
+```
+### 7\. Query Group Members​
+
+  * This command lists all members of a specific group by RID.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "querygroupmem <RID>"  
+```
+### 8\. Enumerate Shares​
+
+  * This command lists all network shares available on the target system.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "netshareenumall"  
+```
+### 9\. Get Domain Password Policy​
+
+  * This command retrieves the domain password policy including minimum length, complexity, and lockout settings.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "getdompwinfo"  
+```
+### 10\. Lookup SID​
+
+  * This command resolves a SID to its corresponding username or group name.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "lookupsids <SID>"  
+```
+### 11\. Lookup Username to SID​
+
+  * This command converts a username to its corresponding SID.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "lookupnames <username>"  
+```
+### 12\. RID Cycling​
+
+  * This command enumerates users by cycling through RIDs, useful when standard enumeration is restricted.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "lookupsids S-1-5-21-<domain>-<RID>"  
+```
+### 13\. Query Domain Info​
+
+  * This command retrieves general domain information including domain name, domain controller, and domain SID.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "querydominfo"  
+```
+### 14\. Enumerate Printers​
+
+  * This command lists all printers configured on the target system.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "enumprinters"  
+```
+### 15\. Get Server Info​
+
+  * This command retrieves server information including platform, version, and server name.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "srvinfo"  
+```
+### 16\. Enumerate Domain Trusts​
+
+  * This command lists all domain trusts configured in the Active Directory environment.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "enumtrust"  
+```
+### 17\. Enumerate Privileges​
+
+  * This command lists user privileges and rights assignments on the target system.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "enumprivs"  
+```
+### 18\. Query Display Information​
+
+  * This command retrieves detailed user display information for all domain users.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "querydispinfo"  
+```
+### 19\. Create User​
+
+  * This command creates a new user account on the target system (requires administrative privileges).
+
+
+    
+    
+```
+rpcclient -U <admin_user> <target> -c "createdomuser <username>"  
+```
+### 20\. Delete User​
+
+  * This command deletes a user account from the target system (requires administrative privileges).
+
+
+    
+    
+```
+rpcclient -U <admin_user> <target> -c "deletedomuser <username>"  
+```
+### 21\. Set User Password​
+
+  * This command changes a user's password on the target system (requires appropriate privileges).
+
+
+    
+    
+```
+rpcclient -U <admin_user> <target> -c "setuserinfo2 <username> 23 '<password>'"  
+```
+### 22\. Enumerate Aliases​
+
+  * This command lists local group aliases on the target system.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "enumalsgroups builtin"  
+```
+### 23\. Query Alias Members​
+
+  * This command lists members of a specific local group alias.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "queryaliasmem builtin <RID>"  
+```
+### 24\. Execute Multiple Commands​
+
+  * This command executes multiple RPC commands in sequence from the command line.
+
+
+    
+    
+```
+rpcclient -U "" -N <target> -c "enumdomusers; enumdomgroups; getdompwinfo"  
+```
+### 25\. Interactive Mode​
+
+  * This command launches an interactive rpcclient shell for manual command execution.
+
+
+    
+    
+```
+rpcclient -U <username> <target>  
+```
+### 26\. Help and Usage Information​
+
+  * This command displays available commands and usage information for rpcclient.
+
+
+    
+    
+```
+rpcclient -h  
+```
+Alternative usage (within interactive mode):
+    
+    
+```bash
+rpcclient $> help  
+```
+## Output Examples of Rpcclient Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Null Session| `rpcclient -U "" -N 192.168.1.10`| Connects anonymously.| `rpcclient $>`  
+With Authentication| `rpcclient -U admin 192.168.1.10`| Connects with credentials.| `Enter WORKGROUP\admin's password: `   
+` rpcclient $>`  
+Enum Domain Users| `rpcclient $> enumdomusers`| Lists domain users.| `user:[Administrator] rid:[0x1f4] `   
+` user:[Guest] rid:[0x1f5] `   
+` user:[john.doe] rid:[0x3e8] `   
+` user:[jane.smith] rid:[0x3e9]`  
+Enum Domain Groups| `rpcclient $> enumdomgroups`| Lists domain groups.| `group:[Domain Admins] rid:[0x200] `   
+` group:[Domain Users] rid:[0x201] `   
+` group:[Domain Guests] rid:[0x202]`  
+Query User Info| `rpcclient $> queryuser 0x3e8`| Gets user details.| `User Name : john.doe `   
+` Full Name : John Doe `   
+` Home Drive : `   
+` Dir Drive : `   
+` Profile Path: `   
+` Description : IT Administrator`  
+Query Group Info| `rpcclient $> querygroup 0x200`| Gets group details.| `Group Name: Domain Admins `   
+` Description: Designated administrators of the domain `   
+` Group Attribute: 7 `   
+` Num Members: 3`  
+Query Group Members| `rpcclient $> querygroupmem 0x200`| Lists group members.| `rid:[0x1f4] attr:[0x7] `   
+` rid:[0x3e8] attr:[0x7] `   
+` rid:[0x3ea] attr:[0x7]`  
+Enum Shares| `rpcclient $> netshareenumall`| Lists network shares.| `netname: ADMIN$ `   
+` remark: Remote Admin `   
+` path: C:\Windows `   
+` password: `   
+` netname: C$ `   
+` remark: Default share`  
+Password Policy| `rpcclient $> getdompwinfo`| Shows password policy.| `min_password_length: 7 `   
+` password_properties: 0x00000001 `   
+` DOMAIN_PASSWORD_COMPLEX`  
+Lookup SID| `rpcclient $> lookupsids S-1-5-21-xxx-xxx-xxx-500`| Resolves SID to name.| `S-1-5-21-xxx-xxx-xxx-500 DOMAIN\Administrator (1)`  
+Lookup Name| `rpcclient $> lookupnames Administrator`| Converts name to SID.| `Administrator S-1-5-21-xxx-xxx-xxx-500 (User: 1)`  
+Query Domain Info| `rpcclient $> querydominfo`| Shows domain details.| `Domain: CORP `   
+` Server: DC01 `   
+` Comment: Corporate Domain `   
+` Total Users: 245 `   
+` Total Groups: 42 `   
+` Total Aliases: 15`  
+Enum Printers| `rpcclient $> enumprinters`| Lists printers.| `flags:[0x800000] `   
+` name:[\\DC01\HP LaserJet] `   
+` description:[HP LaserJet Pro] `   
+` comment:[Office Printer]`  
+Server Info| `rpcclient $> srvinfo`| Gets server details.| `DC01 Wk Sv PDC Tim NT Domain Controller `   
+` platform_id : 500 `   
+` os version : 10.0 `   
+` server type : 0x80102b`  
+Enum Trusts| `rpcclient $> enumtrust`| Lists domain trusts.| `Domain[CORP] SID[S-1-5-21-xxx] Trust Type[MIT] `   
+` Domain[EXTERNAL] SID[S-1-5-21-yyy] Trust Type[External]`  
+Enum Privileges| `rpcclient $> enumprivs`| Lists privileges.| `SeCreateTokenPrivilege 0:2 (0x0:0x2) `   
+` SeAssignPrimaryTokenPrivilege 0:3 (0x0:0x3) `   
+` SeLockMemoryPrivilege 0:4 (0x0:0x4)`  
+Query Display Info| `rpcclient $> querydispinfo`| User display info.| `index: 0x1 RID: 0x1f4 acb: 0x00000210 Account: Administrator Name: (null) Desc: Built-in account `   
+` index: 0x2 RID: 0x3e8 acb: 0x00000210 Account: john.doe Name: John Doe Desc: IT Admin`  
+Enum Aliases| `rpcclient $> enumalsgroups builtin`| Lists local groups.| `group:[Administrators] rid:[0x220] `   
+` group:[Users] rid:[0x221] `   
+` group:[Guests] rid:[0x222] `   
+` group:[Backup Operators] rid:[0x227]`  
+Query Alias Members| `rpcclient $> queryaliasmem builtin 0x220`| Lists Administrators members.| `sid:[S-1-5-21-xxx-xxx-xxx-500] `   
+` sid:[S-1-5-21-xxx-xxx-xxx-512]`  
+Create User| `rpcclient $> createdomuser testuser`| Creates new user.| `user testuser created `   
+` User RID: 0x44f`  
+Delete User| `rpcclient $> deletedomuser testuser`| Deletes user.| `user testuser deleted`  
+Set Password| `rpcclient $> setuserinfo2 testuser 23 'NewP@ss123'`| Changes password.| `Successfully set password for testuser`  
+Access Denied| `rpcclient -U "" -N 192.168.1.10 -c "enumdomusers"`| No null session.| `result was NT_STATUS_ACCESS_DENIED`  
+Connection Failed| `rpcclient -U admin 192.168.1.99`| Unreachable host.| `Cannot connect to server. Error was NT_STATUS_IO_TIMEOUT`  
+Multiple Commands| `rpcclient -U "" -N 192.168.1.10 -c "enumdomusers; getdompwinfo"`| Executes sequence.| `user:[Administrator] rid:[0x1f4] `   
+` user:[john.doe] rid:[0x3e8] `   
+` min_password_length: 7`

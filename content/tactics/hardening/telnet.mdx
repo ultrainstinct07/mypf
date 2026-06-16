@@ -1,0 +1,54 @@
+---
+title: "SMB (Server Message Block) Hardening"
+description: "An in-depth guide for hardening SMB (Server Message Block), including advanced configurations and best practices."
+tags: []
+---
+
+# Telnet Hardening
+
+**Telnet** is a protocol that allows you to manage network devices and systems remotely. However, it is considered insecure because the data, including login credentials, is sent in clear text, which can easily be seen or intercepted by malicious individuals or software.
+
+Despite this, if you must use Telnet, here are some tips to harden your Telnet server against potential threats:
+
+## Disabled by Default​
+
+Telnet is unencrypted and vulnerable to various security threats, including eavesdropping and password sniffing. If you don't need this, it’s best to disable Telnet by default.
+    
+    
+```
+sudo systemctl disable telnet.socket  
+sudo systemctl stop telnet.socket  
+```
+## Restricted User Access​
+
+Only provide access to authorized individuals. Unnecessary access to the Telnet service can lead to potential security issues.
+    
+    
+```
+sudo userdel unnecessary_user  
+```
+## Strong Passwords​
+
+Ensure that your passwords are strong and complex. This makes it harder for potential attackers to guess your passwords.
+
+## Updated Software​
+
+Keep your Telnet client and server software updated to ensure that you have the latest security patches and updates.
+
+## Using Firewall​
+
+Limit the Telnet traffic to your network by configuring your firewall to accept traffic only from trusted networks and hosts.
+    
+    
+```
+sudo iptables -A INPUT -p tcp --dport 23 -j DROP  
+sudo iptables -A INPUT -p tcp -s trusted_IP_address --dport 23 -j ACCEPT  
+```
+## Logging and Monitoring​
+
+Audit and monitor the Telnet sessions. This can help you to detect any suspicious activity.
+    
+    
+```bash
+tail -f /var/log/auth.log | grep 'telnetd'
+```

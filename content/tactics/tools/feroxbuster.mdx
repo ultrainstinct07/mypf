@@ -1,0 +1,560 @@
+---
+title: "Feroxbuster"
+description: "Feroxbuster tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['web', 'fuzzing', 'reconnaissance']
+---
+
+## What is the purpose of Feroxbuster?​
+
+**Feroxbuster** is an **open-source** , Rust-based recursive content discovery tool. It performs forced browsing by combining a target URL with a wordlist to discover files, directories, endpoints, backups, and other unlinked resources that are not directly visible in the web application.
+
+Feroxbuster is useful during web reconnaissance because it can recurse into discovered directories, auto-filter wildcard responses, extract links, collect useful words or extensions, and produce output that can be reused by other tools.
+
+**Here are the primary uses of Feroxbuster:**
+
+  * **Directory and File Discovery:** Feroxbuster brute-forces paths with a wordlist to identify hidden directories, files, backups, and exposed application resources.
+
+  * **Recursive Content Enumeration:** The tool can automatically recurse into discovered directories and continue discovery across nested paths.
+
+  * **False Positive Reduction:** Feroxbuster includes response filtering by status code, size, word count, line count, regular expression, similar page, and unique response behavior.
+
+  * **Authenticated and Custom Requests:** It supports headers, cookies, query parameters, request bodies, custom methods, raw request files, and proxy workflows for testing authenticated or stateful applications.
+
+  * **Proxy and Replay Workflows:** Feroxbuster can route all traffic through a proxy or send only interesting responses through a replay proxy such as Burp Suite or OWASP ZAP.
+
+  * **Large Target Workflows:** The tool can read URLs from standard input, run parallel child scans, control scan limits, rate-limit requests, and resume partially completed scans.
+
+  * **Automation and Reporting:** Feroxbuster can write text or JSON output, run in silent mode for pipelines, and generate state files for recovery.
+
+
+
+
+## Core Features​
+
+  * Recursive web content discovery
+  * Wordlist, extension, and URL filtering controls
+  * Status code, size, word, line, and regex filtering
+  * Headers, cookies, proxy, redirect, and TLS options
+  * Rate limit, timeout, recursion depth, and thread controls
+  * JSON and text output for automation
+  * Replay-proxy and auto-filter workflows
+
+
+
+## Data sources​
+
+  * Target URLs and base paths
+  * Directory and file wordlists
+  * Extension lists and discovered URLs
+  * HTTP responses, status codes, lengths, words, and lines
+  * Authentication headers, cookies, and proxy traffic
+  * Feroxbuster text or JSON output files
+
+
+
+## Common Feroxbuster Commands​
+
+### 1\. Install Feroxbuster on Kali​
+
+  * This command installs Feroxbuster from the Kali package repositories.
+
+
+    
+    
+```
+sudo apt update && sudo apt install -y feroxbuster  
+```
+### 2\. Install Feroxbuster with Homebrew​
+
+  * This command installs Feroxbuster on macOS using Homebrew.
+
+
+    
+    
+```
+brew install feroxbuster  
+```
+### 3\. Show Help​
+
+  * This command displays Feroxbuster help and available command-line options.
+
+
+    
+    
+```
+feroxbuster -h  
+```
+### 4\. Show Version​
+
+  * This command prints the installed Feroxbuster version.
+
+
+    
+    
+```
+feroxbuster -V  
+```
+### 5\. Update Feroxbuster​
+
+  * This command updates Feroxbuster to the latest supported release from the tool's updater.
+
+
+    
+    
+```
+feroxbuster --update  
+```
+### 6\. Basic Directory Scan​
+
+  * This command performs a basic content discovery scan against a target URL with a selected wordlist.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt  
+```
+### 7\. Scan with File Extensions​
+
+  * This command appends selected extensions to wordlist entries to find files such as PHP, HTML, JavaScript, and text files.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -x php,html,js,txt  
+```
+### 8\. Disable Recursion​
+
+  * This command scans only the provided target path and does not recurse into discovered directories.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --no-recursion  
+```
+### 9\. Set Recursion Depth​
+
+  * This command limits recursive scanning to a specific depth.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -d 2  
+```
+### 10\. Force Recursion​
+
+  * This command forces recursion attempts on all found endpoints while still respecting the configured recursion depth.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --force-recursion  
+```
+### 11\. Add a Trailing Slash​
+
+  * This command appends a slash to requests, which can help understand redirect behavior and directory handling.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --add-slash  
+```
+### 12\. Filter Status Codes​
+
+  * This command hides responses with selected status codes, which is useful for filtering common noise such as 404 or 403 responses.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -C 404,403  
+```
+### 13\. Match Only Selected Status Codes​
+
+  * This command shows only responses with selected status codes.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -s 200 301 302  
+```
+### 14\. Filter by Response Size​
+
+  * This command filters out responses with a known noisy byte size.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -S 1234  
+```
+### 15\. Filter by Word Count​
+
+  * This command filters out responses with a known noisy word count.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -W 42  
+```
+### 16\. Filter by Line Count​
+
+  * This command filters out responses with a known noisy line count.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -N 10  
+```
+### 17\. Filter by Regular Expression​
+
+  * This command filters responses whose body or headers match the provided regular expression.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --filter-regex "Access Denied"  
+```
+### 18\. Filter Similar Pages​
+
+  * This command filters pages that are similar to a known unwanted page, which helps reduce soft-404 and redirect noise.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --filter-similar-to https://example.com/register  
+```
+### 19\. Show Only Unique Responses​
+
+  * This command reduces duplicate-looking results by showing only unique responses.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --unique  
+```
+### 20\. Add a Custom Header​
+
+  * This command sends a custom HTTP header with every request.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -H "Authorization: Bearer <token>"  
+```
+### 21\. Add Cookies​
+
+  * This command sends a cookie with every request, which is useful for authenticated scans.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -b "session=<cookie_value>"  
+```
+### 22\. Add Query Parameters​
+
+  * This command adds a query parameter to each request.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --query token=<value>  
+```
+### 23\. Use a POST Request​
+
+  * This command sends POST requests instead of the default GET method.
+
+
+    
+    
+```
+feroxbuster -u https://example.com/api/FUZZ -w /path/to/wordlist.txt -m POST  
+```
+### 24\. Send JSON Data​
+
+  * This command sends a JSON body and automatically sets the content type.
+
+
+    
+    
+```
+feroxbuster -u https://example.com/api/FUZZ -w /path/to/wordlist.txt --data-json '{"name":"test"}'  
+```
+### 25\. Use a Raw Request File​
+
+  * This command builds requests from a saved raw HTTP request file.
+
+
+    
+    
+```
+feroxbuster --request-file request.txt -w /path/to/wordlist.txt  
+```
+### 26\. Proxy Traffic Through Burp​
+
+  * This command uses Feroxbuster's Burp shortcut, which sets the proxy to localhost port 8080 and disables TLS verification.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --burp  
+```
+### 27\. Use a Custom Proxy​
+
+  * This command routes all requests through a selected HTTP proxy.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --proxy http://127.0.0.1:8080 --insecure  
+```
+### 28\. Send Interesting Results to a Replay Proxy​
+
+  * This command sends only selected status code responses to a replay proxy for manual review.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --replay-proxy http://127.0.0.1:8080 --replay-codes 200 302 --insecure  
+```
+### 29\. Use a SOCKS Proxy​
+
+  * This command routes requests through a SOCKS proxy.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --proxy socks5h://127.0.0.1:9050  
+```
+### 30\. Follow Redirects​
+
+  * This command allows the HTTP client to follow redirects.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --redirects  
+```
+### 31\. Skip TLS Certificate Validation​
+
+  * This command disables TLS certificate validation for targets with self-signed or invalid certificates.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --insecure  
+```
+### 32\. Set Thread Count​
+
+  * This command controls the number of concurrent threads.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --threads 30  
+```
+### 33\. Limit Concurrent Scans​
+
+  * This command limits the number of active directory scans at one time.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --scan-limit 2  
+```
+### 34\. Rate Limit Requests​
+
+  * This command limits the number of requests per second per directory scan.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --rate-limit 25  
+```
+### 35\. Set Request Timeout​
+
+  * This command sets the request timeout in seconds.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --timeout 10  
+```
+### 36\. Set a Total Time Limit​
+
+  * This command stops all scans after the selected total runtime.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --time-limit 10m  
+```
+### 37\. Limit Response Body Size​
+
+  * This command limits how much response body data Feroxbuster reads.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --response-size-limit 1048576  
+```
+### 38\. Use Smart Mode​
+
+  * This command enables a group of useful discovery settings such as auto-tuning, word collection, and backup collection.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --smart  
+```
+### 39\. Use Thorough Mode​
+
+  * This command uses smart mode and also enables extension collection and directory listing scans.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --thorough  
+```
+### 40\. Read Targets from STDIN​
+
+  * This command reads target URLs from a file through standard input.
+
+
+    
+    
+```
+cat targets.txt | feroxbuster --stdin --silent -s 200 301 302 --redirects  
+```
+### 41\. Run Parallel Scans from STDIN​
+
+  * This command runs multiple Feroxbuster child scans against URLs received through standard input.
+
+
+    
+    
+```
+cat targets.txt | feroxbuster --stdin --parallel 5 --auto-bail  
+```
+### 42\. Save Output to a File​
+
+  * This command saves scan results to a text output file.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt -o ferox-results.txt  
+```
+### 43\. Save JSON Output​
+
+  * This command writes JSON-formatted output entries to a file.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --json -o ferox-results.json  
+```
+### 44\. Silent Output for Pipelines​
+
+  * This command prints only discovered URLs, which is useful when piping results into another tool.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --silent  
+```
+### 45\. Resume a Scan​
+
+  * This command resumes a partially completed scan from a Feroxbuster state file.
+
+
+    
+    
+```
+feroxbuster --resume-from ferox-1606586780.state  
+```
+### 46\. Disable State File Creation​
+
+  * This command prevents Feroxbuster from writing state files.
+
+
+    
+    
+```
+feroxbuster -u https://example.com -w /path/to/wordlist.txt --no-state  
+```
+## Output Examples of Feroxbuster Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Show Help| `feroxbuster -h`| Displays help and available options.| `Usage: feroxbuster [OPTIONS]`  
+Show Version| `feroxbuster -V`| Prints the installed version.| `feroxbuster 2.13.0`  
+Basic Scan| `feroxbuster -u https://example.com -w wordlist.txt`| Starts content discovery with a wordlist.| `200 GET 12l 42w 1234c https://example.com/admin`  
+Extensions| `feroxbuster -u https://example.com -w wordlist.txt -x php,js`| Adds extensions to discovered paths.| `200 GET 40l 120w 4096c https://example.com/index.php`  
+No Recursion| `feroxbuster -u https://example.com --no-recursion`| Scans only the starting path.| `Recursion disabled`  
+Depth Limit| `feroxbuster -u https://example.com -d 2`| Limits recursion depth.| `Maximum recursion depth: 2`  
+Force Recursion| `feroxbuster -u https://example.com --force-recursion`| Recurses into all found endpoints.| `Forced recursion enabled`  
+Filter Status| `feroxbuster -u https://example.com -C 404,403`| Hides selected status codes.| `Filtered status codes: 404, 403`  
+Match Status| `feroxbuster -u https://example.com -s 200 302`| Shows only selected status codes.| `302 GET 3l 8w 112c https://example.com/login`  
+Filter Size| `feroxbuster -u https://example.com -S 1234`| Filters a known response size.| `Filtered responses of size 1234`  
+Filter Words| `feroxbuster -u https://example.com -W 42`| Filters a known word count.| `Filtered responses with 42 words`  
+Filter Lines| `feroxbuster -u https://example.com -N 10`| Filters a known line count.| `Filtered responses with 10 lines`  
+Regex Filter| `feroxbuster -u https://example.com --filter-regex "Access Denied"`| Filters matching bodies or headers.| `Regex filter added`  
+Similar Filter| `feroxbuster -u https://example.com --filter-similar-to https://example.com/register`| Filters pages similar to an unwanted page.| `Similarity filter initialized`  
+Unique Responses| `feroxbuster -u https://example.com --unique`| Shows only unique responses.| `Unique response filtering enabled`  
+Custom Header| `feroxbuster -u https://example.com -H "Authorization: Bearer token"`| Adds an HTTP header.| `Header added: Authorization`  
+Cookies| `feroxbuster -u https://example.com -b "session=abc123"`| Sends cookies with requests.| `Cookie added: session`  
+Query Parameter| `feroxbuster -u https://example.com --query token=value`| Adds query parameters.| `Query parameter added: token`  
+POST Method| `feroxbuster -u https://example.com/api/FUZZ -m POST`| Sends POST requests.| `POST https://example.com/api/users`  
+JSON Body| `feroxbuster -u https://example.com/api/FUZZ --data-json '{"name":"test"}'`| Sends a JSON request body.| `Content-Type: application/json`  
+Raw Request| `feroxbuster --request-file request.txt -w wordlist.txt`| Uses a raw HTTP request as a template.| `Loaded request file: request.txt`  
+Burp Shortcut| `feroxbuster -u https://example.com --burp`| Proxies traffic through localhost port 8080.| `Proxy: http://127.0.0.1:8080`  
+Replay Proxy| `feroxbuster -u https://example.com --replay-proxy http://127.0.0.1:8080 --replay-codes 200 302`| Sends only interesting results to a proxy.| `Replayed 200 response to proxy`  
+SOCKS Proxy| `feroxbuster -u https://example.com --proxy socks5h://127.0.0.1:9050`| Routes traffic through SOCKS.| `Proxy: socks5h://127.0.0.1:9050`  
+Redirects| `feroxbuster -u https://example.com --redirects`| Follows redirects.| `Redirect following enabled`  
+Insecure TLS| `feroxbuster -u https://example.com --insecure`| Skips TLS validation.| `TLS certificate validation disabled`  
+Threads| `feroxbuster -u https://example.com --threads 30`| Sets concurrent threads.| `Threads: 30`  
+Scan Limit| `feroxbuster -u https://example.com --scan-limit 2`| Limits concurrent directory scans.| `Scan limit: 2`  
+Rate Limit| `feroxbuster -u https://example.com --rate-limit 25`| Limits request rate.| `Rate limit: 25 requests per second`  
+Timeout| `feroxbuster -u https://example.com --timeout 10`| Sets request timeout.| `Timeout: 10 seconds`  
+Time Limit| `feroxbuster -u https://example.com --time-limit 10m`| Stops after total runtime.| `Time limit reached: 10m`  
+Smart Mode| `feroxbuster -u https://example.com --smart`| Enables grouped discovery settings.| `Smart mode enabled`  
+Thorough Mode| `feroxbuster -u https://example.com --thorough`| Enables broader collection behavior.| `Thorough mode enabled`  
+STDIN Targets| `cat targets.txt | feroxbuster --stdin --silent`| Reads targets from standard input.| `https://example.com/admin`  
+Parallel STDIN| `cat targets.txt | feroxbuster --stdin --parallel 5`| Runs child scans in parallel.| `Parallel scans: 5`  
+Text Output| `feroxbuster -u https://example.com -o ferox-results.txt`| Saves text output.| `Wrote results to ferox-results.txt`  
+JSON Output| `feroxbuster -u https://example.com --json -o ferox-results.json`| Saves JSON entries.| `{"type":"response","url":"https://example.com/admin"}`  
+Silent Output| `feroxbuster -u https://example.com --silent`| Prints only discovered URLs.| `https://example.com/admin`  
+Resume Scan| `feroxbuster --resume-from ferox-1606586780.state`| Resumes from a state file.| `Resuming scan from state file`  
+No State| `feroxbuster -u https://example.com --no-state`| Disables state file creation.| `State output disabled`

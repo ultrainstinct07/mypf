@@ -1,0 +1,327 @@
+---
+title: "Searchsploit"
+description: "Searchsploit tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['exploitation', 'vulnerability']
+---
+
+**Searchsploit** is an **open-source** command-line search tool for Exploit-DB, a comprehensive archive of public exploits and corresponding vulnerable software. Maintained by Offensive Security, Searchsploit allows penetration testers and security researchers to quickly search for exploits offline using a local copy of the Exploit-DB repository. This tool is essential for identifying available exploits during vulnerability assessments and penetration testing engagements.
+
+**Here are the primary uses of Searchsploit:**
+
+  * **Exploit Discovery:** Searchsploit enables rapid searching for publicly available exploits based on software names, versions, CVE numbers, or vulnerability types. This functionality is crucial for identifying exploitation opportunities during security assessments.
+
+  * **Offline Access:** The tool maintains a local copy of the Exploit-DB database, allowing security professionals to search for exploits without requiring internet connectivity. This is particularly valuable in isolated or restricted network environments.
+
+  * **CVE Mapping:** Searchsploit can search for exploits using CVE (Common Vulnerabilities and Exposures) identifiers, helping correlate vulnerability scan results with available public exploits.
+
+  * **Exploit Information:** The tool provides detailed information about exploits including file paths, dates, platforms, and exploit types, helping security professionals evaluate the relevance and applicability of specific exploits.
+
+  * **Version-Specific Searches:** Searchsploit supports version-specific queries, enabling precise searches for exploits targeting particular software versions identified during reconnaissance.
+
+  * **Integration with Metasploit:** The tool can identify which exploits have corresponding Metasploit modules, facilitating seamless integration between manual research and automated exploitation frameworks.
+
+
+
+
+## Core Features​
+
+  * Offline Exploit Database
+  * CVE-Based Searching
+  * Version-Specific Queries
+  * Multiple Output Formats
+  * Exploit Path Display
+  * Database Updates
+  * Case-Insensitive Search
+  * Exact Match Filtering
+  * Exclude Term Filtering
+  * Platform-Specific Filtering
+  * Metasploit Integration
+  * Color-Coded Output
+  * Wildcard Support
+
+
+
+## Data sources​
+
+  * Exploit-DB Database
+  * CVE Database
+  * Exploit Code Files
+  * Shell Code Repository
+  * Papers and Documentation
+  * Proof-of-Concept Code
+  * Metasploit Module References
+  * Platform Information
+
+
+
+## Common Searchsploit Commands​
+
+### 1\. Basic Search​
+
+  * This command performs a basic search for exploits related to the specified software or vulnerability. It returns all matching exploits from the local database.
+
+
+    
+    
+```
+searchsploit <search_term>  
+```
+### 2\. Case-Sensitive Search​
+
+  * This command performs a case-sensitive search, useful when searching for specific software names with particular capitalization.
+
+
+    
+    
+```
+searchsploit -c <search_term>  
+```
+### 3\. Exact Match Search​
+
+  * This command searches for exact matches only, filtering out partial matches and providing more precise results.
+
+
+    
+    
+```
+searchsploit -e <search_term>  
+```
+### 4\. Search by CVE​
+
+  * This command searches for exploits associated with a specific CVE identifier, helping correlate vulnerability reports with available exploits.
+
+
+    
+    
+```
+searchsploit --cve <CVE-YYYY-XXXXX>  
+```
+### 5\. Exclude Terms​
+
+  * This command excludes results containing specified terms, useful for filtering out irrelevant exploits or specific platforms.
+
+
+    
+    
+```
+searchsploit <search_term> --exclude="<term>"  
+```
+### 6\. Search Multiple Terms​
+
+  * This command searches for exploits matching multiple keywords simultaneously, narrowing down results to more specific targets.
+
+
+    
+    
+```
+searchsploit <term1> <term2>  
+```
+### 7\. Display Exploit Path​
+
+  * This command shows the full file path of matching exploits, making it easy to locate and examine exploit code.
+
+
+    
+    
+```
+searchsploit -p <exploit_id>  
+```
+### 8\. Copy Exploit to Directory​
+
+  * This command copies the specified exploit to a designated directory for analysis or modification.
+
+
+    
+    
+```
+searchsploit -m <exploit_id>  
+```
+### 9\. Examine Exploit Code​
+
+  * This command opens the exploit code in the default text editor for review and analysis.
+
+
+    
+    
+```
+searchsploit -x <exploit_id>  
+```
+### 10\. JSON Output​
+
+  * This command outputs search results in JSON format, useful for parsing results programmatically or integration with other tools.
+
+
+    
+    
+```
+searchsploit <search_term> --json  
+```
+### 11\. XML Output​
+
+  * This command exports search results in XML format for structured data processing and reporting.
+
+
+    
+    
+```
+searchsploit <search_term> --xml  
+```
+### 12\. Color Output​
+
+  * This command enables color-coded output for better readability, highlighting different exploit types and platforms.
+
+
+    
+    
+```
+searchsploit <search_term> --colour  
+```
+### 13\. Strict Search​
+
+  * This command performs a strict search that requires all specified terms to be present in the exploit title.
+
+
+    
+    
+```
+searchsploit -s <search_term>  
+```
+### 14\. Title Only Search​
+
+  * This command searches only in exploit titles, ignoring file paths and other metadata for cleaner results.
+
+
+    
+    
+```
+searchsploit -t <search_term>  
+```
+### 15\. Nmap Integration​
+
+  * This command parses Nmap XML output and searches for exploits matching detected services and versions.
+
+
+    
+    
+```bash
+searchsploit --nmap <nmap_output.xml>  
+```
+### 16\. Update Database​
+
+  * This command updates the local Exploit-DB database to include the latest exploits and security advisories.
+
+
+    
+    
+```
+searchsploit -u  
+```
+### 17\. Update Database (Force)​
+
+  * This command forces a complete database update, even if the local database appears current.
+
+
+    
+    
+```
+searchsploit -u -f  
+```
+### 18\. Check Version​
+
+  * This command displays the current version of Searchsploit and the database version.
+
+
+    
+    
+```
+searchsploit --version  
+```
+### 19\. Show Statistics​
+
+  * This command displays statistics about the local Exploit-DB database including total number of exploits.
+
+
+    
+    
+```
+searchsploit --stats  
+```
+### 20\. Overflow Search​
+
+  * This command searches specifically for buffer overflow exploits matching the search term.
+
+
+    
+    
+```
+searchsploit <search_term> overflow  
+```
+### 21\. Web App Search​
+
+  * This command filters results to show only web application exploits.
+
+
+    
+    
+```
+searchsploit <search_term> webapp  
+```
+### 22\. Help and Usage Information​
+
+  * This command displays the help menu and usage information for Searchsploit, listing all available options.
+
+
+    
+    
+```
+searchsploit -h  
+```
+Alternative usage:
+    
+    
+```
+searchsploit --help  
+```
+## Output Examples of Searchsploit Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Search| `searchsploit apache`| Searches for Apache exploits.| `Apache 2.4.49 - Path Traversal & Remote Code Execution `   
+` Apache HTTP Server 2.4.50 - Remote Code Execution`  
+Case-Sensitive| `searchsploit -c Apache`| Case-sensitive search for Apache.| `Apache mod_ssl 2.8.7 - Remote Buffer Overflow`  
+Exact Match| `searchsploit -e "apache 2.4.49"`| Exact match for Apache 2.4.49.| `Apache 2.4.49 - Path Traversal & Remote Code Execution (CVE-2021-41773)`  
+CVE Search| `searchsploit --cve CVE-2021-41773`| Searches by CVE number.| `Apache 2.4.49 - Path Traversal & Remote Code Execution (CVE-2021-41773)`  
+Exclude Terms| `searchsploit wordpress --exclude="plugin"`| Excludes WordPress plugins.| `WordPress Core 5.8.1 - Remote Code Execution `   
+` WordPress 5.0.0 - Image Remote Code Execution`  
+Multiple Terms| `searchsploit apache 2.4 remote`| Searches multiple keywords.| `Apache 2.4.49 - Path Traversal & Remote Code Execution `   
+` Apache 2.4.50 - Remote Code Execution`  
+Show Path| `searchsploit -p 50383`| Shows exploit file path.| `Exploit: Apache HTTP Server 2.4.49 - Path Traversal `   
+` Path: /usr/share/exploitdb/exploits/multiple/webapps/50383.sh`  
+Copy Exploit| `searchsploit -m 50383`| Copies exploit to current directory.| `Exploit: Apache HTTP Server 2.4.49 - Path Traversal `   
+` Copied to: ./50383.sh`  
+Examine Code| `searchsploit -x 50383`| Opens exploit in text editor.| `[*] Opening exploit: 50383.sh`  
+JSON Output| `searchsploit apache --json`| Outputs in JSON format.| `{"RESULTS_EXPLOIT":[{"Title":"Apache 2.4.49","EDB-ID":"50383"}]}`  
+XML Output| `searchsploit apache --xml`| Exports results as XML.| `<?xml version="1.0"?> `   
+` <results><exploit id="50383">Apache 2.4.49</exploit></results>`  
+Color Output| `searchsploit apache --colour`| Enables colored output.| `[32mApache 2.4.49[0m - Path Traversal & [31mRemote Code Execution[0m`  
+Strict Search| `searchsploit -s "apache 2.4.49"`| Strict search requiring all terms.| `Apache 2.4.49 - Path Traversal & Remote Code Execution`  
+Title Search| `searchsploit -t overflow`| Searches only in titles.| `Linux Kernel 4.4.0 - Privilege Escalation via Buffer Overflow`  
+Nmap Integration| `searchsploit --nmap scan.xml`| Parses Nmap XML for exploits.| `[*] Analyzing Nmap output... `   
+` [+] Apache 2.4.49 found on 192.168.1.10:80`  
+Update Database| `searchsploit -u`| Updates exploit database.| `[*] Updating Exploit-DB... `   
+` [+] Database updated successfully`  
+Forced Update| `searchsploit -u -f`| Forces database update.| `[*] Forcing update... `   
+` [+] Downloaded 15,234 new exploits`  
+Version Check| `searchsploit --version`| Shows version information.| `searchsploit v4.2.6 `   
+` Database: 2024-11-04`  
+Statistics| `searchsploit --stats`| Shows database statistics.| `Total exploits: 51,234 `   
+` Papers: 5,678 `   
+` Shellcodes: 2,345`  
+Platform Filter| `searchsploit windows privilege`| Filters by platform.| `Microsoft Windows 10 - Privilege Escalation `   
+` Windows Server 2019 - Local Privilege Escalation`  
+Overflow Search| `searchsploit linux kernel overflow`| Searches for overflow exploits.| `Linux Kernel 5.8 < 5.10.16 - Buffer Overflow`  
+Web App Search| `searchsploit php webapp sql`| Searches web app exploits.| `PHP 7.4 - SQL Injection in Web Application`  
+Remote Search| `searchsploit ssh remote`| Searches remote exploits.| `OpenSSH 7.7 - Remote Code Execution`  
+Local Search| `searchsploit windows local`| Searches local exploits.| `Windows 10 - Local Privilege Escalation`  
+DOS Search| `searchsploit apache dos`| Searches DoS exploits.| `Apache 2.4.x - Denial of Service`  
+Metasploit Modules| `searchsploit apache| grep msf`| Shows Metasploit modules.

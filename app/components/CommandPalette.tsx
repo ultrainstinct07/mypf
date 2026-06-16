@@ -7,6 +7,8 @@ import { Search, ArrowRight, X } from 'lucide-react';
 import { useKeyboardShortcut } from '../hooks/useKeyboardShortcut';
 import { useCtfOptional } from './CtfProvider';
 
+import type { TacticMeta } from '@/types/tactics';
+
 interface CommandItem {
   id: string;
   label: string;
@@ -14,6 +16,7 @@ interface CommandItem {
   href: string;
   keywords?: string[];
   action?: 'open-terminal';
+  category?: string;
 }
 
 const baseCommands: CommandItem[] = [
@@ -21,6 +24,7 @@ const baseCommands: CommandItem[] = [
   { id: 'about', label: 'About Me', href: '/#about', keywords: ['about', 'bio'] },
   { id: 'expertise', label: 'Expertise', href: '/#expertise', keywords: ['skills', 'capabilities'] },
   { id: 'projects', label: 'Projects', href: '/projects', keywords: ['work', 'portfolio', 'all', 'gallery'] },
+  { id: 'tactics', label: 'Security Tactics', href: '/tactics', keywords: ['pentesting', 'hardening', 'tools', 'security', 'commands', 'cheat sheets'] },
   {
     id: 'ad-void',
     label: 'AD-Void Cheat Sheet',
@@ -41,7 +45,11 @@ const fuseOptions: IFuseOptions<CommandItem> = {
   threshold: 0.3,
 };
 
-export default function CommandPalette() {
+interface CommandPaletteProps {
+  tactics: TacticMeta[];
+}
+
+export default function CommandPalette({ tactics }: CommandPaletteProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -51,9 +59,19 @@ export default function CommandPalette() {
   const listRef = useRef<HTMLDivElement>(null);
 
   const commands = useMemo(() => {
-    if (!ctf?.progress.voidDiscovered) return baseCommands;
+    const tacticsList = (tactics || []).map((t) => ({
+      id: `tactic-${t.category}-${t.slug}`,
+      label: t.title,
+      description: `${t.category.charAt(0).toUpperCase() + t.category.slice(1)} Tactic — ${t.description}`,
+      href: `/tactics/${t.category}/${t.slug}`,
+      keywords: [t.category, t.subcategory || '', ...t.tags],
+      category: t.category,
+    }));
+
+    const base = [...baseCommands, ...tacticsList];
+    if (!ctf?.progress.voidDiscovered) return base;
     return [
-      ...baseCommands,
+      ...base,
       {
         id: 'void-terminal',
         label: 'Open VOID Terminal',
@@ -63,7 +81,7 @@ export default function CommandPalette() {
         action: 'open-terminal' as const,
       },
     ];
-  }, [ctf?.progress.voidDiscovered]);
+  }, [tactics, ctf?.progress.voidDiscovered]);
 
   useKeyboardShortcut(['mod+k'], () => {
     setIsOpen(true);

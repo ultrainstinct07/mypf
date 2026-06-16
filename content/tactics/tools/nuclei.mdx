@@ -1,0 +1,187 @@
+---
+title: "Nuclei"
+description: "Nuclei tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['web']
+---
+
+## What is the purpose of Nuclei?​
+
+**Nuclei** is an **open source** vulnerability scanning engine that's fast, extensible, and covers a wide range of weaknesses. It has hugely gained fame among bug bounty hunters, penetration testers, and researchers looking to create re-usable checks for critical vulnerabilities.
+
+**Here are the primary uses of Nuclei:**
+
+  * **Template-based Scanning:** Nuclei uses YAML-based templates to define a wide variety of checks types—ranging from vulnerability detection to configuration audits to information gathering—hence the goal is to provide customizable and extensible scanning. It facilitates integration with other security tools.
+
+  * **Rapid Vulnerability Discovery:** It also enables detection through a large database to search for known vulnerabilities using predefined templates that can identify issues such as CVEs (Common Vulnerabilities and Exposures) across multiple hosts.
+
+  * **Integration with CI/CD Pipelines:** Nuclei can be integrated into continuous integration and continuous deployment pipelines. CI/CD is a procedure for enhancing automation while developing and deploying any software application. It involves running automated tests and checks on every change introduced into the code.
+
+  * **Automated Security Testing:** It provides automated security testing capabilities for web applications, APIs and infrastructure that help security teams detect and find potential vulnerabilities early.
+
+  * **Community-driven Templates:** Nuclei leverages a large set of community support-driven templates that identify different vulnerabilities, ensuring that scanning is updated against current cyber threats/attack vectors from all directions. In this respect, Nuclei offers a great privilege to its users with its up-to-date threat detection capability.
+
+
+
+
+## Core Features​
+
+  * Template-Based Scanning
+  * Rapid Scanning
+  * Multi-Protocol Support
+  * Community-Driven Templates
+  * Integration with Other Tools
+  * Customization and Extensibility
+  * Reporting and Output Formats
+
+
+
+## Data sources:​
+
+  * Nuclei Templates Repository
+  * CVE Databases
+  * Security Research Blogs and Reports
+  * Community Contributions
+  * API Integrations
+
+
+
+## Common Nuclei Commands​
+
+### 1\. Basic Usage​
+
+  * The fundamental and most commonly used command is to scan a given target URL. This is one of the major commands for the exploration of vulnerabilities and gathering all the necessary information from the target system.
+
+
+    
+    
+```
+nuclei -u https://example.com  
+```
+### 2\. Scanning from a File​
+
+  * This command can be used by security experts or researchers to scan many targets at the same time by specifying the file containing the target URLs. This simplifies the scanning process, focuses the Nuclei security tool on a specific set of tasks and makes it very efficient in evaluating many systems.
+
+
+    
+    
+```
+nuclei -l targets.txt  
+```
+### 3\. Using Custom Templates​
+
+  * It allows the user to define a template directory and use their own templates or other templates during the scan. This feature saves time by customizing the Nuclei tool for its users. Custom templates can improve the scanning process for specific vulnerabilities of interest.
+
+
+    
+    
+```
+nuclei -t /path/to/templates/  
+```
+### 4\. Scanning for CVEs​
+
+  * This command is programmed to scan targeted machines for potential vulnerabilities related to CVEs (Common Vulnerabilities and Exposures). It uses CVE-specific templates when scanning for potential security threats. This ability provides an opportunity for people using the Nuclei tool to detect current web vulnerabilities.
+
+
+    
+    
+```
+nuclei -t cves/ -l targets.txt  
+```
+### 5\. Displaying Version​
+
+  * This command shows the current version of Nuclei installed on your system.
+
+
+    
+    
+```
+nuclei -s  
+```
+### 6\. Updating Nuclei​
+
+  * This command updates Nuclei to the latest version available.
+
+
+    
+    
+```
+nuclei -o output.txt  
+```
+### 7\. Outputting Results to a File​
+
+  * This option allows the user to set an output file where the scan results should be saved. The results need to be saved for logging, analysis and reporting purposes and even for follow-up actions on the target area.
+
+
+    
+    
+```
+nuclei -o output.txt  
+```
+### 8\. Verbose output​
+
+  * The verbose output command in Nuclei is responsible for clear visualization of the scanning process by including detailed information on every action taken in the process of scanning.
+
+
+    
+    
+```
+nuclei -u https://example.com -v  
+```
+### 9.Silent Mode​
+
+  * This command runs the scan without displaying any output in the console, useful for quiet operation.
+
+
+    
+    
+```
+nuclei -silent  
+```
+### 10\. Help and Usage Information​
+
+  * This command displays help information, including a list of available options and commands for using Nuclei.
+
+
+    
+    
+```
+nuclei -h  
+```
+Alternative usage:
+    
+    
+```
+nuclei --help  
+```
+## Output examples of Nuclei Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Scan| `nuclei -u https://example.com`| Initiates a basic scan on the specified target URL.| `Scanning https://example.com...`  
+Scanning from a File| `nuclei -l targets.txt`| Scans multiple targets listed in a file.| `Scanning targets from targets.txt...`  
+Using Custom Templates| `nuclei -t /path/to/templates/`| Uses custom or additional templates from a specified directory.| `Using templates from /path/to/templates/`  
+Scanning for CVEs| `nuclei -t cves/ -l targets.txt`| Scans for vulnerabilities related to CVEs using CVE-specific templates.| `Scanning for CVEs...`  
+Outputting Results to a File| `nuclei -u https://example.com -o output.txt`| Saves scan results to a specified file for later analysis.| `Results saved to output.txt`  
+Verbose Output| `nuclei -u https://example.com -v`| Provides detailed information about the scanning process.| `Verbose mode enabled.`  
+Silent Mode| `nuclei -u https://example.com -silent`| Runs the scan without displaying output on the console.| `Running scan in silent mode.`  
+Displaying Version| `nuclei -version`| Displays the current version of Nuclei installed.| `Nuclei version 2.0.0`  
+Updating Nuclei| `nuclei -update`| Updates the Nuclei tool to the latest version available.| `Nuclei updated to the latest version.`  
+Help and Usage Information| `nuclei -h`| Displays help information and a list of available commands.| `Usage: nuclei [options]`  
+Specify Multiple Targets| `nuclei -l targets.txt -t /path/to/templates/`| Scans multiple targets with specified templates.| `Scanning targets from targets.txt...`  
+Timeout for Requests| `nuclei -u https://example.com -timeout 5`| Sets a timeout duration for requests during the scan.| `Timeout set to 5 seconds.`  
+Custom User-Agent| `nuclei -u https://example.com -ua "CustomUserAgent"`| Sets a custom User-Agent string for requests.| `Using custom User-Agent: CustomUserAgent`  
+Output JSON Format| `nuclei -u https://example.com -json`| Outputs scan results in JSON format.| `Results saved in JSON format.`  
+Resume Previous Scan| `nuclei -resume session.json`| Resumes a previously interrupted scan using a session file.| `Resuming scan from session.json...`  
+Health Check| `nuclei -health`| Performs a diagnostic check on the Nuclei tool.| `Nuclei is functioning correctly.`  
+Include/Exclude Templates| `nuclei -t /path/to/templates/ -exclude exclude.yaml`| Includes or excludes specific templates during the scan.| `Excluding templates in exclude.yaml`  
+Use Custom DNS Resolvers| `nuclei -u https://example.com -r resolvers.txt`| Specifies custom DNS resolvers for the scan.| `Using DNS resolvers from resolvers.txt`  
+Rate Limiting| `nuclei -u https://example.com -rl 10`| Limits requests sent per second during the scan.| `Rate limit set to 10 requests per second.`  
+Store HTTP Responses| `nuclei -u https://example.com --store-requests`| Stores HTTP requests and responses during the scan.| `HTTP requests and responses stored.`  
+Firewall Detection| `nuclei -u https://example.com --detect-firewall`| Detects the presence of a firewall and assesses its impact on scanning.| `Detecting firewall presence...`  
+Finding Common Log Files| `nuclei -u https://example.com --find-logs`| Searches for common log files on the target site.| `Searching for log files...`  
+Finding Common Backup Files| `nuclei -u https://example.com --find-backups`| Searches for common backup files on the target site.| `Searching for backup files...`  
+Enumerate Users| `nuclei -u https://example.com --enum-users`| Lists registered users on the target site.| `Enumerating users...`  
+Check for Vulnerabilities| `nuclei -u https://example.com --check-vulns`| Scans for known vulnerabilities in web components.| `Scanning for vulnerabilities...`  
+Enumerate Plugins and Extensions| `nuclei -u https://example.com --enum-plugins`| Enumerates installed plugins and extensions.| `Enumerating plugins and extensions...`  
+Brute Force Testing| `nuclei -u https://example.com --brute --wordlist wordlist.txt`| Performs brute force attacks to test password strength.| `Brute forcing with wordlist.txt...`  
+Check Configuration| `nuclei -u https://example.com --check-config`| Checks for insecure configurations and misconfigurations.| `Checking configuration...`

@@ -1,0 +1,340 @@
+---
+title: "Enum4linux"
+description: "Enum4linux tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'windows', 'smb']
+---
+
+**Enum4linux** is an **open-source** tool for enumerating information from Windows and Samba systems. It is a wrapper around the Samba tools smbclient, rpclient, net, and nmblookup, consolidating their functionality into a single easy-to-use interface. Enum4linux is particularly valuable during the reconnaissance phase of penetration testing, providing comprehensive information about Windows networks, shares, users, groups, and system configurations.
+
+**Here are the primary uses of Enum4linux:**
+
+  * **User Enumeration:** Enum4linux enumerates local and domain users from Windows systems, providing usernames, RIDs (Relative Identifiers), and account information. This data is crucial for understanding the user landscape and identifying potential targets for further attacks.
+
+  * **Share Enumeration:** The tool discovers and lists SMB shares on target systems, identifying accessible network resources and potential data repositories. It also determines share permissions and access controls, revealing misconfigured or overly permissive shares.
+
+  * **Group Enumeration:** Enum4linux identifies local and domain groups along with their memberships, helping security professionals understand organizational structure and privilege distribution across the network.
+
+  * **Password Policy Discovery:** The tool retrieves password policy information including minimum length, complexity requirements, lockout thresholds, and password history. This information is valuable for planning password spraying attacks and understanding account security controls.
+
+  * **OS and Domain Information:** Enum4linux gathers operating system details, domain information, and workgroup configurations, providing context about the target environment and helping identify potential vulnerabilities.
+
+  * **RID Cycling:** The tool performs RID (Relative Identifier) cycling to enumerate users and groups even when standard enumeration methods are restricted, providing a reliable fallback enumeration technique.
+
+
+
+
+## Core Features​
+
+  * User Enumeration
+  * Group Enumeration
+  * Share Enumeration
+  * Password Policy Retrieval
+  * OS Information Discovery
+  * Domain/Workgroup Information
+  * RID Cycling
+  * SID Enumeration
+  * Printer Information
+  * Null Session Exploitation
+  * Credential-Based Enumeration
+  * Verbose Output Options
+  * Multiple Protocol Support
+
+
+
+## Data sources​
+
+  * SMB Protocol
+  * NetBIOS Protocol
+  * MSRPC Protocol
+  * SAMR (Security Account Manager Remote)
+  * LSA (Local Security Authority)
+  * Share Information
+  * Domain Controllers
+  * Windows Registry (Remote)
+  * Active Directory (via RPC)
+
+
+
+## Common Enum4linux Commands​
+
+### 1\. Basic Enumeration​
+
+  * This command performs a basic enumeration of the target system, gathering general information about users, shares, and system configuration.
+
+
+    
+    
+```
+enum4linux <target>  
+```
+### 2\. Full Enumeration​
+
+  * This command performs comprehensive enumeration using all available techniques, providing maximum information about the target system.
+
+
+    
+    
+```
+enum4linux -a <target>  
+```
+### 3\. User Enumeration​
+
+  * This command specifically enumerates users on the target system, listing all local and domain user accounts.
+
+
+    
+    
+```
+enum4linux -U <target>  
+```
+### 4\. Share Enumeration​
+
+  * This command lists all SMB shares available on the target system along with their permissions and access controls.
+
+
+    
+    
+```
+enum4linux -S <target>  
+```
+### 5\. Group Enumeration​
+
+  * This command enumerates local and domain groups on the target system, including group memberships.
+
+
+    
+    
+```
+enum4linux -G <target>  
+```
+### 6\. Password Policy​
+
+  * This command retrieves the password policy from the target system, including requirements and lockout settings.
+
+
+    
+    
+```
+enum4linux -P <target>  
+```
+### 7\. OS Information​
+
+  * This command gathers operating system information including version, build number, and system architecture.
+
+
+    
+    
+```
+enum4linux -o <target>  
+```
+### 8\. RID Cycling​
+
+  * This command performs RID cycling to enumerate users and groups through brute-forcing SIDs (Security Identifiers).
+
+
+    
+    
+```
+enum4linux -r <target>  
+```
+### 9\. Detailed RID Cycling​
+
+  * This command performs detailed RID cycling with an extended range, discovering more users and groups through comprehensive SID enumeration.
+
+
+    
+    
+```
+enum4linux -R 500-550,1000-1050 <target>  
+```
+### 10\. Authenticated Enumeration​
+
+  * This command performs enumeration using provided credentials, accessing information that requires authentication.
+
+
+    
+    
+```
+enum4linux -u <username> -p <password> <target>  
+```
+### 11\. Domain Information​
+
+  * This command retrieves domain and workgroup information from the target system.
+
+
+    
+    
+```
+enum4linux -d <target>  
+```
+### 12\. List Users via RID​
+
+  * This command enumerates users by iterating through RIDs, useful when other enumeration methods fail.
+
+
+    
+    
+```
+enum4linux -r -u <username> -p <password> <target>  
+```
+### 13\. Printer Information​
+
+  * This command gathers information about network printers configured on the target system.
+
+
+    
+    
+```
+enum4linux -i <target>  
+```
+### 14\. Group Member Information​
+
+  * This command retrieves detailed information about members of specific groups.
+
+
+    
+    
+```
+enum4linux -M <target>  
+```
+### 15\. Share Access Check​
+
+  * This command checks which shares are accessible and attempts to list their contents.
+
+
+    
+    
+```
+enum4linux -s /usr/share/enum4linux/share-list.txt <target>  
+```
+### 16\. Verbose Output​
+
+  * This command enables verbose output mode, displaying detailed information about enumeration operations and results.
+
+
+    
+    
+```
+enum4linux -v <target>  
+```
+### 17\. Workgroup Detection​
+
+  * This command detects and displays the workgroup or domain name of the target system.
+
+
+    
+    
+```
+enum4linux -w <target>  
+```
+### 18\. Known Usernames Check​
+
+  * This command checks for the existence of common or known usernames on the target system.
+
+
+    
+    
+```
+enum4linux -k <username> <target>  
+```
+### 19\. Dependency Check​
+
+  * This command checks if all required dependencies (smbclient, rpcclient, etc.) are installed and accessible.
+
+
+    
+    
+```
+enum4linux -d  
+```
+### 20\. Help and Usage Information​
+
+  * This command displays the help menu and usage information for Enum4linux, listing all available options.
+
+
+    
+    
+```
+enum4linux -h  
+```
+Alternative usage:
+    
+    
+```
+enum4linux --help  
+```
+## Output Examples of Enum4linux Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Enumeration| `enum4linux 192.168.1.10`| Performs basic target enumeration.| `Starting enum4linux v0.9.1 `   
+` Target: 192.168.1.10 `   
+` [+] Got OS info for 192.168.1.10`  
+Full Enumeration| `enum4linux -a 192.168.1.10`| Comprehensive enumeration.| `[+] Enumerating users... `   
+` [+] Enumerating shares... `   
+` [+] Enumerating groups...`  
+User Enumeration| `enum4linux -U 192.168.1.10`| Lists all users.| `user:[Administrator] rid:[0x1f4] `   
+` user:[Guest] rid:[0x1f5] `   
+` user:[john] rid:[0x3e8]`  
+Share Enumeration| `enum4linux -S 192.168.1.10`| Lists SMB shares.| `Sharename Type Comment `   
+` --------- ---- ------- `   
+` ADMIN$ Disk Remote Admin `   
+` C$ Disk Default share `   
+` IPC$ IPC Remote IPC`  
+Group Enumeration| `enum4linux -G 192.168.1.10`| Lists groups.| `group:[Administrators] rid:[0x220] `   
+` group:[Users] rid:[0x221] `   
+` group:[Guests] rid:[0x222]`  
+Password Policy| `enum4linux -P 192.168.1.10`| Shows password policy.| `[+] Password Info: `   
+` Minimum password length: 7 `   
+` Password complexity: Enabled `   
+` Lockout threshold: 5`  
+OS Information| `enum4linux -o 192.168.1.10`| Displays OS details.| `[+] OS information: `   
+` OS: Windows 10 `   
+` OS version: 10.0 `   
+` OS build: 19041`  
+RID Cycling| `enum4linux -r 192.168.1.10`| Performs RID cycling.| `[+] Attempting to enumerate via RID cycling `   
+` S-1-5-21-xxx-xxx-xxx-500 DOMAIN\Administrator (Local User) `   
+` S-1-5-21-xxx-xxx-xxx-501 DOMAIN\Guest (Local User)`  
+Range RID Cycling| `enum4linux -R 500-550 192.168.1.10`| RID cycles specific range.| `[+] Enumerating RID 500-550 `   
+` RID 500: Administrator `   
+` RID 501: Guest `   
+` RID 502: krbtgt`  
+Authenticated Enum| `enum4linux -u admin -p P@ssw0rd 192.168.1.10`| Uses credentials.| `[+] Authenticating as admin `   
+` [+] Authentication successful `   
+` [+] Retrieving user list...`  
+Domain Info| `enum4linux -d 192.168.1.10`| Shows domain information.| `[+] Domain/Workgroup: CORP `   
+` [+] Domain SID: S-1-5-21-xxx-xxx-xxx`  
+Printer Info| `enum4linux -i 192.168.1.10`| Lists network printers.| `[+] Printer info: `   
+` Printer: HP LaserJet `   
+` Driver: HP Universal Print Driver`  
+Verbose Mode| `enum4linux -v 192.168.1.10`| Detailed output.| `[*] Attempting to connect to 192.168.1.10 `   
+` [*] Running command: smbclient -L 192.168.1.10 `   
+` [+] Connection successful`  
+Null Session| `enum4linux 192.168.1.10`| Tests null session.| `[+] Attempting to map shares on 192.168.1.10 `   
+` [+] Session setup successful (null session)`  
+No Null Session| `enum4linux 192.168.1.10`| Null session fails.| `[-] Could not establish null session `   
+` [-] Access denied`  
+Workgroup Info| `enum4linux -w 192.168.1.10`| Shows workgroup.| `[+] Workgroup/Domain: WORKGROUP `   
+` [+] Server: FILESERVER`  
+Group Members| `enum4linux -M 192.168.1.10`| Lists group members.| `[+] Members of 'Administrators': `   
+` DOMAIN\Administrator `   
+` DOMAIN\admin`  
+Share Details| `enum4linux -S 192.168.1.10`| Detailed share info.| `[+] Share: Documents `   
+` Type: Disk `   
+` Comment: Shared Documents `   
+` Access: READ/WRITE`  
+SID Enumeration| `enum4linux -r 192.168.1.10`| Enumerates SIDs.| `[+] Domain SID: S-1-5-21-1234567890-1234567890-1234567890 `   
+` [+] Local SID: S-1-5-21-0987654321-0987654321-0987654321`  
+NetBIOS Names| `enum4linux 192.168.1.10`| Shows NetBIOS names.| `[+] NetBIOS Names: `   
+` FILESERVER <00> - Workstation `   
+` FILESERVER <20> - File Server`  
+SMB Signing| `enum4linux 192.168.1.10`| Checks SMB signing.| `[+] SMB Signing: Disabled `   
+` [!] SMB signing not required (vulnerable to relay attacks)`  
+Time Info| `enum4linux 192.168.1.10`| Shows system time.| `[+] Server Time: 2024-11-04 15:30:45 `   
+` [+] Time Zone: UTC+0`  
+Machine Account| `enum4linux -r 192.168.1.10`| Finds machine accounts.| `[+] Machine accounts found: `   
+` RID 1001: WORKSTATION$`  
+Trust Info| `enum4linux -a 192.168.1.10`| Shows trust relationships.| `[+] Trusted domains: `   
+` CORP.LOCAL (Direct Outbound)`  
+Error Handling| `enum4linux 192.168.1.99`| Handles unreachable host.| `[-] Could not connect to 192.168.1.99 `   
+` [-] Connection timed out`

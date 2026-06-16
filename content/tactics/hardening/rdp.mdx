@@ -1,0 +1,79 @@
+---
+title: "RDP Server Hardening"
+description: "An advanced and comprehensive RDP Server hardening guide with detailed explanations."
+tags: []
+---
+
+# RDP (Remote Desktop Protocol)
+
+This guide is intended for system administrators and security experts focused on securing **Remote Desktop Protocol (RDP)** services against cyber threats. It provides a series of advanced hardening strategies, complete with explanations for each recommendation.
+
+## Enable Network Level Authentication (NLA)​
+
+NLA adds an extra layer of authentication before establishing an RDP session, reducing the risk of brute force attacks and unauthorized access.
+    
+    
+```
+1. Open the System Properties dialog.  
+2. Navigate to Remote settings > Remote tab.  
+3. Select 'Allow connections only from computers running Remote Desktop with Network Level Authentication.'  
+```
+## Limit RDP Access to Specific Users​
+
+Restrict RDP access to a select group of users to minimize the attack surface and ensure that only authorized users can establish remote sessions.
+    
+    
+```
+1. Open System Properties dialog.  
+2. Navigate to Remote settings > Remote tab.  
+3. Click 'Select Users' and add only the users who require RDP access.  
+```
+## Change the Default RDP Port​
+
+Changing the default RDP port (3389) can help mitigate targeted attacks and reduce the visibility of RDP services to automated scans.
+    
+    
+```
+1. Open Registry Editor (regedit).  
+2. Navigate to HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp.  
+3. Modify the 'PortNumber' registry key to a value other than 3389.  
+```
+## Configure Account Lockout Policies​
+
+Implement account lockout policies to deter brute force attacks by temporarily locking out accounts after a defined number of failed login attempts.
+    
+    
+```
+1. Open Local Security Policy (secpol.msc).  
+2. Navigate to Account Policies > Account Lockout Policy.  
+3. Configure 'Account lockout threshold' and 'Account lockout duration' settings.  
+```
+## Enable Encryption for RDP Sessions​
+
+Ensure that RDP sessions are encrypted to protect data in transit against eavesdropping and man-in-the-middle attacks.
+    
+    
+```
+1. Open Group Policy Editor (gpedit.msc).  
+2. Navigate to Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Security.  
+3. Enable 'Set client connection encryption level' and select 'High Level'.  
+```
+## Use RDP Gateways​
+
+RDP Gateways provide a secure way to access internal network resources through RDP without exposing the RDP servers directly to the internet, reducing the attack surface.
+
+## Implement Two-Factor Authentication​
+
+Adding two-factor authentication to RDP sessions significantly increases security by requiring an additional verification step beyond just a password.
+
+## Regularly Update RDP Clients and Servers​
+
+Keeping RDP clients and servers up-to-date is crucial for protecting against vulnerabilities and ensuring the highest level of security.
+
+## Disable Clipboard Redirection​
+
+Disabling clipboard redirection for RDP sessions helps prevent data leakage and reduces the risk of malware spreading through copy-paste actions.
+
+## Monitor RDP Access Logs​
+
+Regular monitoring of RDP access logs is essential for detecting unauthorized access attempts and ensuring the effectiveness of implemented security measures.

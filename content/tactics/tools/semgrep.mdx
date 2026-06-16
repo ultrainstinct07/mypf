@@ -1,0 +1,658 @@
+---
+title: "Semgrep"
+description: "Semgrep tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['devsecops', 'sast', 'code analysis', 'ci/cd']
+---
+
+## What is the purpose of Semgrep?​
+
+**Semgrep** is a static analysis and code scanning tool used to find security issues, correctness bugs, risky code patterns, insecure API usage, secrets, and policy violations in source code. It uses rules that describe code patterns and can run locally, in CI/CD, or through Semgrep AppSec Platform.
+
+Semgrep is useful because it can scan code with public rules from Semgrep Registry, custom YAML rules, one-off command-line patterns, and organization policies. It is commonly used for SAST, secure coding guardrails, pull request checks, custom policy enforcement, and developer-friendly remediation workflows.
+
+**Note:** Semgrep has two primary CLI scan commands. Use `semgrep scan` for local scans, Semgrep Community Edition workflows, and custom rule testing. Use `semgrep ci` when running organization-managed scans in CI with Semgrep AppSec Platform policies.
+
+**Here are the primary uses of Semgrep:**
+
+  * **Static Application Security Testing:** Semgrep scans source code for security issues such as injection patterns, insecure deserialization, weak cryptography, unsafe framework usage, and authorization mistakes.
+
+  * **Custom Code Pattern Detection:** The tool can run one-off patterns from the command line or reusable YAML rules, which makes it useful for finding project-specific anti-patterns.
+
+  * **Policy Enforcement in CI/CD:** Semgrep can run in CI, fail builds when findings are considered blocking, and report only newly introduced findings in pull request or merge request contexts.
+
+  * **Rule-Based Secure Development:** Teams can use Semgrep Registry rules, local rules, or organization-managed policies to standardize secure coding checks across repositories.
+
+  * **Developer Feedback and Triage:** Semgrep can output findings in text, JSON, SARIF, GitLab SAST, GitLab Secrets, JUnit XML, Emacs, and Vim formats for terminals, dashboards, CI systems, and code scanning tools.
+
+  * **Secrets and Supply Chain Workflows:** When configured with the appropriate product access and policies, Semgrep can run Code, Secrets, and Supply Chain scans from the same CLI workflow.
+
+  * **Rule Testing and Authoring:** The tool can validate and test custom rules, inspect matching behavior, and support rule development in local workflows.
+
+
+
+
+## Core Features​
+
+  * Static analysis for source code and configuration files
+  * Registry, local, and custom rule support
+  * Multi-language code scanning
+  * Secrets and supply-chain checks where enabled
+  * Autofix, baseline, ignore, and severity controls
+  * JSON, SARIF, GitLab, and text output formats
+  * CI/CD and pre-commit integration support
+
+
+
+## Data sources​
+
+  * Source code repositories and individual files
+  * Semgrep YAML rules and registry rulesets
+  * Dependency manifests and lockfiles
+  * Configuration files such as Dockerfile, YAML, and Terraform
+  * Semgrep ignore files and baselines
+  * Scan findings and CI artifacts
+
+
+
+## Common Semgrep Commands​
+
+### 1\. Install Semgrep with Homebrew​
+
+  * This command installs Semgrep on macOS using Homebrew.
+
+
+    
+    
+```
+brew install semgrep  
+```
+### 2\. Install Semgrep with Pipx​
+
+  * This command installs Semgrep as an isolated Python CLI tool.
+
+
+    
+    
+```
+pipx install semgrep  
+```
+### 3\. Install Semgrep with Uv​
+
+  * This command installs Semgrep using `uv`.
+
+
+    
+    
+```
+uv tool install semgrep  
+```
+### 4\. Check Semgrep Version​
+
+  * This command prints the installed Semgrep version.
+
+
+    
+    
+```
+semgrep --version  
+```
+### 5\. Show Global Help​
+
+  * This command displays Semgrep commands and global help.
+
+
+    
+    
+```
+semgrep --help  
+```
+### 6\. Show Local Scan Help​
+
+  * This command displays options for `semgrep scan`.
+
+
+    
+    
+```
+semgrep scan --help  
+```
+### 7\. Show CI Help​
+
+  * This command displays options for `semgrep ci`.
+
+
+    
+    
+```
+semgrep ci --help  
+```
+### 8\. Run a Local Scan with Auto Rules​
+
+  * This command uses Semgrep Registry to fetch rules that fit the project.
+
+
+    
+    
+```
+semgrep scan --config auto  
+```
+### 9\. Run a Local Scan Against a Specific Path​
+
+  * This command scans a selected source directory.
+
+
+    
+    
+```
+semgrep scan --config auto path/to/src  
+```
+### 10\. Run the Default Registry Ruleset​
+
+  * This command scans with the default Semgrep ruleset.
+
+
+    
+    
+```
+semgrep scan --config p/default  
+```
+### 11\. Run a Language Ruleset​
+
+  * This command scans with a selected Semgrep Registry language ruleset.
+
+
+    
+    
+```
+semgrep scan --config p/python path/to/src  
+```
+### 12\. Run Multiple Rulesets​
+
+  * This command combines multiple registry rulesets in one scan.
+
+
+    
+    
+```
+semgrep scan --config p/python --config p/owasp-top-ten path/to/src  
+```
+### 13\. Run a Local Rule File​
+
+  * This command scans with a local YAML rule file.
+
+
+    
+    
+```
+semgrep scan --config rules.yaml path/to/src  
+```
+### 14\. Run a Directory of Rules​
+
+  * This command scans with all YAML rules inside a rule directory.
+
+
+    
+    
+```
+semgrep scan --config rules/ path/to/src  
+```
+### 15\. Run Rules Found in the Current Directory​
+
+  * This command loads YAML rules found in the current directory and subdirectories.
+
+
+    
+    
+```
+semgrep scan --config .  
+```
+### 16\. Run a One-Off Pattern​
+
+  * This command runs an ephemeral pattern against Python code.
+
+
+    
+    
+```bash
+semgrep scan -e '$X == $X' --lang=py path/to/src  
+```
+### 17\. Run a JavaScript Pattern​
+
+  * This command searches JavaScript and TypeScript files for direct `eval` usage.
+
+
+    
+    
+```bash
+semgrep scan -e 'eval($X)' --lang=javascript path/to/src  
+```
+### 18\. Save Text Output​
+
+  * This command writes text output to a file.
+
+
+    
+    
+```
+semgrep scan --config auto --text --text-output semgrep.txt  
+```
+### 19\. Save JSON Output​
+
+  * This command writes JSON output to a file.
+
+
+    
+    
+```
+semgrep scan --config auto --json --json-output semgrep.json  
+```
+### 20\. Save SARIF Output​
+
+  * This command writes SARIF output for code scanning platforms.
+
+
+    
+    
+```
+semgrep scan --config auto --sarif --sarif-output semgrep.sarif  
+```
+### 21\. Save Multiple Output Formats​
+
+  * This command writes text, JSON, and SARIF outputs in one scan.
+
+
+    
+    
+```
+semgrep scan --config auto --text --output semgrep.txt --json-output semgrep.json --sarif-output semgrep.sarif  
+```
+### 22\. Output GitLab SAST Format​
+
+  * This command writes results in GitLab SAST format.
+
+
+    
+    
+```
+semgrep scan --config auto --gitlab-sast --gitlab-sast-output gl-sast-report.json  
+```
+### 23\. Output JUnit XML​
+
+  * This command writes results in JUnit XML format.
+
+
+    
+    
+```
+semgrep scan --config auto --junit-xml --junit-xml-output semgrep-junit.xml  
+```
+### 24\. Fail on Findings​
+
+  * This command exits with code 1 when findings are found, which is useful for CI scripts.
+
+
+    
+    
+```
+semgrep scan --config auto --error  
+```
+### 25\. Filter by Severity​
+
+  * This command reports only findings from selected severities.
+
+
+    
+    
+```
+semgrep scan --config auto --severity ERROR --severity WARNING  
+```
+### 26\. Exclude Paths​
+
+  * This command skips matching files or directories using glob-style patterns.
+
+
+    
+    
+```
+semgrep scan --config auto --exclude tests --exclude "*.min.js"  
+```
+### 27\. Include Only Selected Paths​
+
+  * This command restricts scanning to selected paths or file patterns.
+
+
+    
+    
+```
+semgrep scan --config auto --include "src/**/*.py"  
+```
+### 28\. Exclude a Rule​
+
+  * This command skips a selected rule ID.
+
+
+    
+    
+```
+semgrep scan --config auto --exclude-rule <rule_id>  
+```
+### 29\. Use a Baseline Commit​
+
+  * This command reports only findings not present in the baseline commit.
+
+
+    
+    
+```
+semgrep scan --config auto --baseline-commit <commit_sha>  
+```
+### 30\. Enable Dataflow Traces​
+
+  * This command adds dataflow trace information to text and SARIF output.
+
+
+    
+    
+```
+semgrep scan --config auto --dataflow-traces  
+```
+### 31\. Disable `nosem` Suppressions​
+
+  * This command reports findings even when a line contains a `nosem` suppression comment.
+
+
+    
+    
+```
+semgrep scan --config auto --disable-nosem  
+```
+### 32\. Disable Metrics​
+
+  * This command disables Semgrep usage metrics.
+
+
+    
+    
+```
+semgrep scan --config auto --metrics=off  
+```
+### 33\. Use Semgrep Rules from an Environment Variable​
+
+  * This command sets rules through `SEMGREP_RULES`.
+
+
+    
+    
+```
+SEMGREP_RULES="p/python rules.yaml" semgrep scan path/to/src  
+```
+### 34\. Run a CI Scan​
+
+  * This command runs the Semgrep CI workflow using organization policies when logged in.
+
+
+    
+    
+```
+semgrep ci  
+```
+### 35\. Run a CI Dry Run​
+
+  * This command runs the configured CI scan without sending findings to Semgrep.
+
+
+    
+    
+```
+semgrep ci --dry-run  
+```
+### 36\. Run CI with JSON and SARIF Outputs​
+
+  * This command writes CI scan results in JSON and SARIF formats.
+
+
+    
+    
+```
+semgrep ci --json-output semgrep.json --sarif-output semgrep.sarif  
+```
+### 37\. Run CI with All Common Output Files​
+
+  * This command writes text, JSON, and SARIF outputs from a CI scan.
+
+
+    
+    
+```
+semgrep ci --text --output semgrep.txt --json-output semgrep.json --sarif-output semgrep.sarif  
+```
+### 38\. Run Only Semgrep Code​
+
+  * This command runs only the Semgrep Code product in a CI scan.
+
+
+    
+    
+```
+semgrep ci --code  
+```
+### 39\. Run Only Semgrep Supply Chain​
+
+  * This command runs only the Semgrep Supply Chain product in a CI scan.
+
+
+    
+    
+```
+semgrep ci --supply-chain  
+```
+### 40\. Run Only Semgrep Secrets​
+
+  * This command runs only the Semgrep Secrets product in a CI scan.
+
+
+    
+    
+```
+semgrep ci --secrets  
+```
+### 41\. Run CI with OSS Engine Only​
+
+  * This command forces a CI scan to use only open-source Semgrep analysis.
+
+
+    
+    
+```
+semgrep ci --oss-only  
+```
+### 42\. Extend Timeout Thresholds​
+
+  * This command increases the per-file timeout and reduces retry attempts.
+
+
+    
+    
+```
+semgrep ci --timeout 45 --timeout-threshold 2  
+```
+### 43\. Set Parallel Jobs​
+
+  * This command adjusts the number of Semgrep scan jobs.
+
+
+    
+    
+```
+semgrep scan --config auto -j 4  
+```
+### 44\. Limit Target File Size​
+
+  * This command skips files larger than the selected size.
+
+
+    
+    
+```
+semgrep scan --config auto --max-target-bytes 2MB  
+```
+### 45\. Set Maximum Memory​
+
+  * This command sets the maximum memory in MiB for scanning phases.
+
+
+    
+    
+```
+semgrep scan --config auto --max-memory 4096  
+```
+### 46\. Show Supported Languages​
+
+  * This command prints the currently supported languages.
+
+
+    
+    
+```
+semgrep scan --show-supported-languages  
+```
+### 47\. Validate Rule Files​
+
+  * This command validates Semgrep rule YAML without running a search.
+
+
+    
+    
+```
+semgrep scan --validate --config rules.yaml  
+```
+### 48\. Test Custom Rules​
+
+  * This command runs Semgrep rule tests.
+
+
+    
+    
+```
+semgrep scan --test  
+```
+### 49\. Publish Custom Rules​
+
+  * This command uploads rules to Semgrep Registry.
+
+
+    
+    
+```
+semgrep publish path/to/rules  
+```
+### 50\. Log In​
+
+  * This command logs in to Semgrep AppSec Platform.
+
+
+    
+    
+```
+semgrep login  
+```
+### 51\. Log Out​
+
+  * This command removes locally stored Semgrep credentials.
+
+
+    
+    
+```
+semgrep logout  
+```
+### 52\. Run Semgrep in Docker​
+
+  * This command scans a local source directory using the official Semgrep Docker image.
+
+
+    
+    
+```
+docker run --rm -v "/path/to/src:/src" semgrep/semgrep semgrep scan --config auto /src  
+```
+### 53\. Run a Specific Semgrep Docker Version​
+
+  * This command runs a pinned Semgrep Docker image version.
+
+
+    
+    
+```
+docker run --rm -v "/path/to/src:/src" semgrep/semgrep:<version> semgrep scan --config auto /src  
+```
+### 54\. Start the Semgrep LSP Server​
+
+  * This command starts the Semgrep language server for IDE integrations.
+
+
+    
+    
+```
+semgrep lsp  
+```
+### 55\. Start the Semgrep MCP Server​
+
+  * This command starts the Semgrep MCP server.
+
+
+    
+    
+```
+semgrep mcp  
+```
+## Output Examples of Semgrep Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Show Help| `semgrep --help`| Displays global commands.| `Commands: ci, login, logout, scan, show, test, validate`  
+Show Version| `semgrep --version`| Prints installed version.| `1.x.x`  
+Local Scan Help| `semgrep scan --help`| Shows local scan options.| `semgrep scan [OPTION]... [TARGETS]...`  
+CI Help| `semgrep ci --help`| Shows CI scan options.| `semgrep ci [OPTION]...`  
+Auto Rules Scan| `semgrep scan --config auto`| Fetches applicable Registry rules.| `Ran 120 rules on 80 files`  
+Path Scan| `semgrep scan --config auto path/to/src`| Scans a selected path.| `Scanning path/to/src`  
+Default Ruleset| `semgrep scan --config p/default`| Runs the default ruleset.| `Using config from p/default`  
+Language Ruleset| `semgrep scan --config p/python path/to/src`| Runs language-specific rules.| `Python rules loaded`  
+Multiple Rulesets| `semgrep scan --config p/python --config p/owasp-top-ten`| Combines multiple configs.| `Loaded 2 configs`  
+Local Rule File| `semgrep scan --config rules.yaml path/to/src`| Uses a local rule file.| `rules.yaml loaded`  
+Rule Directory| `semgrep scan --config rules/ path/to/src`| Uses rules from a directory.| `Loaded rules from rules/`  
+One-Off Pattern| `semgrep scan -e '$X == $X' --lang=py path/to/src`| Runs an ephemeral pattern.| `pattern match found`  
+Text Output| `semgrep scan --config auto --text --text-output semgrep.txt`| Saves text results.| `semgrep.txt written`  
+JSON Output| `semgrep scan --config auto --json --json-output semgrep.json`| Saves JSON results.| `semgrep.json written`  
+SARIF Output| `semgrep scan --config auto --sarif --sarif-output semgrep.sarif`| Saves SARIF results.| `semgrep.sarif written`  
+Multi Output| `semgrep scan --config auto --text --output semgrep.txt --json-output semgrep.json --sarif-output semgrep.sarif`| Writes multiple formats.| `text, JSON, and SARIF outputs written`  
+GitLab SAST| `semgrep scan --config auto --gitlab-sast-output gl-sast-report.json`| Writes GitLab SAST report.| `gl-sast-report.json written`  
+JUnit XML| `semgrep scan --config auto --junit-xml-output semgrep-junit.xml`| Writes JUnit XML report.| `semgrep-junit.xml written`  
+Fail on Findings| `semgrep scan --config auto --error`| Exits non-zero when findings exist.| `exit status 1`  
+Severity Filter| `semgrep scan --config auto --severity ERROR`| Reports selected severities.| `Only ERROR findings shown`  
+Exclude Paths| `semgrep scan --config auto --exclude tests`| Skips matching paths.| `Skipped tests/`  
+Include Paths| `semgrep scan --config auto --include "src/**/*.py"`| Scans only selected paths.| `Selected Python files in src/`  
+Exclude Rule| `semgrep scan --config auto --exclude-rule <rule_id>`| Skips one rule.| `Excluded rule <rule_id>`  
+Baseline Commit| `semgrep scan --config auto --baseline-commit <commit_sha>`| Shows only new findings.| `Baseline commit applied`  
+Dataflow Traces| `semgrep scan --config auto --dataflow-traces`| Adds trace information.| `Dataflow trace included`  
+Disable Nosem| `semgrep scan --config auto --disable-nosem`| Ignores `nosem` suppressions.| `nosem disabled`  
+Disable Metrics| `semgrep scan --config auto --metrics=off`| Turns off metrics.| `Metrics disabled`  
+CI Scan| `semgrep ci`| Runs CI workflow and organization policy.| `Only blocking findings displayed`  
+CI Dry Run| `semgrep ci --dry-run`| Runs without uploading findings.| `Dry run enabled`  
+CI Outputs| `semgrep ci --json-output semgrep.json --sarif-output semgrep.sarif`| Writes CI output files.| `semgrep.json and semgrep.sarif written`  
+Code Only| `semgrep ci --code`| Runs Semgrep Code only.| `Semgrep Code enabled`  
+Supply Chain Only| `semgrep ci --supply-chain`| Runs supply chain checks only.| `Semgrep Supply Chain enabled`  
+Secrets Only| `semgrep ci --secrets`| Runs secrets checks only.| `Semgrep Secrets enabled`  
+OSS Only| `semgrep ci --oss-only`| Uses open-source analysis only.| `OSS engine selected`  
+Timeout| `semgrep ci --timeout 45 --timeout-threshold 2`| Adjusts timeout behavior.| `Timeout set to 45 seconds`  
+Parallel Jobs| `semgrep scan --config auto -j 4`| Sets scan parallelism.| `Jobs: 4`  
+Max Target Size| `semgrep scan --config auto --max-target-bytes 2MB`| Skips large files.| `Large files skipped`  
+Max Memory| `semgrep scan --config auto --max-memory 4096`| Sets memory limit.| `Max memory: 4096 MiB`  
+Supported Languages| `semgrep scan --show-supported-languages`| Lists supported languages.| `python, javascript, go, java, ...`  
+Validate Rules| `semgrep scan --validate --config rules.yaml`| Validates rule files.| `Configuration is valid`  
+Test Rules| `semgrep scan --test`| Runs rule tests.| `All tests passed`  
+Login| `semgrep login`| Authenticates with Semgrep.| `Login successful`  
+Logout| `semgrep logout`| Removes stored credentials.| `Logged out`  
+Docker Scan| `docker run --rm -v "/path/to/src:/src" semgrep/semgrep semgrep scan --config auto /src`| Scans with Docker.| `Scanning /src`  
+LSP Server| `semgrep lsp`| Starts the Semgrep language server.| `Semgrep LSP server started`  
+MCP Server| `semgrep mcp`| Starts the Semgrep MCP server.| `Semgrep MCP server started`

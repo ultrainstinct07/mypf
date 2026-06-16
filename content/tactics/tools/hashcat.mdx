@@ -1,0 +1,249 @@
+---
+title: "Hashcat"
+description: "Hashcat tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['cracking', 'brute force']
+---
+
+**Hashcat** is the world's fastest and most advanced **open-source** password recovery tool. It supports various attack modes and can crack multiple hash types using CPU or GPU acceleration. Hashcat is widely used by penetration testers, security researchers, and system administrators to test password strength and recover lost passwords.
+
+**Here are the primary uses of Hashcat:**
+
+  * **Password Recovery:** Hashcat is primarily used for recovering lost or forgotten passwords by cracking password hashes. It supports over 300 highly-optimized hashing algorithms, making it versatile for various security assessments.
+
+  * **GPU Acceleration:** Hashcat leverages the power of GPUs to dramatically increase cracking speed compared to CPU-based tools. This makes it capable of processing billions of password candidates per second, significantly reducing the time required for password recovery.
+
+  * **Multiple Attack Modes:** Hashcat supports various attack modes including dictionary attacks, brute-force attacks, combination attacks, hybrid attacks, and rule-based attacks. This flexibility allows users to optimize their approach based on the target hash and available resources.
+
+  * **Hash Analysis:** The tool can identify hash types and provide detailed information about cracking progress, allowing security professionals to assess the strength of password policies and encryption implementations.
+
+  * **Security Auditing:** Hashcat is extensively used in security audits to test password strength across organizations. It helps identify weak passwords and enforce stronger password policies by demonstrating the ease with which weak passwords can be compromised.
+
+  * **Cross-Platform Support:** Hashcat runs on Linux, Windows, and macOS, and supports various GPU platforms including NVIDIA CUDA, AMD OpenCL, and Apple Metal, making it accessible across different hardware configurations.
+
+
+
+
+## Core Features​
+
+  * GPU and CPU Acceleration
+  * Support for 300+ Hash Types
+  * Multiple Attack Modes
+  * Rule-Based Password Generation
+  * Distributed Cracking Support
+  * Session Management and Resume
+  * Benchmark and Performance Testing
+  * Brain Feature (Password Knowledge Base)
+  * Potfile Management
+  * Real-time Progress Monitoring
+  * Custom Character Sets
+  * Mask Attack with Placeholders
+
+
+
+## Data sources​
+
+  * Password Hashes
+  * Wordlists and Dictionaries
+  * Rule Files
+  * Mask Files
+  * Character Sets
+  * Hash Files
+  * Potfile (Cracked Passwords)
+  * Brain Database (Learned Patterns)
+
+
+
+## Common Hashcat Commands​
+
+### 1\. Basic Dictionary Attack​
+
+  * This command performs a basic dictionary attack against a hash file using a specified wordlist. It attempts to crack passwords by comparing hash values against a list of common passwords.
+
+
+    
+    
+```
+hashcat -m 0 -a 0 hashes.txt wordlist.txt  
+```
+### 2\. Brute Force Attack​
+
+  * This command performs a brute-force attack using a mask to define the password pattern. It systematically tries all possible combinations within the specified pattern.
+
+
+    
+    
+```
+hashcat -m 0 -a 3 hashes.txt ?a?a?a?a?a?a?a?a  
+```
+### 3\. Combination Attack​
+
+  * This command combines words from two different wordlists to create password candidates. It's effective against passwords that combine multiple dictionary words.
+
+
+    
+    
+```
+hashcat -m 0 -a 1 hashes.txt wordlist1.txt wordlist2.txt  
+```
+### 4\. Rule-Based Attack​
+
+  * This command applies password generation rules to wordlist entries, creating variations of dictionary words. Rules can add numbers, special characters, or perform character substitutions.
+
+
+    
+    
+```
+hashcat -m 0 -a 0 hashes.txt wordlist.txt -r rules/best64.rule  
+```
+### 5\. Hybrid Attack (Wordlist + Mask)​
+
+  * This command combines dictionary words with brute-force patterns, trying variations like adding numbers or special characters to the end of dictionary words.
+
+
+    
+    
+```
+hashcat -m 0 -a 6 hashes.txt wordlist.txt ?d?d?d?d  
+```
+### 6\. Specify Hash Type​
+
+  * This command explicitly specifies the hash algorithm type for cracking. Using the correct hash mode is crucial for successful password recovery.
+
+
+    
+    
+```
+hashcat -m 1000 hashes.txt wordlist.txt  
+```
+### 7\. Show Cracked Passwords​
+
+  * This command displays all previously cracked passwords from the potfile without running a new attack. It's useful for reviewing past results.
+
+
+    
+    
+```
+hashcat -m 0 hashes.txt --show  
+```
+### 8\. Benchmark Mode​
+
+  * This command runs benchmark tests to measure cracking performance on the current hardware. It helps users understand their system's capabilities for different hash types.
+
+
+    
+    
+```
+hashcat -b  
+```
+### 9\. Session Management​
+
+  * This command creates a named session that can be paused and resumed later. This feature is essential for long-running cracking operations.
+
+
+    
+    
+```
+hashcat -m 0 -a 0 hashes.txt wordlist.txt --session=mysession  
+```
+### 10\. Resume Session​
+
+  * This command resumes a previously paused or interrupted cracking session, continuing from where it left off without losing progress.
+
+
+    
+    
+```
+hashcat --session=mysession --restore  
+```
+### 11\. Increment Mode​
+
+  * This command enables increment mode for mask attacks, automatically trying shorter patterns before longer ones. It optimizes cracking time by starting with most common password lengths.
+
+
+    
+    
+```
+hashcat -m 0 -a 3 hashes.txt ?a?a?a?a?a?a --increment  
+```
+### 12\. Custom Character Set​
+
+  * This command defines custom character sets for mask attacks, allowing users to specify exactly which characters to include in brute-force attempts.
+
+
+    
+    
+```
+hashcat -m 0 -a 3 hashes.txt -1 ?l?u?d custom_mask.txt  
+```
+### 13\. Output to File​
+
+  * This command saves cracked passwords to a specified output file in addition to the potfile. This facilitates post-analysis and reporting.
+
+
+    
+    
+```
+hashcat -m 0 -a 0 hashes.txt wordlist.txt -o cracked.txt  
+```
+### 14\. Remove Cracked Hashes​
+
+  * This command removes successfully cracked hashes from the input file, creating a new file with only uncracked hashes remaining.
+
+
+    
+    
+```
+hashcat -m 0 hashes.txt --show --left  
+```
+### 15\. Help and Usage Information​
+
+  * This command displays the help menu and usage information for Hashcat, listing all available options, hash modes, and attack types.
+
+
+    
+    
+```
+hashcat -h  
+```
+Alternative usage:
+    
+    
+```
+hashcat --help  
+```
+## Output Examples of Hashcat Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Dictionary Attack| `hashcat -m 0 -a 0 hashes.txt wordlist.txt`| Performs dictionary attack on MD5 hashes.| `Status: Cracked `   
+` Hash: 5f4dcc3b5aa765d61d8327deb882cf99:password`  
+Brute Force Attack| `hashcat -m 0 -a 3 hashes.txt ?a?a?a?a`| Performs brute-force attack with 4-character mask.| `Candidates: 95^4 (81,450,625) `   
+` Progress: 100%`  
+Show Cracked Passwords| `hashcat -m 0 hashes.txt --show`| Displays all previously cracked passwords.| `5f4dcc3b5aa765d61d8327deb882cf99:password `   
+` e10adc3949ba59abbe56e057f20f883e:123456`  
+Benchmark Mode| `hashcat -b -m 0`| Runs benchmark for MD5 hash cracking.| `Speed: 25000.0 MH/s (GPU)`  
+Specify Hash Type| `hashcat -m 1000 hashes.txt wordlist.txt`| Cracks NTLM hashes using dictionary.| `Hash-Mode 1000 (NTLM)`  
+Rule-Based Attack| `hashcat -m 0 -a 0 hashes.txt wordlist.txt -r best64.rule`| Applies rules to wordlist entries.| `Rules: 77 `   
+` Candidates: 7,700,000`  
+Combination Attack| `hashcat -m 0 -a 1 hashes.txt list1.txt list2.txt`| Combines words from two wordlists.| `Combination mode enabled`  
+Hybrid Attack| `hashcat -m 0 -a 6 hashes.txt wordlist.txt ?d?d`| Combines dictionary with 2-digit brute-force.| `Hybrid Wordlist + Mask mode`  
+Session Management| `hashcat -m 0 hashes.txt wordlist.txt --session=test`| Creates named session for cracking.| `Session: test `   
+` Status: Running`  
+Resume Session| `hashcat --session=test --restore`| Resumes previously saved session.| `Restored session 'test'`  
+Increment Mode| `hashcat -m 0 -a 3 hashes.txt ?a?a?a?a --increment`| Tries shorter masks before longer ones.| `Increment-Min: 1 `   
+` Increment-Max: 4`  
+Custom Character Set| `hashcat -m 0 -a 3 hashes.txt -1 ?l?d ?1?1?1?1`| Uses custom character set (lowercase + digits).| `Custom charset: abcdefghijklmnopqrstuvwxyz0123456789`  
+Workload Profile| `hashcat -m 0 hashes.txt wordlist.txt -w 3`| Sets workload profile for performance.| `Workload: High (3)`  
+Remove Cracked| `hashcat -m 0 hashes.txt --show --left`| Shows only uncracked hashes.| `Remaining: 15 hashes`  
+Output Format| `hashcat -m 0 hashes.txt wordlist.txt --outfile-format 2`| Specifies output format for cracked hashes.| `Outfile Format: plain`  
+Potfile Disable| `hashcat -m 0 hashes.txt wordlist.txt --potfile-disable`| Disables potfile usage during cracking.| `Potfile: Disabled`  
+Force Override| `hashcat -m 0 hashes.txt wordlist.txt --force`| Forces execution despite warnings.| `Force mode enabled`  
+Quiet Mode| `hashcat -m 0 hashes.txt wordlist.txt --quiet`| Suppresses status output during cracking.| _(Minimal output)_  
+Status Timer| `hashcat -m 0 hashes.txt wordlist.txt --status-timer=10`| Sets status update interval in seconds.| `Status updates every 10 seconds`  
+GPU Selection| `hashcat -m 0 hashes.txt wordlist.txt -d 1`| Selects specific GPU device for cracking.| `Device #1: NVIDIA RTX 3080`  
+Brain Feature| `hashcat -m 0 hashes.txt wordlist.txt --brain-server`| Enables brain server for distributed cracking.| `Brain server enabled on port 13743`  
+Hash Info| `hashcat --hash-info`| Displays information about hash types.| `Hash mode #0: MD5`  
+Example Hashes| `hashcat -m 1000 --example-hashes`| Shows example hashes for specified mode.| `NTLM: b4b9b02e6f09a9bd760f388b67351e2b`  
+Version Info| `hashcat --version`| Displays Hashcat version information.| `v6.2.6`  
+Machine Readable Output| `hashcat -m 0 hashes.txt wordlist.txt --machine-readable`| Outputs in machine-readable format.| `STATUS:RUNNING:0:1000:50.5`  
+Runtime Limit| `hashcat -m 0 hashes.txt wordlist.txt --runtime=300`| Sets maximum runtime in seconds.| `Runtime limit: 300 seconds`

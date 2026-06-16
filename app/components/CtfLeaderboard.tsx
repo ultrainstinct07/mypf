@@ -17,10 +17,6 @@ export default function CtfLeaderboard() {
 
   const isComplete = progress.completedStages.includes(5);
 
-  useEffect(() => {
-    void fetchLeaderboard();
-  }, []);
-
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
@@ -35,6 +31,13 @@ export default function CtfLeaderboard() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => {
+      void fetchLeaderboard();
+    });
+    return () => cancelAnimationFrame(handle);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -47,11 +47,13 @@ export function useHomeSectionSpy() {
 
   useEffect(() => {
     if (!isHome) {
-      setPastHero(false);
-      setActiveSection('');
-      setSectionProgress(0);
+      const handle = requestAnimationFrame(() => {
+        setPastHero(false);
+        setActiveSection('');
+        setSectionProgress(0);
+      });
       pastHeroRef.current = false;
-      return;
+      return () => cancelAnimationFrame(handle);
     }
 
     const sectionRatios = new Map<string, number>();

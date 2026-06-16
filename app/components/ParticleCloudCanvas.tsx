@@ -30,7 +30,9 @@ export default function ParticleCloudCanvas() {
     useParticleCloud();
   const webglEnabled = useParticleCloudEnabled();
 
-  showSplashRef.current = showSplash;
+  useEffect(() => {
+    showSplashRef.current = showSplash;
+  }, [showSplash]);
 
   useEffect(() => {
     if (!webglEnabled) return;

@@ -1,0 +1,371 @@
+---
+title: "Smbclient"
+description: "Smbclient tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'windows', 'smb']
+---
+
+**Smbclient** is an **open-source** command-line tool that provides SMB/CIFS protocol client functionality, similar to an FTP client. It is part of the Samba suite and allows users to access Windows shares, transfer files, and interact with SMB servers from Linux and Unix systems. Smbclient is essential for penetration testing Windows networks, enabling reconnaissance, data exfiltration, and lateral movement.
+
+**Here are the primary uses of Smbclient:**
+
+  * **Share Enumeration:** Smbclient lists available SMB shares on target Windows systems, identifying accessible network resources and potential data repositories. This capability is crucial during the reconnaissance phase of penetration testing.
+
+  * **File Transfer:** The tool facilitates file upload and download operations with Windows shares, enabling data exfiltration during security assessments and providing a method for transferring exploitation tools to target systems.
+
+  * **Authentication Testing:** Smbclient tests various authentication methods including null sessions, guest access, and credential-based authentication, helping identify misconfigured shares and weak access controls.
+
+  * **Remote Command Execution:** When combined with appropriate permissions, Smbclient can execute commands on remote Windows systems through administrative shares, providing a method for post-exploitation activities.
+
+  * **Interactive Shell:** The tool provides an interactive shell interface for browsing shares, similar to FTP, allowing users to navigate directories, list files, and perform file operations interactively.
+
+  * **Automated Scripting:** Smbclient supports non-interactive mode with command execution, enabling automation of file operations and integration with penetration testing workflows and scripts.
+
+
+
+
+## Core Features​
+
+  * SMB Share Access
+  * File Upload/Download
+  * Directory Listing
+  * Null Session Support
+  * Authentication Methods
+  * Interactive Shell Mode
+  * Non-Interactive Commands
+  * Share Enumeration
+  * Recursive Operations
+  * Tar Archive Support
+  * Print Queue Access
+  * Message Sending
+  * Kerberos Support
+  * NTLM Authentication
+
+
+
+## Data sources​
+
+  * SMB/CIFS Protocol
+  * Windows Shares
+  * Network Files
+  * Authentication Credentials
+  * Share Permissions
+  * Directory Structures
+  * File Metadata
+  * Print Queues
+  * NetBIOS Names
+
+
+
+## Common Smbclient Commands​
+
+### 1\. List Shares​
+
+  * This command lists all available shares on a target system without authentication, useful for initial reconnaissance.
+
+
+    
+    
+```
+smbclient -L //<target> -N  
+```
+### 2\. List Shares with Authentication​
+
+  * This command lists shares using provided credentials, revealing resources that require authentication.
+
+
+    
+    
+```
+smbclient -L //<target> -U <username>  
+```
+### 3\. Connect to Share​
+
+  * This command establishes an interactive connection to a specific share, providing an FTP-like interface for file operations.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username>  
+```
+### 4\. Null Session Connection​
+
+  * This command attempts to connect using a null session without credentials, testing for anonymous access vulnerabilities.
+
+
+    
+    
+```
+smbclient //<target>/<share> -N  
+```
+### 5\. Execute Single Command​
+
+  * This command executes a single SMB command non-interactively, useful for scripting and automation.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -c '<command>'  
+```
+### 6\. Download File​
+
+  * This command downloads a specific file from an SMB share to the local system.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -c 'get <remote_file> <local_file>'  
+```
+### 7\. Upload File​
+
+  * This command uploads a local file to an SMB share on the remote system.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -c 'put <local_file> <remote_file>'  
+```
+### 8\. List Directory Contents​
+
+  * This command lists all files and directories within a share non-interactively.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -c 'ls'  
+```
+### 9\. Recursive Download​
+
+  * This command recursively downloads an entire directory structure from the SMB share.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -c 'recurse ON; prompt OFF; mget *'  
+```
+### 10\. Create Directory​
+
+  * This command creates a new directory on the remote SMB share.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -c 'mkdir <directory>'  
+```
+### 11\. Delete File​
+
+  * This command removes a file from the remote SMB share.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -c 'del <file>'  
+```
+### 12\. Specify Password​
+
+  * This command provides the password directly in the command line for non-interactive authentication.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username>%<password>  
+```
+### 13\. Use Password File​
+
+  * This command reads the password from a file for more secure credential handling in scripts.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> --password-file=<path>  
+```
+### 14\. Use Kerberos Authentication​
+
+  * This command authenticates using Kerberos tickets instead of NTLM, useful in Active Directory environments.
+
+
+    
+    
+```
+smbclient //<target>/<share> -k  
+```
+### 15\. Specify Domain​
+
+  * This command specifies the Windows domain for authentication in domain-joined environments.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <domain>/<username>  
+```
+### 16\. Pass-the-Hash​
+
+  * This command authenticates using NTLM hash instead of plaintext password for pass-the-hash attacks.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> --pw-nt-hash <hash>  
+```
+### 17\. Set Maximum Protocol​
+
+  * This command specifies the maximum SMB protocol version to use, useful for compatibility or security testing.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> --max-protocol=SMB3  
+```
+### 18\. Disable Encryption​
+
+  * This command disables SMB encryption for connections, useful when testing against systems with specific configurations.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> --client-protection=off  
+```
+### 19\. Create Tar Archive​
+
+  * This command creates a tar archive of files from the SMB share for bulk download.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -Tc <archive.tar> *  
+```
+### 20\. Extract Tar Archive​
+
+  * This command extracts a tar archive to the SMB share for bulk upload.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -Tx <archive.tar>  
+```
+### 21\. Send Message​
+
+  * This command sends a message to a user or computer on the network using the Windows messaging service.
+
+
+    
+    
+```
+smbclient -M <target> -U <username>  
+```
+### 22\. Access Print Queue​
+
+  * This command connects to a printer share and allows print job management.
+
+
+    
+    
+```
+smbclient //<target>/<printer> -U <username>  
+```
+### 23\. Specify Port​
+
+  * This command connects to SMB service on a non-standard port.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -p <port>  
+```
+### 24\. Debug Level​
+
+  * This command sets the debug level for verbose output, useful for troubleshooting connection issues.
+
+
+    
+    
+```
+smbclient //<target>/<share> -U <username> -d <level>  
+```
+### 25\. Help and Usage Information​
+
+  * This command displays help information and available options for smbclient.
+
+
+    
+    
+```
+smbclient -h  
+```
+Alternative usage:
+    
+    
+```
+smbclient --help  
+```
+## Output Examples of Smbclient Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+List Shares| `smbclient -L //192.168.1.10 -N`| Lists shares anonymously.| `Sharename Type Comment `   
+` --------- ---- ------- `   
+` ADMIN$ Disk Remote Admin `   
+` C$ Disk Default share `   
+` IPC$ IPC Remote IPC`  
+List with Auth| `smbclient -L //192.168.1.10 -U admin`| Lists shares with credentials.| `Enter WORKGROUP\admin's password: `   
+` Sharename Type Comment `   
+` Documents Disk Shared Documents`  
+Connect to Share| `smbclient //192.168.1.10/Documents -U admin`| Connects interactively.| `Enter WORKGROUP\admin's password: `   
+` Try "help" to get a list of possible commands. `   
+` smb: \>`  
+Null Session| `smbclient //192.168.1.10/IPC$ -N`| Tests null session.| `Anonymous login successful `   
+` smb: \>`  
+Execute Command| `smbclient //192.168.1.10/Documents -U admin -c 'ls'`| Lists files.| `. D 0 Mon Nov 4 15:30:00 2024 `   
+` .. D 0 Mon Nov 4 15:30:00 2024 `   
+` confidential.doc A 1024 Mon Nov 4 10:00:00 2024`  
+Download File| `smbclient //192.168.1.10/Documents -U admin -c 'get file.txt'`| Downloads file.| `getting file \file.txt of size 1024 as file.txt (100.0 KiloBytes/sec)`  
+Upload File| `smbclient //192.168.1.10/Documents -U admin -c 'put test.txt'`| Uploads file.| `putting file test.txt as \test.txt (50.0 kb/s) (average 50.0 kb/s)`  
+Interactive ls| `smb: \> ls`| Lists directory in shell.| `. D 0 Mon Nov 4 15:30:00 2024 `   
+` Documents D 0 Mon Nov 4 14:00:00 2024 `   
+` Projects D 0 Mon Nov 4 13:00:00 2024`  
+Interactive get| `smb: \> get passwords.txt`| Downloads in interactive mode.| `getting file \passwords.txt of size 2048 as passwords.txt`  
+Interactive put| `smb: \> put exploit.exe`| Uploads in interactive mode.| `putting file exploit.exe as \exploit.exe (200.0 kb/s)`  
+Change Directory| `smb: \> cd Documents`| Changes directory.| `smb: \Documents\>`  
+Make Directory| `smb: \> mkdir backup`| Creates directory.| `smb: \>`  
+Delete File| `smb: \> del oldfile.txt`| Deletes file.| `smb: \>`  
+Recursive Download| `smbclient //192.168.1.10/Documents -U admin -c 'recurse; mget *'`| Downloads all files.| `getting file \file1.txt `   
+` getting file \file2.txt `   
+` getting file \subdir\file3.txt`  
+Password in Command| `smbclient //192.168.1.10/Documents -U admin%P@ssw0rd`| Auth with password.| `Try "help" to get a list of possible commands. `   
+` smb: \>`  
+Domain Login| `smbclient //192.168.1.10/Documents -U CORP/admin`| Domain authentication.| `Enter CORP\admin's password: `   
+` smb: \>`  
+Pass-the-Hash| `smbclient //192.168.1.10/C$ -U admin --pw-nt-hash abc123...`| Authenticates with hash.| `Try "help" to get a list of possible commands. `   
+` smb: \>`  
+Kerberos Auth| `smbclient //server.domain.com/share -k`| Uses Kerberos ticket.| `Using Kerberos authentication `   
+` smb: \>`  
+SMB3 Protocol| `smbclient //192.168.1.10/Documents -U admin --max-protocol=SMB3`| Forces SMB3.| `protocol negotiation failed: NT_STATUS_CONNECTION_DISCONNECTED`  
+Create Tar| `smbclient //192.168.1.10/Documents -U admin -Tc backup.tar *`| Creates tar archive.| `tar file creation started `   
+` creating tar file backup.tar`  
+Extract Tar| `smbclient //192.168.1.10/Documents -U admin -Tx restore.tar`| Extracts tar archive.| `extracting restore.tar `   
+` restoring file1.txt`  
+Send Message| `smbclient -M 192.168.1.10`| Sends network message.| `Connected. Type your message, ending it with a Control-D `   
+` Message sent`  
+Custom Port| `smbclient //192.168.1.10/Documents -U admin -p 4445`| Uses custom port.| `Connecting to 192.168.1.10 at port 4445`  
+Debug Output| `smbclient //192.168.1.10/Documents -U admin -d 3`| Verbose debugging.| `lp_load_ex: refreshing parameters `   
+` Connecting to 192.168.1.10 at port 445`  
+Access Denied| `smbclient //192.168.1.10/ADMIN$ -N`| Null session fails.| `tree connect failed: NT_STATUS_ACCESS_DENIED`  
+Connection Failed| `smbclient //192.168.1.99/share -U admin`| Unreachable host.| `Connection to 192.168.1.99 failed (Error NT_STATUS_HOST_UNREACHABLE)`  
+Print Queue| `smbclient //192.168.1.10/HP_LaserJet -U admin`| Accesses printer.| `smb: \> print report.pdf `   
+` putting file report.pdf as a print job`

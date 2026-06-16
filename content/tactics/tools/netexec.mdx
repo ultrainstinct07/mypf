@@ -1,0 +1,390 @@
+---
+title: "NetExec"
+description: "NetExec tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'windows', 'active directory', 'post-exploitation']
+---
+
+**NetExec (NXC)** is an **open-source** network service exploitation tool used to automate the assessment of large networks. It is commonly used in Windows and Active Directory penetration tests for credential validation, SMB and LDAP enumeration, command execution, password spraying, share discovery, and post-exploitation workflows.
+
+**Here are the primary uses of NetExec:**
+
+  * **Network Reconnaissance:** NetExec identifies reachable hosts and supported services across internal networks. It can quickly show SMB host information such as hostname, domain, OS build, SMB signing status, and SMBv1 support.
+
+  * **Credential Validation:** The tool validates usernames, passwords, NTLM hashes, Kerberos tickets, and certificates across supported protocols. This helps security professionals understand where credentials work and whether they provide administrative access.
+
+  * **Active Directory Enumeration:** NetExec can query LDAP and SMB to enumerate domain users, groups, password policies, trusts, shares, sessions, and other Active Directory information that is useful during internal assessments.
+
+  * **Password Spraying:** The tool supports testing one password against many users or many credential combinations against one or more hosts. It includes options such as jitter and no-bruteforce modes to control authentication behavior.
+
+  * **Command Execution:** With administrative access, NetExec can execute commands through SMB, WMI, WinRM, MSSQL, and other supported protocols. This helps demonstrate the impact of compromised credentials.
+
+  * **Database and Workspace Tracking:** NetExec stores hosts, credentials, shares, and other collected data in protocol-specific databases. Workspaces help separate findings between different engagements.
+
+
+
+
+## Core Features​
+
+  * Multi-protocol authentication and enumeration
+  * SMB, LDAP, WinRM, MSSQL, SSH, FTP, and RDP workflows
+  * Password, hash, ticket, and certificate-based authentication
+  * Password spraying and credential validation
+  * Share, session, user, group, and policy enumeration
+  * Command execution and module support where authorized
+  * Loot database and structured output helpers
+
+
+
+## Data sources​
+
+  * Host lists and network ranges
+  * Usernames, passwords, NTLM hashes, Kerberos tickets, and certificates
+  * SMB shares, sessions, and local admin signals
+  * LDAP users, groups, computers, and domain policies
+  * WinRM, MSSQL, SSH, FTP, and RDP service responses
+  * NetExec workspace and loot data
+
+
+
+## Common NetExec Commands​
+
+### 1\. View Available Protocols​
+
+  * This command displays general help information and lists the supported protocol modules.
+
+
+    
+    
+```
+nxc --help  
+```
+### 2\. Protocol-Specific Help​
+
+  * This command displays options for a specific protocol. Use it before running protocol-specific enumeration or execution commands.
+
+
+    
+    
+```
+nxc <protocol> --help  
+```
+### 3\. Basic SMB Enumeration​
+
+  * This command performs basic SMB enumeration against a target and displays host, domain, OS, SMB signing, and SMBv1 information when available.
+
+
+    
+    
+```
+nxc smb <target>  
+```
+### 4\. Subnet SMB Enumeration​
+
+  * This command scans a full subnet for SMB information and quickly identifies Windows hosts in the network range.
+
+
+    
+    
+```
+nxc smb <target_subnet>  
+```
+### 5\. Credential Validation​
+
+  * This command validates a username and password against the selected protocol and target.
+
+
+    
+    
+```
+nxc <protocol> <target> -u <username> -p <password>  
+```
+### 6\. Domain Credential Validation​
+
+  * This command validates credentials while explicitly setting the domain context.
+
+
+    
+    
+```
+nxc smb <target> -d <domain> -u <username> -p <password>  
+```
+### 7\. Local Account Authentication​
+
+  * This command validates a local account instead of a domain account. It is useful when testing local administrator reuse.
+
+
+    
+    
+```
+nxc smb <target> --local-auth -u <username> -p <password>  
+```
+### 8\. Pass-the-Hash Authentication​
+
+  * This command authenticates with an NTLM hash instead of a plaintext password.
+
+
+    
+    
+```
+nxc smb <target> -u <username> -H <ntlm_hash>  
+```
+### 9\. Password Spraying​
+
+  * This command tests one password against a list of users.
+
+
+    
+    
+```
+nxc smb <target> -u users.txt -p <password>  
+```
+### 10\. Password Spraying Without Bruteforce​
+
+  * This command tests user and password files line by line instead of trying every possible combination.
+
+
+    
+    
+```
+nxc smb <target> -u users.txt -p passwords.txt --no-bruteforce  
+```
+### 11\. Continue After Success​
+
+  * This command continues authentication attempts after a valid credential is found, useful for identifying credential reuse.
+
+
+    
+    
+```
+nxc smb <target> -u users.txt -p <password> --continue-on-success  
+```
+### 12\. Add Jitter to Authentication Attempts​
+
+  * This command adds randomized delay between authentication attempts to control request pacing.
+
+
+    
+    
+```
+nxc smb <target> --jitter 2-5 -u users.txt -p passwords.txt  
+```
+### 13\. Enumerate SMB Shares​
+
+  * This command lists available SMB shares and shows access levels for the provided credentials.
+
+
+    
+    
+```
+nxc smb <target> -u <username> -p <password> --shares  
+```
+### 14\. Filter Readable SMB Shares​
+
+  * This command filters share enumeration results to show readable shares.
+
+
+    
+    
+```
+nxc smb <target> -u <username> -p <password> --shares READ  
+```
+### 15\. Enumerate Null Sessions​
+
+  * This command checks whether anonymous SMB access is allowed and then tries to enumerate shares, users, and groups through a null session.
+
+
+    
+    
+```
+nxc smb <target> -u '' -p '' --shares  
+```
+### 16\. Enumerate Domain Users​
+
+  * This command queries LDAP and lists domain users using valid credentials.
+
+
+    
+    
+```
+nxc ldap <domain_controller> -u <username> -p <password> --users  
+```
+### 17\. Enumerate Domain Groups​
+
+  * This command queries LDAP and lists domain groups.
+
+
+    
+    
+```
+nxc ldap <domain_controller> -u <username> -p <password> --groups  
+```
+### 18\. Enumerate Password Policy​
+
+  * This command retrieves password policy information from the target.
+
+
+    
+    
+```
+nxc smb <target> -u <username> -p <password> --pass-pol  
+```
+### 19\. Enumerate Logged-On Users​
+
+  * This command identifies users currently logged on to remote systems.
+
+
+    
+    
+```
+nxc smb <target> -u <username> -p <password> --loggedon-users  
+```
+### 20\. Execute a Command Over SMB​
+
+  * This command executes an operating system command after successful administrative authentication.
+
+
+    
+    
+```
+nxc smb <target> -u <username> -p <password> -x "whoami"  
+```
+### 21\. Execute a PowerShell Command​
+
+  * This command executes a PowerShell command on the target host.
+
+
+    
+    
+```bash
+nxc smb <target> -u <username> -p <password> -X "$PSVersionTable"  
+```
+### 22\. Force an Execution Method​
+
+  * This command forces NetExec to use a specific SMB execution method.
+
+
+    
+    
+```
+nxc smb <target> -u <username> -p <password> --exec-method wmiexec -x "hostname"  
+```
+### 23\. WinRM Authentication​
+
+  * This command validates credentials against WinRM and shows whether code execution is available.
+
+
+    
+    
+```
+nxc winrm <target> -u <username> -p <password>  
+```
+### 24\. WinRM Command Execution​
+
+  * This command executes a command over WinRM after successful authentication.
+
+
+    
+    
+```
+nxc winrm <target> -u <username> -p <password> -x "hostname"  
+```
+### 25\. List Available Modules​
+
+  * This command lists available modules for the selected protocol.
+
+
+    
+    
+```
+nxc smb -L  
+```
+### 26\. View Module Options​
+
+  * This command displays supported options for a selected module.
+
+
+    
+    
+```
+nxc smb -M <module_name> --options  
+```
+### 27\. Run a Module​
+
+  * This command runs a selected NetExec module against one or more targets.
+
+
+    
+    
+```
+nxc smb <target> -u <username> -p <password> -M <module_name>  
+```
+### 28\. BloodHound Collection​
+
+  * This command collects BloodHound-compatible Active Directory data through LDAP.
+
+
+    
+    
+```
+nxc ldap <domain_controller> -u <username> -p <password> --bloodhound --collection All  
+```
+### 29\. Open the NetExec Database​
+
+  * This command opens the NetExec database navigator.
+
+
+    
+    
+```
+nxcdb  
+```
+### 30\. Export Share Data from the Database​
+
+  * This command exports detailed SMB share data from the active workspace database.
+
+
+    
+    
+```
+nxcdb  
+proto smb  
+export shares detailed shares.csv  
+```
+## Output Examples of NetExec Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Available Protocols| `nxc --help`| Lists global options and protocol modules.| `usage: nxc ... {smb,ssh,ldap,ftp,wmi,winrm,rdp,vnc,mssql,nfs} ...`  
+Protocol Help| `nxc smb --help`| Shows SMB-specific options.| `usage: nxc smb [-h] [--shares] [--users] [--pass-pol] ...`  
+Basic SMB Enumeration| `nxc smb 192.168.1.10`| Enumerates basic SMB host data.| `SMB 192.168.1.10 445 DC01 [*] Windows Server 2019 (name:DC01) (domain:CORP.LOCAL) (signing:True) (SMBv1:False)`  
+Subnet Enumeration| `nxc smb 192.168.1.0/24`| Scans a subnet for SMB hosts.| `SMB 192.168.1.20 445 FILE01 [*] Windows 10 Build 19045 (domain:CORP.LOCAL)`  
+Valid Credentials| `nxc smb 192.168.1.10 -u admin -p 'P@ssw0rd'`| Validates SMB credentials.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\admin:P@ssw0rd (Pwn3d!)`  
+Invalid Credentials| `nxc smb 192.168.1.10 -u admin -p wrongpass`| Shows failed authentication.| `SMB 192.168.1.10 445 DC01 [-] CORP.LOCAL\admin:wrongpass STATUS_LOGON_FAILURE`  
+Local Authentication| `nxc smb 192.168.1.25 --local-auth -u Administrator -p 'Password1!'`| Tests local credentials.| `SMB 192.168.1.25 445 WS01 [+] WS01\Administrator:Password1! (Pwn3d!)`  
+Pass the Hash| `nxc smb 192.168.1.10 -u admin -H aad3b435b51404eeaad3b435b51404ee`| Authenticates with an NTLM hash.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\admin:<hash> (Pwn3d!)`  
+Password Spray| `nxc smb 192.168.1.0/24 -u users.txt -p 'Spring2026!'`| Tests one password against many users.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\jane:Spring2026!`  
+No Bruteforce Mode| `nxc smb 192.168.1.10 -u users.txt -p passwords.txt --no-bruteforce`| Tests line-matched credentials.| `SMB 192.168.1.10 445 DC01 [*] Using no-bruteforce mode`  
+Jitter| `nxc smb 192.168.1.10 --jitter 2-5 -u users.txt -p passwords.txt`| Adds randomized authentication delay.| `SMB 192.168.1.10 445 DC01 [*] Jitter interval set to 2-5 seconds`  
+Share Enumeration| `nxc smb 192.168.1.10 -u admin -p 'P@ssw0rd' --shares`| Lists SMB shares and access.| `SMB 192.168.1.10 445 DC01 Share: SYSVOL READ`  
+Readable Shares| `nxc smb 192.168.1.10 -u admin -p 'P@ssw0rd' --shares READ`| Filters readable shares.| `SMB 192.168.1.10 445 DC01 Share: NETLOGON READ`  
+Null Session| `nxc smb 192.168.1.10 -u '' -p '' --shares`| Tests anonymous SMB share access.| `SMB 192.168.1.10 445 DC01 [+] \: Guest session established`  
+LDAP Users| `nxc ldap 192.168.1.10 -u admin -p 'P@ssw0rd' --users`| Enumerates domain users.| `LDAP 192.168.1.10 389 DC01 user: jsmith`  
+LDAP Groups| `nxc ldap 192.168.1.10 -u admin -p 'P@ssw0rd' --groups`| Enumerates domain groups.| `LDAP 192.168.1.10 389 DC01 group: Domain Admins`  
+Password Policy| `nxc smb 192.168.1.10 -u admin -p 'P@ssw0rd' --pass-pol`| Shows password policy.| `Minimum password length: 12`   
+`Lockout threshold: 5`  
+Logged-On Users| `nxc smb 192.168.1.20 -u admin -p 'P@ssw0rd' --loggedon-users`| Lists remote logged-on users.| `SMB 192.168.1.20 445 WS01 CORP\jsmith logged on`  
+SMB Command Execution| `nxc smb 192.168.1.20 -u admin -p 'P@ssw0rd' -x "whoami"`| Executes a command over SMB.| `SMB 192.168.1.20 445 WS01 [+] Executed command`   
+`corp\admin`  
+PowerShell Execution| `nxc smb 192.168.1.20 -u admin -p 'P@ssw0rd' -X "$PSVersionTable"`| Executes PowerShell.| `SMB 192.168.1.20 445 WS01 [+] Executed command`   
+`PSVersion 5.1.19041.1`  
+Forced Exec Method| `nxc smb 192.168.1.20 -u admin -p 'P@ssw0rd' --exec-method wmiexec -x "hostname"`| Forces a specific execution method.| `SMB 192.168.1.20 445 WS01 [+] Executed command via wmiexec`  
+WinRM Authentication| `nxc winrm 192.168.1.20 -u admin -p 'P@ssw0rd'`| Validates WinRM credentials.| `WINRM 192.168.1.20 5985 WS01 [+] CORP\admin:P@ssw0rd (Pwn3d!)`  
+WinRM Execution| `nxc winrm 192.168.1.20 -u admin -p 'P@ssw0rd' -x "hostname"`| Executes a command over WinRM.| `WINRM 192.168.1.20 5985 WS01 [+] Executed command`   
+`WS01`  
+List Modules| `nxc smb -L`| Lists modules for SMB.| `[*] Available modules: lsassy, spider_plus, ...`  
+Module Options| `nxc smb -M spider_plus --options`| Shows module configuration options.| `DOWNLOAD_FLAG Set to true to download matched files`  
+Run Module| `nxc smb 192.168.1.20 -u admin -p 'P@ssw0rd' -M spider_plus`| Runs a selected module.| `SPIDER_PLUS 192.168.1.20 [*] Started spidering shares`  
+BloodHound Collection| `nxc ldap 192.168.1.10 -u admin -p 'P@ssw0rd' --bloodhound --collection All`| Collects BloodHound data.| `LDAP 192.168.1.10 389 DC01 [*] Starting BloodHound collection`  
+Database Navigator| `nxcdb`| Opens the local NetExec database shell.| `nxcdb (default) >`  
+Export Shares| `nxcdb`| Exports share data from the database.| `nxcdb (default)(smb) > export shares detailed shares.csv`  
+Version Info| `nxc --version`| Displays the installed version.| `NetExec version 1.x`

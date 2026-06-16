@@ -1,0 +1,472 @@
+---
+title: "socat"
+description: "socat tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'pivoting', 'tunneling', 'cli']
+---
+
+## What is the purpose of socat?​
+
+**socat** is a command-line relay utility that connects two bidirectional byte streams and transfers data between them. It can connect standard input and output, TCP sockets, UDP sockets, Unix sockets, files, pseudo-terminals, OpenSSL sockets, and subprocesses.
+
+socat is useful because it can quickly build listeners, clients, relays, port forwards, protocol test harnesses, Unix socket bridges, serial-style PTYs, and encrypted transport wrappers. It is commonly used by network engineers, system administrators, incident responders, and penetration testers for authorized debugging and controlled lab workflows.
+
+**Note:** socat is powerful because each side of the command is an address. The general pattern is `socat [options] <address1> <address2>`. Always bind listeners carefully, prefer explicit bind addresses, and avoid exposing relay ports beyond the intended network.
+
+**Here are the primary uses of socat:**
+
+  * **TCP and UDP Connectivity Testing:** socat can act as a simple client or listener for validating network paths, service behavior, and firewall rules.
+
+  * **Port Forwarding and Relaying:** The tool can forward traffic from one local port to another local or remote service, making it useful for temporary access paths and troubleshooting.
+
+  * **Unix Socket Bridging:** socat can expose a Unix domain socket through TCP or connect TCP clients to local Unix socket services.
+
+  * **PTY and Terminal Workflows:** The tool can create pseudo-terminals for interacting with serial-like devices, local processes, or lab command sessions.
+
+  * **File and Stream Transfer:** socat can move data between files, sockets, standard input, standard output, and named pipes.
+
+  * **TLS Wrapping:** The tool supports OpenSSL client and listener addresses for encrypted transport in controlled testing.
+
+  * **Debugging and Traffic Observation:** socat can print transferred data in text or hex form and write directional dumps for troubleshooting.
+
+
+
+
+## Core Features​
+
+  * Bidirectional data relay between endpoints
+  * TCP, UDP, UNIX socket, file, and stdin/stdout support
+  * Port forwarding and listener creation
+  * TLS wrapping and certificate options
+  * PTY allocation for interactive tools
+  * Serial, pipe, and process bridging
+  * Verbose, hex dump, timeout, and reuse controls
+
+
+
+## Data sources​
+
+  * TCP, UDP, and UNIX socket streams
+  * Standard input and standard output
+  * Files, named pipes, and PTYs
+  * TLS certificates, keys, and CA files
+  * Serial devices and local processes
+  * Raw network traffic passing through relays
+
+
+
+## Common socat Commands​
+
+### 1\. Install socat with Homebrew​
+
+  * This command installs socat on macOS using Homebrew.
+
+
+    
+    
+```
+brew install socat  
+```
+### 2\. Install socat on Debian or Ubuntu​
+
+  * This command installs socat from apt repositories.
+
+
+    
+    
+```
+sudo apt install socat  
+```
+### 3\. Check socat Version​
+
+  * This command prints socat version and feature information.
+
+
+    
+    
+```
+socat -V  
+```
+### 4\. Show Help​
+
+  * This command displays help and available address types.
+
+
+    
+    
+```
+socat -h  
+```
+### 5\. Show Extended Help​
+
+  * This command displays additional address option names.
+
+
+    
+    
+```
+socat -hh  
+```
+### 6\. Connect to a TCP Service​
+
+  * This command connects standard input and output to a remote TCP service.
+
+
+    
+    
+```
+socat - TCP:example.com:80  
+```
+### 7\. Send a Manual HTTP Request​
+
+  * This command sends a simple HTTP request through a TCP connection.
+
+
+    
+    
+```
+printf 'GET / HTTP/1.1\r\nHost: example.com\r\nConnection: close\r\n\r\n' | socat - TCP:example.com:80  
+```
+### 8\. Start a TCP Listener​
+
+  * This command listens on TCP port `9000` and prints received data to the terminal.
+
+
+    
+    
+```
+socat TCP-LISTEN:9000,reuseaddr STDOUT  
+```
+### 9\. Start a Forking TCP Listener​
+
+  * This command accepts multiple TCP connections by forking for each client.
+
+
+    
+    
+```
+socat TCP-LISTEN:9000,reuseaddr,fork STDOUT  
+```
+### 10\. Bind a Listener to Localhost​
+
+  * This command restricts a listener to local connections only.
+
+
+    
+    
+```
+socat TCP-LISTEN:9000,bind=127.0.0.1,reuseaddr,fork STDOUT  
+```
+### 11\. Restrict a Listener by Source Range​
+
+  * This command accepts clients only from the selected source range.
+
+
+    
+    
+```
+socat TCP-LISTEN:9000,reuseaddr,fork,range=192.168.1.0/24 STDOUT  
+```
+### 12\. Forward a Local Port to a Remote Host​
+
+  * This command forwards local port `8080` to `example.com:80`.
+
+
+    
+    
+```
+socat TCP-LISTEN:8080,bind=127.0.0.1,reuseaddr,fork TCP:example.com:80  
+```
+### 13\. Forward One Local Port to Another​
+
+  * This command relays local port `15432` to local PostgreSQL on `5432`.
+
+
+    
+    
+```
+socat TCP-LISTEN:15432,bind=127.0.0.1,reuseaddr,fork TCP:127.0.0.1:5432  
+```
+### 14\. Connect with a Timeout​
+
+  * This command fails if the remote TCP connection cannot be established within five seconds.
+
+
+    
+    
+```
+socat -T5 - TCP:example.com:443,connect-timeout=5  
+```
+### 15\. Use IPv4 Explicitly​
+
+  * This command forces IPv4 for the TCP connection.
+
+
+    
+    
+```
+socat -4 - TCP:example.com:80  
+```
+### 16\. Use IPv6 Explicitly​
+
+  * This command forces IPv6 for the TCP connection.
+
+
+    
+    
+```
+socat -6 - TCP:[2001:db8::10]:80  
+```
+### 17\. Start a UDP Listener​
+
+  * This command waits for UDP datagrams on port `5353`.
+
+
+    
+    
+```
+socat UDP-LISTEN:5353,reuseaddr,fork STDOUT  
+```
+### 18\. Send UDP Data​
+
+  * This command sends data to a UDP endpoint.
+
+
+    
+    
+```
+printf 'test\n' | socat - UDP:127.0.0.1:5353  
+```
+### 19\. Forward UDP Traffic​
+
+  * This command forwards UDP datagrams from local port `1053` to a DNS resolver.
+
+
+    
+    
+```
+socat UDP-LISTEN:1053,reuseaddr,fork UDP:1.1.1.1:53  
+```
+### 20\. Bridge a Unix Socket to TCP​
+
+  * This command exposes a local Unix socket through a localhost TCP listener.
+
+
+    
+    
+```
+socat TCP-LISTEN:8080,bind=127.0.0.1,reuseaddr,fork UNIX-CONNECT:/var/run/app.sock  
+```
+### 21\. Bridge TCP to a Unix Listener​
+
+  * This command creates a Unix socket that forwards to a TCP service.
+
+
+    
+    
+```
+socat UNIX-LISTEN:/tmp/app.sock,reuseaddr,fork TCP:127.0.0.1:8080  
+```
+### 22\. Create a Pair of Linked PTYs​
+
+  * This command creates two pseudo-terminals connected to each other.
+
+
+    
+    
+```
+socat -d -d PTY,raw,echo=0 PTY,raw,echo=0  
+```
+### 23\. Attach a PTY to a TCP Service​
+
+  * This command exposes a TCP service as a local pseudo-terminal.
+
+
+    
+    
+```
+socat -d -d PTY,link=/tmp/remote-tty,raw,echo=0 TCP:192.168.1.50:23  
+```
+### 24\. Execute a Local Command for Each Connection​
+
+  * This command runs a local command for each client and returns its output.
+
+
+    
+    
+```
+socat TCP-LISTEN:9001,bind=127.0.0.1,reuseaddr,fork EXEC:'/usr/bin/uptime'  
+```
+### 25\. Attach a Local Command with STDERR​
+
+  * This command runs a command and includes stderr in the client stream.
+
+
+    
+    
+```
+socat TCP-LISTEN:9002,bind=127.0.0.1,reuseaddr,fork EXEC:'/usr/bin/id',stderr  
+```
+### 26\. Copy a File Over TCP​
+
+  * This listener writes received bytes into a file.
+
+
+    
+    
+```
+socat TCP-LISTEN:9003,bind=127.0.0.1,reuseaddr OPEN:received.bin,creat,trunc  
+```
+### 27\. Send a File to a TCP Listener​
+
+  * This command sends a file to a remote TCP listener.
+
+
+    
+    
+```
+socat OPEN:payload.bin TCP:127.0.0.1:9003  
+```
+### 28\. Read from a Named Pipe and Send to TCP​
+
+  * This command forwards data from a named pipe to a TCP service.
+
+
+    
+    
+```
+socat OPEN:/tmp/input.pipe TCP:127.0.0.1:9000  
+```
+### 29\. Start a TLS Client Connection​
+
+  * This command connects to a TLS service with certificate verification disabled for lab testing.
+
+
+    
+    
+```
+socat - OPENSSL:example.com:443,verify=0  
+```
+### 30\. Start a TLS Listener​
+
+  * This command starts an OpenSSL listener with a certificate and key.
+
+
+    
+    
+```
+socat OPENSSL-LISTEN:9443,cert=server.pem,key=server.key,verify=0,reuseaddr,fork STDOUT  
+```
+### 31\. TLS-Wrap a Plain TCP Service​
+
+  * This command accepts TLS locally and forwards plaintext to a local HTTP service.
+
+
+    
+    
+```
+socat OPENSSL-LISTEN:9443,cert=server.pem,key=server.key,verify=0,reuseaddr,fork TCP:127.0.0.1:8080  
+```
+### 32\. Connect Through a SOCKS5 Proxy​
+
+  * This command connects to a target through a SOCKS5 server.
+
+
+    
+    
+```
+socat - SOCKS5-CONNECT:127.0.0.1:example.com:80,socksport=1080  
+```
+### 33\. Use Verbose Data Output​
+
+  * This command prints transferred data in a readable debug form.
+
+
+    
+    
+```
+socat -v - TCP:example.com:80  
+```
+### 34\. Use Hex Data Output​
+
+  * This command prints transferred data in hexadecimal.
+
+
+    
+    
+```
+socat -x - TCP:example.com:80  
+```
+### 35\. Write Directional Dumps​
+
+  * This command writes left-to-right and right-to-left raw data into separate files.
+
+
+    
+    
+```
+socat -r client-to-server.bin -R server-to-client.bin - TCP:example.com:80  
+```
+### 36\. Log to a File​
+
+  * This command writes socat diagnostic logs to a file.
+
+
+    
+    
+```
+socat -d -d -lf socat.log TCP-LISTEN:9000,bind=127.0.0.1,reuseaddr,fork STDOUT  
+```
+### 37\. Set an Inactivity Timeout​
+
+  * This command closes the relay after 30 seconds without traffic.
+
+
+    
+    
+```
+socat -T30 TCP-LISTEN:9000,bind=127.0.0.1,reuseaddr,fork TCP:127.0.0.1:8080  
+```
+### 38\. Use Unidirectional Mode​
+
+  * This command reads from standard input and writes to a TCP service only.
+
+
+    
+    
+```
+socat -u - TCP:example.com:80  
+```
+### 39\. Use Reverse Unidirectional Mode​
+
+  * This command reads from a TCP service and writes to standard output only.
+
+
+    
+    
+```
+socat -U - TCP:example.com:80  
+```
+### 40\. Relay Standard IO to a Local Unix Socket​
+
+  * This command connects the terminal to a Unix socket service.
+
+
+    
+    
+```
+socat - UNIX-CONNECT:/var/run/docker.sock  
+```
+## Output Examples​
+
+Command| Description| Example Output  
+---|---|---  
+`socat -V`| Shows version and compiled features.| `socat by Gerhard Rieger`   
+`running on Darwin version ...`  
+`socat -h`| Shows help and address types.| `Usage: socat [options] <bi-address> <bi-address>`  
+`socat -d -d PTY,raw,echo=0 PTY,raw,echo=0`| Creates connected pseudo-terminals.| `PTY is /dev/ttys010`   
+`PTY is /dev/ttys011`  
+`socat TCP-LISTEN:9000,reuseaddr STDOUT`| Receives TCP data and prints it.| `hello from client`  
+`socat -v - TCP:example.com:80`| Prints transferred data with direction markers.| `> GET / HTTP/1.1`   
+`< HTTP/1.1 200 OK`  
+`socat -x - TCP:example.com:80`| Prints transferred data in hex.| `> 0000 47 45 54 20 2f`  
+`socat -T30 TCP-LISTEN:9000 ...`| Uses an inactivity timeout.| `N exiting on signal 0`

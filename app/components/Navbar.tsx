@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Home, Briefcase, User, HelpCircle, Mail } from 'lucide-react';
+import { Menu, X, Home, Briefcase, User, HelpCircle, Mail, Crosshair } from 'lucide-react';
 import { useScrollPosition } from '../hooks/useScrollPosition';
 import { useHomeSectionSpy } from '../hooks/useHomeSectionSpy';
 import { smoothScrollToSectionId } from '@/lib/smoothScroll';
@@ -14,6 +14,7 @@ const navLinks = [
   { href: '/#about', label: 'About', icon: User },
   { href: '/#expertise', label: 'Expertise', icon: Briefcase },
   { href: '/projects', label: 'Projects', icon: Briefcase },
+  { href: '/tactics', label: 'Tactics', icon: Crosshair },
   { href: '/#faq', label: 'FAQ', icon: HelpCircle },
   { href: '/#contact', label: 'Contact', icon: Mail },
 ];
@@ -33,14 +34,16 @@ export default function Navbar() {
 
   useEffect(() => {
     if (scrollPosition < 100) {
-      setIsVisible(true);
-      return;
+      const handle = requestAnimationFrame(() => setIsVisible(true));
+      return () => cancelAnimationFrame(handle);
     }
 
     if (scrollDirection === 'up') {
-      setIsVisible(true);
+      const handle = requestAnimationFrame(() => setIsVisible(true));
+      return () => cancelAnimationFrame(handle);
     } else if (scrollDirection === 'down') {
-      setIsVisible(false);
+      const handle = requestAnimationFrame(() => setIsVisible(false));
+      return () => cancelAnimationFrame(handle);
     }
   }, [scrollDirection, scrollPosition]);
 

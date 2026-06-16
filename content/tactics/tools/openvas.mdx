@@ -1,0 +1,168 @@
+---
+title: "OpenVAS"
+description: "OpenVAS tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['vulnerability']
+---
+
+> _**"OpenVAS provides an excellent balance of performance and user-friendliness, making it accessible for users at all skill levels while still delivering thorough and effective scans."**_ _**\- Dave Aitel**_
+
+## What is the purpose of OpenVAS?​
+
+**OpenVAS** is an **open source** vulnerability scanning and management tool that helps to identify security issues like misconfigurations, outdated software, and weak passwords that could be exploited by attackers.
+
+**Here are the primary uses of OpenVAS:**
+
+  * **Vulnerability Scanning:** OpenVAS provides to users scan networks and systems for known vulnerabilities, detecting potential security risks and providing detailed reports on the target system's security risks.The OpenVAS security tool has a huge database of vulnerability tests against a wide range of potential security vulnerabilities in various operating systems, applications, and services.
+  * **Customizable Scans:** OpenVAS can define target-specific scanning, scanning configuration, and testing parameters. This flexibility allows assessments to be focused on specific security needs.
+  * **Reporting and Analysis:** OpenVAS generates detailed reports that help security professionals post-attack analyze for vulnerabilities and prioritize remediation efforts. These reports can be exported in various formats for further analysis or presentation.
+  * **Integration with Security Frameworks:** The tool integrates well with other security frameworks and tools, enabling detailed security assessments and streamlined workflows across larger security operations. The ability to integrate with different security tools and frameworks is very critical when performing security testing on large and complex target systems.
+
+
+
+## Core Features​
+
+  * Vulnerability Scanning
+  * Regular Updates to Vulnerability Database
+  * Comprehensive Scan Configurations
+  * Detailed Reporting
+  * Integration with Other Security Tools
+  * Customizable Scan Policies
+  * Web-Based Management Interface
+  * Automated Security Assessments
+  * Support for Multiple Asset Types
+  * Risk Assessment and Analysis
+
+
+
+## Data sources​
+
+  * Vulnerability Database (OpenVAS NVT Feed)
+  * Exploit and Threat Reports
+  * Public Vulnerability Advisories
+  * Security Configuration Guides
+  * Network Traffic and Service Data
+  * Historical Scan Data
+  * Security Best Practices and Standards
+  * Community Contributions and Plugins
+
+
+
+## Common OpenVAS Commands​
+
+### 1\. Start OpenVAS​
+
+  * This command initiates the OpenVAS services, preparing the tool for conducting vulnerability scans.
+
+
+    
+    
+```
+openvas-start  
+```
+### 2\. Configure Target​
+
+  * This command allows users to define the target system or network for the vulnerability scan. By specifying the target, users focus their efforts on the systems that require assessment.
+
+
+    
+    
+```
+openvasmd --create-target --name "<target_name>" --hosts "<target_ip>"  
+```
+### 3\. Launch a Scan​
+
+  * This command starts a configured target with a given scan configuration. This initiates the process for finding vulnerabilities within the target system.
+
+
+    
+    
+```
+omp --xml="<scan_configuration>" --target=<target_id>  
+```
+### 4\. View Scan Results​
+
+  * This command reads and displays the results of the finished scan. This provides a survey for the scaning process.
+
+
+    
+    
+```
+omp --xml="<get_reports>"  
+```
+### 5\. Update the Vulnerability Database​
+
+  * This command updates OpenVAS’s vulnerability database, ensuring that the latest vulnerability tests are available. It is very important to find and understand the new trend web vulnerabilities.
+
+
+    
+    
+```
+openvas-nvt-sync  
+```
+### 6\. Manage Users​
+
+  * This command controls users and roles in OpenVAS by adding, removing, or changing user's account transactions.
+
+
+    
+    
+```
+openvasmd --create-user=<username>  
+```
+### 7\. Export Scan Reports​
+
+  * This command exports scan reports to various formats such as PDF, XML or CSV. It allows users to access post-test output data or use these outputs integrated with other tools.
+
+
+    
+    
+```
+omp --get-report --format=<format> --report-id=<report_id>  
+```
+### 8\. Stop OpenVAS​
+
+  * This command stops OpenVAS services, killing all active operations and closing the tool.
+
+
+    
+    
+```
+openvas-stop  
+```
+### 9\. Help and Usage Information​
+
+  * This command provides help and usage information for OpenVAS, listing available options and commands.
+
+
+    
+    
+```
+openvas-help  
+```
+## Output Examples of OpenVAS Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Start OpenVAS| `openvas-start`| Initiates the OpenVAS services.| `Starting OpenVAS services... <br /> enVAS services started successfully.`  
+Check OpenVAS Status| `openvasmd --status`| Checks the status of OpenVAS services and the scan processes.| `OpenVAS services are running.`  
+Update the Vulnerability Database| `openvas-nvt-sync`| Updates the vulnerability database for accurate scanning.| `Synchronizing NVTs... <br /> ` `NVT synchronization completed.`  
+Configure Target| `openvasmd --create-target --name "Server" --hosts "192.168.1.1"`| Configures the target system for the scan.| `Target created with ID: a3b4c5d6`  
+Create Scan Configurations| `openvasmd --create-scan-config --name "Basic Scan"`| Creates a new scan configuration.| `Scan configuration 'Basic Scan' created with ID: x1y2z3`  
+List Scan Configurations| `openvasmd --get-scan-configs`| Lists all available scan configurations.| `Scan Configurations: <br /> ` `1. Basic Scan <br /> ` `2. Full Scan`  
+Launch a Scan| `omp --xml="<scan_configuration>" --target=a3b4c5d6`| Starts a vulnerability scan on the specified target.| `Scan started with ID: e7f8g9h0`  
+View Scan Results| `omp --xml="<get_reports>"`| Retrieves and displays scan results.| `Report ID: e7f8g9h0 <br /> ` `Vulnerabilities found: 5 <br /> ` `Critical: 1 <br /> ` `High: 2 <br /> ` `Medium: 2`  
+Pause a Scan| `omp --xml="<pause_scan>" --scan-id=e7f8g9h0`| Pauses an ongoing scan.| `Scan with ID: e7f8g9h0 paused successfully.`  
+Resume a Scan| `omp --xml="<resume_scan>" --scan-id=e7f8g9h0`| Resumes a paused scan.| `Scan with ID: e7f8g9h0 resumed successfully.`  
+Delete Scan Reports| `openvasmd --delete-report --report-id=e7f8g9h0`| Deletes a previously generated scan report.| `Report with ID: e7f8g9h0 deleted successfully.`  
+Export Scan Reports| `omp --get-report --format=pdf --report-id=e7f8g9h0`| Exports scan results to a specified format.| `Report exported as report.pdf`  
+Manage Users| `openvasmd --create-user=analyst`| Adds a new user to OpenVAS.| `User 'analyst' created successfully.`  
+Get User List| `openvasmd --get-users`| Lists all users in OpenVAS.| `User List: <br /> ` `1. admin <br /> ` `2. analyst`  
+Manage Roles| `openvasmd --modify-user=analyst --new-role=admin`| Changes the role of an existing user.| `User 'analyst' role updated to 'admin'.`  
+Delete a User| `openvasmd --delete-user=analyst`| Deletes a user from OpenVAS.| `User 'analyst' deleted successfully.`  
+Create Scheduled Scans| `openvasmd --create-schedule --name "Weekly Scan" --hour=2 --day-of-week=Sunday`| Creates a schedule to automatically start scans.| `Schedule 'Weekly Scan' created successfully.`  
+List Scheduled Scans| `openvasmd --get-schedules`| Lists all scheduled scans.| `Scheduled Scans: <br /> ` `1. Weekly Scan`  
+Delete Scheduled Scans| `openvasmd --delete-schedule --schedule-id=w1x2y3z4`| Deletes an existing scan schedule.| `Schedule with ID: w1x2y3z4 deleted successfully.`  
+Import Scan Configurations| `openvasmd --import-scan-config <config_file>`| Imports a scan configuration from a file.| `Scan configuration imported successfully.`  
+Export Scan Configurations| `openvasmd --export-scan-config --config-id=x1y2z3 --format=xml`| Exports a scan configuration to a file.| `Scan configuration exported as config.xml`  
+Delete Scan Configurations| `openvasmd --delete-scan-config --config-id=x1y2z3`| Deletes an existing scan configuration.| `Scan configuration with ID: x1y2z3 deleted successfully.`  
+Stop OpenVAS| `openvas-stop`| Stops all OpenVAS services.| `Stopping OpenVAS services... <br /> ` `OpenVAS services stopped successfully.`

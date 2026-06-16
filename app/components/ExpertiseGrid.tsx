@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { EXPERTISE_ITEMS } from '@/lib/constants';
 import { Target, Smartphone, Search, Code, Shield, BookOpen, type LucideIcon } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import Link from 'next/link';
 
 const iconMap: Record<string, LucideIcon> = {
   'target': Target,
@@ -79,9 +80,9 @@ export default function ExpertiseGrid() {
           <p className="text-slate-600 dark:text-gray-400 mb-6 font-bold uppercase tracking-wider text-xs">
             Want to learn more about my security approach?
           </p>
-          <a href="/projects" className="btn-outline inline-flex items-center gap-2">
+          <Link href="/projects" className="btn-outline inline-flex items-center gap-2">
             View My Work
-          </a>
+          </Link>
         </div>
       </div>
     </ScrollReveal>

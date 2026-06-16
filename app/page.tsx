@@ -4,6 +4,7 @@ import SectionIndicatorRail from './components/SectionIndicatorRail';
 import HeroSectionDivider from './components/HeroSectionDivider';
 import About from './components/About';
 import ExpertiseGrid from './components/ExpertiseGrid';
+import TacticsShowcase from './components/TacticsShowcase';
 import ProjectGallery from './components/ProjectGallery';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
@@ -49,6 +50,7 @@ export default function Home() {
           <HeroSectionDivider />
           <About />
           <ExpertiseGrid />
+          <TacticsShowcase />
           <ProjectGallery projects={projects} />
           <Testimonials />
           <FAQ />

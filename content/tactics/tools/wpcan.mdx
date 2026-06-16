@@ -1,0 +1,167 @@
+---
+title: "WPScan"
+description: "WPScan tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['web']
+---
+
+## What is the purpose of WPScan?​
+
+**WPScan** is not an **open source** cyber security tool. WPScan is a security scanner designed to test the security of websites built with WordPress. This ruby programming language development product is intended for use by WordPress Administrators and Security Teams who need to find out the security status of their WordPress installations. It is used for scanning WordPress websites against known vulnerabilities in WordPress itself and its generally applied themes and plugins.
+
+**Here are the primary uses of WPScan:**
+
+  * **Username enumeration:** Enumeration attacks, by themselves, are a means of trying to determine whether the target exists on the target system. The threat actor is trying to find out which users are present on a website. This information can be used as auxiliary information for different attack vectors. In a user enumeration attack, the threat actor will identify variations in how WordPress responds to certain requests. From this response, the attacker can determine whether the user exists or not.
+
+  * **Version detection:** WPScan can detect target system's versions of WordPress core, plugins, and themes.
+
+  * **Publicly accessible sensitive data:** WPScan can check for publicly accessible wp-config.php(The wp-config.php file is considered the “heart” of a WordPress site. This file contains your database connection information, security keys and other critical settings.) backups and other database exports.
+
+  * **Password cracking:** WPScan also has a password cracker. This can help you check if your website has weak authentication credentials. You need to provide WPScan with a password dictionary of your choice. This feature allows cybersecurity experts or researchers to specify a dictionary of words specific to the target system for a more focused test.
+
+
+
+
+## Core Features​
+
+  * Vulnerability Scanning
+  * Configuration File Backup Detection
+  * User Enumeration
+  * Brute Force Protection
+  * Banner Grabbing
+  * Plugin and Theme Detection
+  * WordPress Version Detection
+
+
+
+## Data sources:​
+
+  * Vulnerability Database
+  * WordPress Plugin and Theme Repositories
+  * Online Resources
+  * Target Website
+
+
+
+## Common WPScan Commands​
+
+### 1\. Basic Usage​
+
+  * This is a basic scanning command on a target WordPress site. It tries to pentest the attack vectors of the website by finding possible vulnerabilities and gathering information about the target system.
+
+
+    
+    
+```
+wpscan --url http://example.com  
+```
+### 2\. Enumerating Plugins​
+
+  * This command is used to list the installed plugins on the target WordPress site. Some WordPress plugins may contain security vulnerabilities, and knowing which plugins are in use can make known vulnerabilities associated with that plugin more obvious.
+
+
+    
+    
+```
+wpscan --url http://example.com --enumerate p  
+```
+### 3\. Enumerating Themes​
+
+  * This command lists the themes installed on the target WordPress site. This command is critical for identifying themes that do not contain some security updates. It is essential for assessing the security of a site's appearance, as outdated or vulnerable themes can also allow security risks.
+
+
+    
+    
+```
+wpscan --url http://example.com --enumerate t  
+```
+### 4\. Enumerating Users​
+
+  * This command lists the registered users on the target WordPress site. Knowledge of the user base is an advantage against security vulnerabilities such as CSRF, and can identify potential attack vectors related to weak or compromised accounts.
+
+
+    
+    
+```
+wpscan --url http://example.com --enumerate u  
+```
+### 5\. Checking for Vulnerabilities​
+
+  * This passive and aggressive detection command detects plugins and identifies known vulnerabilities. It highlights vulnerabilities in installed plugins by analyzing installed plugins against existing databases containing information about vulnerabilities.
+
+
+    
+    
+```
+wpscan --url http://example.com --plugins-detection mixed  
+```
+### 6\. Using an API Token​
+
+  * This option allows the user to use an API token for advanced scanning features, such as performing a scan using the latest vulnerability data. The API token provides access to WPScan's vast vulnerability database, allowing for more complete and accurate results.
+
+
+    
+    
+```
+wpscan --url http://example.com --api-token YOUR_API_TOKEN  
+```
+### 7\. Outputting Results to a File​
+
+  * This option allows an output file to be specified for the results obtained from the scan. This feature will therefore be important for record keeping, further analysis or reporting purposes and will allow users to keep a permanent record of the findings. This command facilitates the integration of WPScan outputs with other security tools, making the WPScan tool user-friendly.
+
+
+    
+    
+```
+wpscan --url http://example.com -o output.txt  
+```
+### 8\. Verbose output​
+
+  * This provides detailed output for the scan, where you can view a lot of information for the target system regarding the scan process, including actions performed and vulnerabilities discovered.
+
+
+    
+    
+```
+wpscan --url https://example.com --verbose  
+```
+### 9\. Help and Usage Information​
+
+  * This command displays help information, including a list of available options and commands for using WPScan.
+
+
+    
+    
+```
+wpscan -h  
+```
+Alternative usage:
+    
+    
+```
+wpscan --help  
+```
+## Output Examples of WPScan Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Usage| `wpscan --url https://example.com`| Initiates a basic scan of the specified WordPress site.| `Crawling https://example.com...`  
+Display Help| `wpscan --help`| Displays help information and available commands.| `Usage: wpscan [options]`  
+Display Version| `wpscan --version`| Displays the current version of WPScan installed.| `WPScan version 3.8.0`  
+Update WPScan| `wpscan --update`| Updates the WPScan tool to the latest version.| `WPScan updated to the latest version.`  
+Using an API Token| `wpscan --url https://example.com --api-token YOUR_API_TOKEN`| Allows enhanced features with an API token.| `Using API token for enhanced data...`  
+Enumerate All Available Options| `wpscan --url https://example.com --enumerate ap,at,au`| Enumerates all available options, including plugins, themes, and users.| `Enumerating all available options...`  
+Enumerate Plugins| `wpscan --url https://example.com --enumerate p`| Enumerates installed plugins on the target site.| `Enumerating plugins...`  
+Enumerate Themes| `wpscan --url https://example.com --enumerate t`| Enumerates installed themes on the target site.| `Enumerating themes...`  
+Enumerate Users| `wpscan --url https://example.com --enumerate u`| Enumerates users registered on the target WordPress site.| `Enumerating users...`  
+Check for Vulnerabilities| `wpscan --url https://example.com --plugins-detection mixed`| Checks for known vulnerabilities in detected plugins.| `Scanning for vulnerabilities...`  
+Check for Specific Vulnerabilities| `wpscan --url https://example.com --vulnerable`| Checks for specific vulnerabilities listed in the database.| `Checking for known vulnerabilities...`  
+Brute Force Enumeration| `wpscan --url https://example.com --brute --wordlist wordlist.txt`| Uses brute force to discover usernames or passwords.| `Brute forcing usernames...`  
+Use Proxy| `wpscan --url https://example.com --proxy http://proxy.example.com`| Uses a specified proxy for requests.| `Using proxy: http://proxy.example.com`  
+Custom User-Agent| `wpscan --url https://example.com --user-agent "CustomUserAgent"`| Sets a custom User-Agent string for requests.| `Using custom User-Agent: CustomUserAgent`  
+Rate Limiting| `wpscan --url https://example.com --rate-limit 5`| Limits the number of requests sent per second.| `Rate limit set to 5 requests per second.`  
+Output Results to a File| `wpscan --url https://example.com -o output.txt`| Outputs the scan results to a specified file.| `Results saved to output.txt`  
+Output JSON| `wpscan --url https://example.com --output-json`| Outputs results in JSON format.| `Results saved in JSON format.`  
+Store HTTP Responses| `wpscan --url https://example.com --store-requests`| Stores HTTP requests and responses during the scan.| `HTTP requests and responses stored.`  
+Verbose Mode| `wpscan --url https://example.com --verbose`| Enables verbose output for detailed information.| `Verbose mode enabled.`  
+Resume Scan| `wpscan --url https://example.com --resume resume.cfg`| Resumes a scan using a previous session configuration file.| `Resuming scan from resume.cfg...`  
+Exclude Specific Paths| `wpscan --url https://example.com --exclude-path /wp-admin`| Excludes specified paths from the scan.| `Excluding path: /wp-admin`

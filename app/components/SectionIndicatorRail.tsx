@@ -15,7 +15,8 @@ export default function SectionIndicatorRail() {
   const [pendingSection, setPendingSection] = useState<string | null>(null);
 
   useEffect(() => {
-    setMounted(true);
+    const handle = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   const handleSectionClick = useCallback((id: string) => {

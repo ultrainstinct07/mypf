@@ -1,0 +1,611 @@
+---
+title: "TruffleHog"
+description: "TruffleHog tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['devsecops', 'git', 'secrets', 'cloud']
+---
+
+## What is the purpose of TruffleHog?​
+
+**TruffleHog** is an **open-source** secret discovery, classification, validation, and analysis tool. It finds leaked credentials in Git repositories, GitHub and GitLab, filesystems, Docker images, S3, GCS, CI platforms, Postman, Jenkins, Elasticsearch, Hugging Face, and standard input.
+
+TruffleHog is especially useful because it can verify many detected credentials against the relevant service API. This helps separate active credentials from unverified matches and makes triage more practical during security reviews, CI checks, and incident response.
+
+**Here are the primary uses of TruffleHog:**
+
+  * **Verified Secret Discovery:** TruffleHog detects credentials and, when supported, verifies whether they are still valid and active.
+
+  * **Git Repository Scanning:** The tool scans remote Git repositories, local repositories, branches, commit ranges, and CI merge ranges for leaked credentials.
+
+  * **GitHub and GitLab Scanning:** TruffleHog can scan repositories, organizations, issues, pull request comments, and GitLab projects when the required access is available.
+
+  * **Cloud Storage Scanning:** The tool can scan S3 and GCS buckets for exposed credentials and supports AWS role-based workflows.
+
+  * **Container Secret Scanning:** TruffleHog scans Docker images from registries, local Docker daemon images, and saved image tarballs.
+
+  * **Filesystem and Artifact Scanning:** It can scan individual files, directories, binaries, documents, archives, and streamed data from standard input.
+
+  * **CI/CD Secret Blocking:** TruffleHog can run in GitHub Actions, GitLab CI, CircleCI, and other pipelines, returning a failing exit code when selected findings are discovered.
+
+  * **Credential Analysis:** For supported credential types, TruffleHog can analyze API keys for permission and resource information.
+
+
+
+
+## Core Features​
+
+  * Secret scanning across repositories and filesystems
+  * Verified credential detection with detector support
+  * Git history and branch-aware scanning
+  * GitHub, GitLab, S3, Docker, and other source integrations
+  * JSON output and no-update/no-verification controls
+  * Include, exclude, and since-commit filtering
+  * CI/CD and incident-response triage workflows
+
+
+
+## Data sources​
+
+  * Git repositories, commits, and branches
+  * Local filesystems and archives
+  * GitHub and GitLab organizations or repositories
+  * Object stores and container images where configured
+  * Detector definitions and verification responses
+  * JSON findings and scan logs
+
+
+
+## Common TruffleHog Commands​
+
+### 1\. Install TruffleHog with Homebrew​
+
+  * This command installs TruffleHog on macOS using Homebrew.
+
+
+    
+    
+```
+brew install trufflehog  
+```
+### 2\. Pull the Docker Image​
+
+  * This command downloads the official TruffleHog Docker image.
+
+
+    
+    
+```
+docker pull trufflesecurity/trufflehog:latest  
+```
+### 3\. Install with the Official Script​
+
+  * This command installs the TruffleHog binary using the official installation script.
+
+
+    
+    
+```
+curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin  
+```
+### 4\. Install a Specific Version​
+
+  * This command installs a selected TruffleHog release tag with the official installation script.
+
+
+    
+    
+```
+curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin <release_tag>  
+```
+### 5\. Show Help​
+
+  * This command displays global help and available subcommands.
+
+
+    
+    
+```
+trufflehog --help  
+```
+### 6\. Show Version​
+
+  * This command prints the installed TruffleHog version.
+
+
+    
+    
+```
+trufflehog --version  
+```
+### 7\. Show Git Source Help​
+
+  * This command displays help for scanning Git repositories.
+
+
+    
+    
+```
+trufflehog git --help  
+```
+### 8\. Scan a Remote Git Repository​
+
+  * This command scans a remote Git repository and reports verified secrets only.
+
+
+    
+    
+```
+trufflehog git https://github.com/example/repo.git --results=verified  
+```
+### 9\. Scan a Remote Git Repository with JSON Output​
+
+  * This command scans a Git repository and writes JSON lines to standard output.
+
+
+    
+    
+```
+trufflehog git https://github.com/example/repo.git --results=verified --json  
+```
+### 10\. Scan a Local Git Repository​
+
+  * This command scans a local Git repository by using a `file://` URI.
+
+
+    
+    
+```
+trufflehog git file://. --results=verified,unknown  
+```
+### 11\. Scan a Local Git Repository with a Clone Path​
+
+  * This command uses a selected clone path for TruffleHog's local repository scanning workflow.
+
+
+    
+    
+```
+trufflehog git file://repo --clone-path /tmp/trufflehog-clones --results=verified,unknown  
+```
+### 12\. Scan a Trusted Local Git Repository Directly​
+
+  * This command skips the safer local clone process and scans a trusted local repository directly.
+
+
+    
+    
+```
+trufflehog git file://repo --trust-local-git-config --results=verified,unknown  
+```
+### 13\. Scan a Git Repository over SSH with Docker​
+
+  * This command mounts local SSH keys read-only and scans an SSH Git URL from Docker.
+
+
+    
+    
+```bash
+docker run --rm -v "$HOME/.ssh:/root/.ssh:ro" trufflesecurity/trufflehog:latest git ssh://github.com/example/repo.git --results=verified  
+```
+### 14\. Scan a GitHub Repository​
+
+  * This command scans a GitHub repository through the GitHub source.
+
+
+    
+    
+```
+trufflehog github --repo=https://github.com/example/repo --results=verified  
+```
+### 15\. Scan a GitHub Organization​
+
+  * This command scans repositories in a GitHub organization.
+
+
+    
+    
+```
+trufflehog github --org=example-org --results=verified  
+```
+### 16\. Scan GitHub with an Access Token​
+
+  * This command uses a GitHub token to improve access and rate limits for GitHub scanning.
+
+
+    
+    
+```
+trufflehog github --org=example-org --token <github_token> --results=verified  
+```
+### 17\. Scan GitHub Issues and Pull Request Comments​
+
+  * This command includes GitHub issue comments and pull request comments in the scan.
+
+
+    
+    
+```
+trufflehog github --repo=https://github.com/example/repo --issue-comments --pr-comments --results=verified,unknown  
+```
+### 18\. Scan GitHub Hidden and Deleted Commits​
+
+  * This command uses the experimental GitHub object discovery workflow for hidden and deleted commits.
+
+
+    
+    
+```
+trufflehog github-experimental --repo https://github.com/example/repo.git --object-discovery  
+```
+### 19\. Delete Cached Object Discovery Data​
+
+  * This command removes cached object discovery data after the experimental scan completes.
+
+
+    
+    
+```
+trufflehog github-experimental --repo https://github.com/example/repo.git --object-discovery --delete-cached-data  
+```
+### 20\. Scan Individual Files and Directories​
+
+  * This command scans selected files and directories without requiring Git history.
+
+
+    
+    
+```
+trufflehog filesystem path/to/file.txt path/to/dir  
+```
+### 21\. Scan Standard Input​
+
+  * This command streams data into TruffleHog from standard input.
+
+
+    
+    
+```
+cat config.txt | trufflehog stdin  
+```
+### 22\. Scan Compressed Data from Standard Input​
+
+  * This command streams decompressed cloud data into TruffleHog.
+
+
+    
+    
+```
+aws s3 cp s3://example-bucket/data.gz - | gunzip -c | trufflehog stdin  
+```
+### 23\. Scan an S3 Bucket​
+
+  * This command scans a selected S3 bucket for high-confidence results.
+
+
+    
+    
+```
+trufflehog s3 --bucket <bucket_name> --results=verified,unknown  
+```
+### 24\. Scan S3 with an IAM Role​
+
+  * This command assumes an IAM role for S3 scanning.
+
+
+    
+    
+```
+trufflehog s3 --bucket <bucket_name> --role-arn <iam_role_arn> --results=verified  
+```
+### 25\. Scan All Accessible Buckets for Multiple Roles​
+
+  * This command attempts to scan buckets accessible to each supplied role.
+
+
+    
+    
+```
+trufflehog s3 --role-arn <iam_role_arn_1> --role-arn <iam_role_arn_2> --results=verified  
+```
+### 26\. Scan GCS Buckets​
+
+  * This command scans Google Cloud Storage buckets for verified secrets.
+
+
+    
+    
+```
+trufflehog gcs --project-id <project_id> --cloud-environment --results=verified  
+```
+### 27\. Scan a Remote Docker Image​
+
+  * This command scans a Docker image from a remote registry.
+
+
+    
+    
+```
+trufflehog docker --image trufflesecurity/secrets --results=verified  
+```
+### 28\. Scan a Local Docker Daemon Image​
+
+  * This command scans an image available through the local Docker daemon.
+
+
+    
+    
+```
+trufflehog docker --image docker://new_image:tag --results=verified  
+```
+### 29\. Scan a Docker Image Tarball​
+
+  * This command scans a Docker image saved as a tarball.
+
+
+    
+    
+```
+trufflehog docker --image file://path_to_image.tar --results=verified  
+```
+### 30\. Scan Multiple Docker Images​
+
+  * This command scans multiple Docker images in one run.
+
+
+    
+    
+```
+trufflehog docker --image image-one:latest --image image-two:latest --results=verified  
+```
+### 31\. Run a CI Merge Range Scan​
+
+  * This command scans changes between a default branch and a feature branch and fails when selected results are found.
+
+
+    
+    
+```
+trufflehog git file://. --since-commit main --branch feature-1 --results=verified,unknown --fail  
+```
+### 32\. Run a CI Scan Against HEAD​
+
+  * This command scans from the default branch to the already checked-out branch.
+
+
+    
+    
+```
+trufflehog git file://. --since-commit main --branch HEAD --results=verified,unknown --fail  
+```
+### 33\. Disable Update Checks​
+
+  * This command disables update checks, which is useful in deterministic CI jobs.
+
+
+    
+    
+```
+trufflehog git file://. --results=verified,unknown --no-update  
+```
+### 34\. Output in GitHub Actions Format​
+
+  * This command formats findings for GitHub Actions annotations.
+
+
+    
+    
+```
+trufflehog git file://. --results=verified,unknown --github-actions  
+```
+### 35\. Scan Without Verification​
+
+  * This command disables credential verification and reports detection results only.
+
+
+    
+    
+```
+trufflehog filesystem path/to/dir --no-verification --results=verified,unknown,unverified  
+```
+### 36\. Include Selected Detectors​
+
+  * This command runs only selected detector types.
+
+
+    
+    
+```
+trufflehog git file://. --include-detectors AWS,GitHub --results=verified,unknown  
+```
+### 37\. Exclude Selected Detectors​
+
+  * This command excludes selected detector types from the scan.
+
+
+    
+    
+```
+trufflehog git file://. --exclude-detectors Slack --results=verified,unknown  
+```
+### 38\. Filter Unverified Results by Entropy​
+
+  * This command filters unverified findings with a Shannon entropy threshold.
+
+
+    
+    
+```
+trufflehog filesystem path/to/dir --filter-entropy 3.0 --results=unverified  
+```
+### 39\. Set Concurrency​
+
+  * This command adjusts the number of concurrent workers.
+
+
+    
+    
+```
+trufflehog git file://. --concurrency 8 --results=verified,unknown  
+```
+### 40\. Limit Archive Scanning​
+
+  * This command sets archive scan depth and maximum archive size.
+
+
+    
+    
+```
+trufflehog filesystem path/to/dir --archive-max-depth 2 --archive-max-size 10MB --results=verified,unknown  
+```
+### 41\. Skip Binaries​
+
+  * This command skips binary files during scanning.
+
+
+    
+    
+```
+trufflehog filesystem path/to/dir --force-skip-binaries --results=verified,unknown  
+```
+### 42\. Skip Archives​
+
+  * This command skips archive extraction during scanning.
+
+
+    
+    
+```
+trufflehog filesystem path/to/dir --force-skip-archives --results=verified,unknown  
+```
+### 43\. Use a Configuration File​
+
+  * This command loads custom detectors or source definitions from a configuration file.
+
+
+    
+    
+```
+trufflehog filesystem path/to/dir --config trufflehog.yaml --results=verified,unknown  
+```
+### 44\. Run a Multi-Source Scan​
+
+  * This command scans multiple sources defined in a configuration file.
+
+
+    
+    
+```
+trufflehog multi-scan --config trufflehog.yaml --results=verified,unknown  
+```
+### 45\. Use Custom Verification Endpoints​
+
+  * This command uses a selected verifier endpoint for credential verification workflows.
+
+
+    
+    
+```
+trufflehog git file://. --verifier https://verifier.example.com --results=verified,unknown  
+```
+### 46\. Use Only Custom Verifiers​
+
+  * This command disables built-in verifiers and uses only custom verification endpoints.
+
+
+    
+    
+```
+trufflehog git file://. --verifier https://verifier.example.com --custom-verifiers-only --results=verified,unknown  
+```
+### 47\. Scan a Postman Workspace​
+
+  * This command scans a Postman workspace with a Postman API token.
+
+
+    
+    
+```
+trufflehog postman --token <postman_api_token> --workspace-id <workspace_id> --results=verified  
+```
+### 48\. Scan a Jenkins Server​
+
+  * This command scans a Jenkins server when valid Jenkins credentials are available.
+
+
+    
+    
+```
+trufflehog jenkins --url https://jenkins.example.com --username <username> --password <password> --results=verified  
+```
+### 49\. Scan an Elasticsearch Cluster​
+
+  * This command scans an Elasticsearch cluster using username and password authentication.
+
+
+    
+    
+```
+trufflehog elasticsearch --nodes 192.0.2.10 192.0.2.11 --username <username> --password <password> --results=verified  
+```
+### 50\. Scan Hugging Face Resources​
+
+  * This command scans Hugging Face models, datasets, or spaces.
+
+
+    
+    
+```
+trufflehog huggingface --model <model_id> --dataset <dataset_id> --space <space_id> --results=verified  
+```
+### 51\. Analyze a Credential​
+
+  * This command starts TruffleHog's credential analysis workflow for supported key types.
+
+
+    
+    
+```
+trufflehog analyze  
+```
+## Output Examples of TruffleHog Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Show Help| `trufflehog --help`| Displays global help.| `Commands: git, github, gitlab, docker, s3, filesystem, stdin`  
+Show Version| `trufflehog --version`| Prints the installed version.| `trufflehog version 3.x.x`  
+Git Help| `trufflehog git --help`| Shows Git source options.| `Find credentials in git repositories`  
+Remote Git Scan| `trufflehog git https://github.com/example/repo.git --results=verified`| Scans a remote Git repository.| `Found verified result`  
+JSON Git Scan| `trufflehog git https://github.com/example/repo.git --results=verified --json`| Outputs JSON findings.| `{"DetectorName":"AWS","Verified":true}`  
+Local Git Scan| `trufflehog git file://. --results=verified,unknown`| Scans a local Git repository.| `scanning repo`  
+Clone Path| `trufflehog git file://repo --clone-path /tmp/trufflehog-clones`| Uses a selected local clone path.| `temporary clone path configured`  
+Trusted Local Scan| `trufflehog git file://repo --trust-local-git-config`| Scans trusted local Git config directly.| `trust local git config enabled`  
+GitHub Repo| `trufflehog github --repo=https://github.com/example/repo --results=verified`| Scans a GitHub repository.| `Repository: https://github.com/example/repo`  
+GitHub Org| `trufflehog github --org=example-org --results=verified`| Scans repositories in an organization.| `Scanning GitHub organization example-org`  
+GitHub Token| `trufflehog github --org=example-org --token <github_token>`| Authenticates GitHub scans.| `Using authenticated GitHub client`  
+GitHub Comments| `trufflehog github --repo=https://github.com/example/repo --issue-comments --pr-comments`| Includes issue and PR comments.| `Scanning issue comments`  
+Object Discovery| `trufflehog github-experimental --repo https://github.com/example/repo.git --object-discovery`| Scans hidden and deleted commits.| `valid_hidden.txt created`  
+Filesystem| `trufflehog filesystem path/to/file.txt path/to/dir`| Scans files and directories.| `File: path/to/file.txt`  
+STDIN| `cat config.txt | trufflehog stdin`| Scans streamed input.| `Found unverified result`  
+S3 Bucket| `trufflehog s3 --bucket example-bucket --results=verified,unknown`| Scans one S3 bucket.| `SourceName: trufflehog - s3`  
+S3 Role| `trufflehog s3 --bucket example-bucket --role-arn <iam_role_arn>`| Scans using an assumed role.| `Assuming role`  
+GCS| `trufflehog gcs --project-id example-project --cloud-environment --results=verified`| Scans GCS buckets.| `SourceName: trufflehog - gcs`  
+Docker Remote| `trufflehog docker --image trufflesecurity/secrets --results=verified`| Scans a remote image.| `Scanning Docker image`  
+Docker Local| `trufflehog docker --image docker://new_image:tag --results=verified`| Scans local Docker daemon image.| `SourceName: trufflehog - docker`  
+Docker Tarball| `trufflehog docker --image file://path_to_image.tar --results=verified`| Scans saved Docker image tar.| `Archive extracted`  
+CI Range| `trufflehog git file://. --since-commit main --branch feature-1 --results=verified,unknown --fail`| Scans a merge range and fails on findings.| `exit code 183`  
+GitHub Actions Output| `trufflehog git file://. --github-actions`| Emits GitHub Actions annotations.| `::warning file=...`  
+No Verification| `trufflehog filesystem path/to/dir --no-verification`| Disables live validation.| `Verified: false`  
+Include Detectors| `trufflehog git file://. --include-detectors AWS,GitHub`| Runs selected detectors.| `Included detectors: AWS, GitHub`  
+Exclude Detectors| `trufflehog git file://. --exclude-detectors Slack`| Skips selected detectors.| `Excluded detector: Slack`  
+Entropy Filter| `trufflehog filesystem path/to/dir --filter-entropy 3.0`| Filters unverified results by entropy.| `Filtered unverified results`  
+Concurrency| `trufflehog git file://. --concurrency 8`| Sets concurrent workers.| `concurrency=8`  
+Archive Limits| `trufflehog filesystem path/to/dir --archive-max-depth 2 --archive-max-size 10MB`| Controls archive scanning.| `Archive depth: 2`  
+Skip Binaries| `trufflehog filesystem path/to/dir --force-skip-binaries`| Skips binary files.| `Skipping binary file`  
+Skip Archives| `trufflehog filesystem path/to/dir --force-skip-archives`| Skips archive extraction.| `Skipping archive`  
+Config File| `trufflehog filesystem path/to/dir --config trufflehog.yaml`| Loads custom configuration.| `Loaded config trufflehog.yaml`  
+Multi-Scan| `trufflehog multi-scan --config trufflehog.yaml`| Scans configured sources.| `Scanning multiple sources`  
+Custom Verifier| `trufflehog git file://. --verifier https://verifier.example.com`| Uses a verifier endpoint.| `Custom verifier configured`  
+Postman| `trufflehog postman --token <postman_api_token> --workspace-id <workspace_id>`| Scans a Postman workspace.| `Scanning Postman workspace`  
+Jenkins| `trufflehog jenkins --url https://jenkins.example.com --username <username> --password <password>`| Scans Jenkins.| `Scanning Jenkins server`  
+Elasticsearch| `trufflehog elasticsearch --nodes 192.0.2.10 --username <username> --password <password>`| Scans Elasticsearch.| `Scanning Elasticsearch nodes`  
+Hugging Face| `trufflehog huggingface --model <model_id> --results=verified`| Scans Hugging Face resources.| `Scanning Hugging Face model`  
+Analyze| `trufflehog analyze`| Starts credential analysis.| `Analyze API keys for permissions information`

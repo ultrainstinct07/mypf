@@ -1,0 +1,584 @@
+---
+title: "kube-bench"
+description: "kube-bench tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['kubernetes', 'cis benchmark', 'compliance', 'hardening']
+---
+
+## What is the purpose of kube-bench?​
+
+**kube-bench** is an open-source command-line tool from Aqua Security that checks whether Kubernetes is deployed securely according to the CIS Kubernetes Benchmark and related hardening guides. It inspects Kubernetes node configuration, component processes, file permissions, kubelet settings, control plane configuration, etcd settings, policies, and managed-service-specific benchmark checks where supported.
+
+kube-bench is useful because it turns Kubernetes hardening guidance into repeatable checks that can be run on nodes, inside privileged Kubernetes jobs, or inside containers with host mounts. It is commonly used by platform engineers, DevSecOps teams, auditors, and penetration testers to identify Kubernetes configuration drift and hardening gaps.
+
+**Note:** kube-bench needs access to node-level files, process information, and Kubernetes configuration paths. When running directly on a node, root or sudo may be required. In managed Kubernetes services such as EKS, GKE, AKS, and ACK, kube-bench cannot inspect provider-managed control plane or master nodes because users do not have access to those nodes; worker node checks are still possible.
+
+**Here are the primary uses of kube-bench:**
+
+  * **CIS Kubernetes Benchmark Assessment:** kube-bench runs automated checks from CIS Kubernetes Benchmark profiles and reports pass, fail, warning, and informational results.
+
+  * **Node Hardening Review:** The tool checks kubelet configuration, file ownership, file permissions, process arguments, certificates, and node-level security settings.
+
+  * **Control Plane and etcd Review:** On self-managed clusters, kube-bench can check API server, scheduler, controller manager, and etcd configuration against benchmark recommendations.
+
+  * **Managed Kubernetes Checks:** The tool includes platform-specific benchmark support and job manifests for environments such as EKS, GKE, AKS, ACK, and OpenShift, with managed control plane limitations.
+
+  * **Compliance Evidence Collection:** kube-bench can generate text, JSON, and JUnit-style output that can be stored as audit evidence or consumed by CI/CD and reporting systems.
+
+  * **Focused Check Execution:** The tool can run selected benchmark sections, individual checks, groups, or skip specific checks based on the assessment scope.
+
+  * **AWS Security Hub Integration:** For EKS workflows, kube-bench can send failed and warning findings to AWS Security Hub using AWS Security Finding Format when configured.
+
+
+
+
+## Core Features​
+
+  * CIS Kubernetes benchmark checks
+  * Control plane, node, and etcd profile support
+  * Version and platform-specific test selection
+  * JSON, JUnit, and plain output options
+  * Check filtering, skip lists, and config overrides
+  * Remediation and audit command visibility
+  * Containerized and host-based execution workflows
+
+
+
+## Data sources​
+
+  * Kubernetes component configuration files
+  * kubeadm manifests and kubelet configs
+  * Control plane, node, and etcd settings
+  * Systemd service files and process flags
+  * CIS benchmark definitions and kube-bench cfg files
+  * JSON, JUnit, and text scan results
+
+
+
+## Common kube-bench Commands​
+
+### 1\. Install kube-bench from a Release Archive​
+
+  * This command downloads the current release archive, extracts it, and makes the binary available locally.
+
+
+    
+    
+```bash
+VERSION=0.15.5  
+curl -L "https://github.com/aquasecurity/kube-bench/releases/download/v${VERSION}/kube-bench_${VERSION}_linux_amd64.tar.gz" -o "kube-bench_${VERSION}_linux_amd64.tar.gz"  
+tar -xvf "kube-bench_${VERSION}_linux_amd64.tar.gz"  
+```
+### 2\. Install kube-bench from a Debian Package​
+
+  * This command installs kube-bench on Debian or Ubuntu from a release package.
+
+
+    
+    
+```bash
+VERSION=0.15.5  
+curl -L "https://github.com/aquasecurity/kube-bench/releases/download/v${VERSION}/kube-bench_${VERSION}_linux_amd64.deb" -o "kube-bench_${VERSION}_linux_amd64.deb"  
+sudo apt install "./kube-bench_${VERSION}_linux_amd64.deb" -f  
+```
+### 3\. Install kube-bench from an RPM Package​
+
+  * This command installs kube-bench on RPM-based systems.
+
+
+    
+    
+```bash
+VERSION=0.15.5  
+curl -L "https://github.com/aquasecurity/kube-bench/releases/download/v${VERSION}/kube-bench_${VERSION}_linux_amd64.rpm" -o "kube-bench_${VERSION}_linux_amd64.rpm"  
+sudo yum install "kube-bench_${VERSION}_linux_amd64.rpm" -y  
+```
+### 4\. Install kube-bench from the Container Image​
+
+  * This command copies the kube-bench binary and configuration files from the container image into the current host directory.
+
+
+    
+    
+```bash
+docker run --rm -v "$(pwd)":/host aquasec/kube-bench:latest install  
+```
+### 5\. Build kube-bench from Source​
+
+  * This command builds kube-bench from the official repository.
+
+
+    
+    
+```
+git clone https://github.com/aquasecurity/kube-bench.git  
+cd kube-bench  
+go build -o kube-bench .  
+```
+### 6\. Show kube-bench Help​
+
+  * This command displays supported commands and flags.
+
+
+    
+    
+```
+kube-bench --help  
+```
+### 7\. Show kube-bench Version​
+
+  * This command prints the kube-bench version.
+
+
+    
+    
+```
+kube-bench version  
+```
+### 8\. Run Auto-Detected Checks on a Node​
+
+  * This command lets kube-bench detect the Kubernetes version, benchmark, and local components.
+
+
+    
+    
+```
+sudo kube-bench  
+```
+### 9\. Run Auto-Detected Checks with the Run Command​
+
+  * This command explicitly uses the `run` subcommand.
+
+
+    
+    
+```
+sudo kube-bench run  
+```
+### 10\. Run with a Specific Kubernetes Version​
+
+  * This command selects checks based on a manually specified Kubernetes version.
+
+
+    
+    
+```
+sudo kube-bench --version 1.28  
+```
+### 11\. Run with an Environment-Provided Kubernetes Version​
+
+  * This command sets the Kubernetes version through an environment variable.
+
+
+    
+    
+```
+KUBE_BENCH_VERSION=1.28 sudo kube-bench  
+```
+### 12\. Run with a Specific CIS Benchmark​
+
+  * This command selects a benchmark profile directly.
+
+
+    
+    
+```
+sudo kube-bench --benchmark cis-1.8  
+```
+### 13\. Run Control Plane and Node Targets​
+
+  * This command runs selected benchmark targets.
+
+
+    
+    
+```
+sudo kube-bench run --targets master,node  
+```
+### 14\. Run Master, Node, etcd, and Policy Targets​
+
+  * This command runs multiple target sections together.
+
+
+    
+    
+```
+sudo kube-bench run --targets master,node,etcd,policies  
+```
+### 15\. Run Node Checks Only​
+
+  * This command focuses on node checks, useful for worker node assessment.
+
+
+    
+    
+```
+sudo kube-bench run --targets node  
+```
+### 16\. Run etcd Checks Only​
+
+  * This command focuses on etcd checks on self-managed clusters.
+
+
+    
+    
+```
+sudo kube-bench run --targets etcd  
+```
+### 17\. Run a Specific Check​
+
+  * This command runs one benchmark check by ID.
+
+
+    
+    
+```
+sudo kube-bench --check 1.1.1  
+```
+### 18\. Run Multiple Specific Checks​
+
+  * This command runs a comma-delimited list of checks.
+
+
+    
+    
+```
+sudo kube-bench --check "1.1.1,1.1.2,1.2.1,1.3.3"  
+```
+### 19\. Run a Check Group​
+
+  * This command runs all checks under selected benchmark groups.
+
+
+    
+    
+```
+sudo kube-bench --group "1.1,2.2"  
+```
+### 20\. Skip Specific Checks or Groups​
+
+  * This command skips selected checks or check groups.
+
+
+    
+    
+```
+sudo kube-bench --skip "1.1,1.2.1,1.3.3"  
+```
+### 21\. Include Failing Test Output​
+
+  * This command prints the actual failing test output in the results section.
+
+
+    
+    
+```
+sudo kube-bench --include-test-output  
+```
+### 22\. Hide Remediation Text​
+
+  * This command disables remediation output in stdout.
+
+
+    
+    
+```
+sudo kube-bench --noremediations  
+```
+### 23\. Hide Results Text​
+
+  * This command disables the results section in stdout.
+
+
+    
+    
+```
+sudo kube-bench --noresults  
+```
+### 24\. Hide Totals​
+
+  * This command disables totals calculation and printing.
+
+
+    
+    
+```
+sudo kube-bench --nototals  
+```
+### 25\. Print JSON Output​
+
+  * This command prints results as JSON.
+
+
+    
+    
+```
+sudo kube-bench --json  
+```
+### 26\. Save JSON Output​
+
+  * This command writes JSON results to a file.
+
+
+    
+    
+```
+sudo kube-bench --json --outputfile kube-bench-results.json  
+```
+### 27\. Print JUnit Output​
+
+  * This command prints results in JUnit format.
+
+
+    
+    
+```
+sudo kube-bench --junit  
+```
+### 28\. Save JUnit Output​
+
+  * This command saves JUnit output with shell redirection.
+
+
+    
+    
+```
+sudo kube-bench --junit > kube-bench-junit.xml  
+```
+### 29\. Set a Custom Failure Exit Code​
+
+  * This command returns a custom exit code if one or more checks fail.
+
+
+    
+    
+```
+sudo kube-bench --exit-code 42  
+```
+### 30\. Run with Debug Logging​
+
+  * This command enables debug logging for troubleshooting.
+
+
+    
+    
+```
+sudo kube-bench -v 3  
+```
+### 31\. Run with a Custom Config Directory and File​
+
+  * This command uses explicit configuration paths when running from an extracted archive or custom config layout.
+
+
+    
+    
+```bash
+./kube-bench --config-dir "$(pwd)/cfg" --config "$(pwd)/cfg/config.yaml"  
+```
+### 32\. Run Inside a Container​
+
+  * This command runs kube-bench in a container with host PID namespace and host config directories mounted read-only.
+
+
+    
+    
+```
+docker run --pid=host -v /etc:/etc:ro -v /var:/var:ro -t aquasec/kube-bench:latest  
+```
+### 33\. Run Inside a Container with a Version Override​
+
+  * This command runs containerized kube-bench while manually specifying the Kubernetes version.
+
+
+    
+    
+```
+docker run --pid=host -v /etc:/etc:ro -v /var:/var:ro -t aquasec/kube-bench:latest --version 1.28  
+```
+### 34\. Run Inside a Container with kubectl and kubeconfig​
+
+  * This command mounts `kubectl` and kubeconfig so kube-bench can use Kubernetes version detection and API access.
+
+
+    
+    
+```bash
+docker run --pid=host -v /etc:/etc:ro -v /var:/var:ro -v "$(which kubectl)":/usr/local/mount-from-host/bin/kubectl -v ~/.kube:/.kube -e KUBECONFIG=/.kube/config -t aquasec/kube-bench:latest  
+```
+### 35\. Run Inside a Container with a Custom Config​
+
+  * This command mounts a custom config file over the container's default kube-bench config.
+
+
+    
+    
+```bash
+docker run --pid=host -v /etc:/etc:ro -v /var:/var:ro -v "$(pwd)/my-config.yaml":/opt/kube-bench/cfg/config.yaml -v "$(which kubectl)":/usr/local/mount-from-host/bin/kubectl -v ~/.kube:/.kube -e KUBECONFIG=/.kube/config -t aquasec/kube-bench:latest  
+```
+### 36\. Run kube-bench as a Kubernetes Job​
+
+  * This command applies the default job manifest from the repository.
+
+
+    
+    
+```
+kubectl apply -f job.yaml  
+```
+### 37\. View kube-bench Job Pods​
+
+  * This command lists pods created by the kube-bench job.
+
+
+    
+    
+```
+kubectl get pods  
+```
+### 38\. Read kube-bench Job Logs​
+
+  * This command retrieves results from a completed kube-bench job pod.
+
+
+    
+    
+```
+kubectl logs kube-bench-<pod-suffix>  
+```
+### 39\. Save kube-bench Job Logs​
+
+  * This command saves job output as an evidence file.
+
+
+    
+    
+```
+kubectl logs kube-bench-<pod-suffix> > kube-bench-report.txt  
+```
+### 40\. Run kube-bench on EKS Worker Nodes​
+
+  * This command applies the EKS job manifest for worker node checks.
+
+
+    
+    
+```
+kubectl apply -f job-eks.yaml  
+```
+### 41\. Run kube-bench on GKE Worker Nodes​
+
+  * This command applies the GKE job manifest.
+
+
+    
+    
+```
+kubectl apply -f job-gke.yaml  
+```
+### 42\. Run kube-bench on AKS Worker Nodes​
+
+  * This command applies the AKS job manifest.
+
+
+    
+    
+```
+kubectl apply -f job-aks.yaml  
+```
+### 43\. Run kube-bench on ACK Worker Nodes​
+
+  * This command applies the ACK job manifest.
+
+
+    
+    
+```
+kubectl apply -f job-ack.yaml  
+```
+### 44\. Run an OpenShift Benchmark​
+
+  * This command selects an OpenShift hardening benchmark profile.
+
+
+    
+    
+```
+sudo kube-bench --benchmark rh-1.0  
+```
+### 45\. Run the GKE Benchmark Profile​
+
+  * This command selects the GKE benchmark profile.
+
+
+    
+    
+```
+sudo kube-bench --benchmark gke-1.0  
+```
+### 46\. Run the EKS Benchmark Profile​
+
+  * This command selects the EKS benchmark profile.
+
+
+    
+    
+```
+sudo kube-bench --benchmark eks-1.0  
+```
+### 47\. Run the ACK Benchmark Profile​
+
+  * This command selects the ACK benchmark profile.
+
+
+    
+    
+```
+sudo kube-bench --benchmark ack-1.0  
+```
+### 48\. Send Findings to AWS Security Hub​
+
+  * This command enables ASFF output for AWS Security Hub workflows after required IAM and Security Hub integration steps are configured.
+
+
+    
+    
+```
+kube-bench --asff  
+```
+### 49\. Run the EKS ASFF Job​
+
+  * This command applies the EKS AWS Security Hub job manifest after image and account settings are configured.
+
+
+    
+    
+```
+kubectl apply -f job-eks-asff.yaml  
+```
+### 50\. Store Results in PostgreSQL​
+
+  * This command enables PostgreSQL result storage when database settings are configured.
+
+
+    
+    
+```
+kube-bench --pgsql  
+```
+## Output Examples​
+
+Command| Description| Example Output  
+---|---|---  
+`kube-bench version`| Shows the installed version.| `kube-bench version 0.15.5`  
+`sudo kube-bench`| Runs auto-detected checks.| `[INFO] 1 Master Node Security Configuration`   
+`[PASS] 1.1.1 Ensure that the API server pod specification file permissions are set to 644 or more restrictive`  
+`sudo kube-bench --version 1.28`| Runs checks for a selected Kubernetes version.| `[INFO] Using Kubernetes version 1.28`  
+`sudo kube-bench --benchmark cis-1.8`| Runs a selected benchmark profile.| `[INFO] Running benchmark cis-1.8`  
+`sudo kube-bench run --targets node`| Runs worker node checks only.| `[INFO] 4 Worker Node Security Configuration`  
+`sudo kube-bench --check 1.1.1`| Runs one check by ID.| `[PASS] 1.1.1 Ensure that the API server pod specification file permissions are set to 644 or more restrictive`  
+`sudo kube-bench --include-test-output`| Prints failing test output.| `[FAIL] 1.1.1 ...`   
+`permissions=777`  
+`sudo kube-bench --json --outputfile kube-bench-results.json`| Writes JSON results.| `kube-bench-results.json written`  
+`sudo kube-bench --junit`| Prints JUnit output.| `<testsuite name="kube-bench">`  
+`kubectl apply -f job.yaml`| Runs kube-bench as a Kubernetes job.| `job.batch/kube-bench created`  
+`kubectl logs kube-bench-<pod-suffix>`| Reads job results.| `[INFO] 1 Master Node Security Configuration`  
+`kube-bench --asff`| Sends failed and warning findings to AWS Security Hub when configured.| `BatchImportFindings`

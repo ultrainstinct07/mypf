@@ -1,0 +1,546 @@
+---
+title: "Binwalk"
+description: "Binwalk tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['firmware', 'forensics', 'reverse engineering', 'embedded security']
+---
+
+## What is the purpose of Binwalk?​
+
+**Binwalk** is an open-source command-line tool for analyzing firmware images and other binary blobs. It scans files for embedded signatures, identifies compressed data, file systems, bootloader structures, certificates, archives, images, and other embedded content, then optionally extracts or carves those objects to disk.
+
+Binwalk is especially useful in embedded security, IoT firmware review, malware triage, CTF challenges, digital forensics, and incident response because firmware files often contain several nested layers. A single vendor update image can include boot headers, compressed kernels, SquashFS or UBIFS file systems, configuration files, web interfaces, certificates, scripts, and proprietary binary sections.
+
+**Version note:** This guide uses the current Binwalk v3 command style. Binwalk v3 is a Rust rewrite with a smaller and cleaner CLI than older v2 examples found online. Prefer `--extract`, `--carve`, `--matryoshka`, `--entropy`, `--log`, `--include`, and `--exclude`. Do not assume older v2 flags such as `--dd`, `-B`, or `-A` are available.
+
+**Here are the primary uses of Binwalk:**
+
+  * **Firmware Triage:** Binwalk quickly identifies the structure of a firmware image and shows offsets, signature names, confidence levels, and descriptions for embedded objects.
+
+  * **Embedded File System Discovery:** The tool helps find file systems such as SquashFS, CramFS, JFFS2, UBIFS, ext, and FAT inside router, camera, appliance, or IoT firmware.
+
+  * **Automatic Extraction:** Binwalk can extract known file types and file systems into an output directory for deeper analysis with standard Linux tools.
+
+  * **Recursive Extraction:** The matryoshka mode recursively scans extracted files, which is useful when firmware contains nested archives, compressed payloads, or multi-stage update packages.
+
+  * **Data Carving:** The tool can carve known and unknown file sections to disk when automatic extraction is not enough or when analysts want offset-based artifacts.
+
+  * **Entropy Analysis:** Binwalk can generate entropy graphs to highlight compressed, encrypted, packed, or random-looking regions inside a binary file.
+
+  * **Signature Filtering:** Analysts can include or exclude specific signatures to reduce noise, focus on file systems, or avoid carving irrelevant media files.
+
+  * **Automation and Reporting:** Binwalk can write JSON logs for signature and entropy results, making it suitable for CI checks, firmware pipelines, and repeatable lab workflows.
+
+
+
+
+## Core Features​
+
+  * Firmware and binary signature scanning
+  * Automatic extraction and recursive extraction
+  * Raw section carving for manual review
+  * Entropy analysis and PNG graph output
+  * JSON logging for automation
+  * Include and exclude filters for signatures
+  * Custom output directories, stdin scanning, and thread control
+
+
+
+## Data sources​
+
+  * Firmware images and vendor update packages
+  * Raw SPI, NAND, NOR, and flash dumps
+  * Embedded Linux file systems such as SquashFS, JFFS2, and UBIFS
+  * Compressed streams and archive formats
+  * Boot images, kernels, U-Boot images, and ELF binaries
+  * Certificates, keys, configs, and embedded web assets
+
+
+
+## Common Binwalk Commands​
+
+### 1\. Install Binwalk with Cargo​
+
+  * This command installs the latest Binwalk release from crates.io when Rust and required external dependencies are available.
+
+
+    
+    
+```
+cargo install binwalk  
+```
+### 2\. Check Binwalk Version​
+
+  * This command prints the installed Binwalk version.
+
+
+    
+    
+```
+binwalk --version  
+```
+### 3\. Show Help​
+
+  * This command displays the available Binwalk options.
+
+
+    
+    
+```
+binwalk --help  
+```
+### 4\. Scan a Firmware Image​
+
+  * This command scans a firmware file and prints detected embedded signatures.
+
+
+    
+    
+```
+binwalk firmware.bin  
+```
+### 5\. Scan a Vendor Update Package​
+
+  * This command performs a normal signature scan against a vendor update image.
+
+
+    
+    
+```
+binwalk DIR-890L_AxFW110b07.bin  
+```
+### 6\. Extract Known File Types​
+
+  * This command scans the firmware and automatically extracts supported embedded content.
+
+
+    
+    
+```
+binwalk --extract firmware.bin  
+```
+### 7\. Extract with the Short Option​
+
+  * This command uses the short form of automatic extraction.
+
+
+    
+    
+```
+binwalk -e firmware.bin  
+```
+### 8\. Recursively Extract Nested Content​
+
+  * This command extracts known content and recursively scans extracted files.
+
+
+    
+    
+```
+binwalk --matryoshka --extract firmware.bin  
+```
+### 9\. Recursively Extract with Short Options​
+
+  * This command uses the common short form for recursive extraction.
+
+
+    
+    
+```
+binwalk -Me firmware.bin  
+```
+### 10\. Extract to a Custom Directory​
+
+  * This command writes extracted files and folders into a selected directory.
+
+
+    
+    
+```
+binwalk --extract --directory ./binwalk-output firmware.bin  
+```
+### 11\. Recursively Extract to a Custom Directory​
+
+  * This command keeps recursive extraction output in a predictable working directory.
+
+
+    
+    
+```
+binwalk -Me --directory ./firmware-root firmware.bin  
+```
+### 12\. Carve File Sections​
+
+  * This command carves known and unknown file sections from the input file to disk.
+
+
+    
+    
+```
+binwalk --carve firmware.bin  
+```
+### 13\. Carve to a Custom Directory​
+
+  * This command stores carved sections in a custom output directory.
+
+
+    
+    
+```
+binwalk --carve --directory ./carved firmware.bin  
+```
+### 14\. Extract and Carve Together​
+
+  * This command performs automatic extraction and also carves file sections.
+
+
+    
+    
+```
+binwalk --extract --carve firmware.bin  
+```
+### 15\. Generate an Entropy Graph​
+
+  * This command analyzes data randomness and saves an entropy graph to the current directory.
+
+
+    
+    
+```
+binwalk --entropy firmware.bin  
+```
+### 16\. Save Entropy Graph to a Specific PNG​
+
+  * This command writes the entropy graph to a chosen PNG file.
+
+
+    
+    
+```
+binwalk --entropy --png firmware-entropy.png firmware.bin  
+```
+### 17\. Save Signature Results as JSON​
+
+  * This command writes Binwalk results to a JSON file for later parsing.
+
+
+    
+    
+```
+binwalk --log scan-results.json firmware.bin  
+```
+### 18\. Print JSON Results to Standard Output​
+
+  * This command writes JSON output to stdout, which is useful for automation.
+
+
+    
+    
+```
+binwalk --log - firmware.bin  
+```
+### 19\. List Supported Signatures and Extractors​
+
+  * This command lists the signature names that can be used with include and exclude filters.
+
+
+    
+    
+```
+binwalk --list  
+```
+### 20\. Include Only SquashFS Results​
+
+  * This command focuses the scan on the SquashFS signature name.
+
+
+    
+    
+```
+binwalk --include=squashfs firmware.bin  
+```
+### 21\. Extract Only File System Signatures​
+
+  * This command extracts only selected embedded Linux file system types.
+
+
+    
+    
+```
+binwalk --extract --include=squashfs,ubifs,jffs2 firmware.bin  
+```
+### 22\. Exclude Common Image Noise​
+
+  * This command suppresses common media signatures when they are not relevant to the investigation.
+
+
+    
+    
+```
+binwalk --exclude=jpeg,png,gif firmware.bin  
+```
+### 23\. Carve Only Compressed Streams​
+
+  * This command focuses carving on common compressed data signatures.
+
+
+    
+    
+```
+binwalk --carve --include=gzip,xz,lzma,zstd firmware.bin  
+```
+### 24\. Search for All Signatures at All Offsets​
+
+  * This command enables a deeper search that can find overlapping or less obvious embedded signatures.
+
+
+    
+    
+```
+binwalk --search-all firmware.bin  
+```
+### 25\. Scan Data from Standard Input​
+
+  * This command reads firmware bytes from stdin instead of a file path.
+
+
+    
+    
+```
+cat firmware.bin | binwalk --stdin  
+```
+### 26\. Use More Worker Threads​
+
+  * This command manually sets the number of threads for scanning.
+
+
+    
+    
+```
+binwalk --threads 8 firmware.bin  
+```
+### 27\. Run Quietly​
+
+  * This command suppresses normal stdout output, useful when only files or logs matter.
+
+
+    
+    
+```
+binwalk --quiet --extract firmware.bin  
+```
+### 28\. Show Verbose Recursive Results​
+
+  * This command displays all results during recursive extraction.
+
+
+    
+    
+```
+binwalk --verbose --matryoshka --extract firmware.bin  
+```
+### 29\. Create JSON While Extracting​
+
+  * This command records signature and extraction results in JSON while extracting files.
+
+
+    
+    
+```
+binwalk --extract --log extraction-results.json firmware.bin  
+```
+### 30\. Create JSON for Recursive Extraction​
+
+  * This command records recursive extraction findings in a JSON report.
+
+
+    
+    
+```
+binwalk -Me --log recursive-results.json firmware.bin  
+```
+### 31\. Generate Entropy and JSON Together​
+
+  * This command saves entropy analysis results in JSON and creates an entropy graph.
+
+
+    
+    
+```
+binwalk --entropy --log entropy-results.json firmware.bin  
+```
+### 32\. Save Entropy Graph and JSON Together​
+
+  * This command writes both a PNG graph and JSON entropy results.
+
+
+    
+    
+```
+binwalk --entropy --png entropy.png --log entropy-results.json firmware.bin  
+```
+### 33\. Scan a Raw Flash Dump​
+
+  * This command analyzes a raw flash dump collected from an embedded device.
+
+
+    
+    
+```
+binwalk flash-dump.bin  
+```
+### 34\. Extract a Raw Flash Dump​
+
+  * This command extracts known objects from a flash dump into a working directory.
+
+
+    
+    
+```
+binwalk --extract --directory ./flash-extract flash-dump.bin  
+```
+### 35\. Focus on File Systems in a Flash Dump​
+
+  * This command looks for common embedded file system signatures in a flash image.
+
+
+    
+    
+```
+binwalk --include=squashfs,cramfs,jffs2,ubifs,ext,fat flash-dump.bin  
+```
+### 36\. Carve Unknown Sections for Manual Review​
+
+  * This command carves the full binary into known and unknown regions for offset-based inspection.
+
+
+    
+    
+```
+binwalk --carve --search-all --directory ./manual-review firmware.bin  
+```
+### 37\. Find the Extraction Directory Size​
+
+  * This command estimates how much data Binwalk extracted.
+
+
+    
+    
+```
+du -sh ./firmware-root  
+```
+### 38\. List Top-Level Extracted Files​
+
+  * This command gives a quick view of the extracted firmware layout.
+
+
+    
+    
+```
+find ./firmware-root -maxdepth 2 -type f | head  
+```
+### 39\. Search Extracted Files for Linux Password Databases​
+
+  * This command looks for account database files inside extracted firmware.
+
+
+    
+    
+```
+find ./firmware-root -type f \( -name passwd -o -name shadow \)  
+```
+### 40\. Search Extracted Files for Secrets​
+
+  * This command looks for common secret-related strings in extracted firmware content.
+
+
+    
+    
+```
+grep -RIn "password\|passwd\|token\|secret\|private_key" ./firmware-root  
+```
+### 41\. Find Executable Files After Extraction​
+
+  * This command lists extracted files that are marked executable.
+
+
+    
+    
+```
+find ./firmware-root -type f -perm -111  
+```
+### 42\. Find Symbolic Links After Extraction​
+
+  * This command lists symbolic links that may reveal firmware layout assumptions.
+
+
+    
+    
+```
+find ./firmware-root -type l -ls  
+```
+### 43\. Identify Extracted File Types​
+
+  * This command summarizes file types from a recursive extraction directory.
+
+
+    
+    
+```
+find ./firmware-root -type f -exec file {} \;  
+```
+### 44\. Batch Scan Firmware Files​
+
+  * This command scans each firmware image in a directory and writes one JSON report per file.
+
+
+    
+    
+```bash
+mkdir -p binwalk-logs  
+for fw in firmware-samples/*.bin; do  
+  name=$(basename "$fw")  
+  binwalk --log "binwalk-logs/$name.json" "$fw"  
+done  
+```
+### 45\. Batch Extract Firmware Files​
+
+  * This command extracts each firmware image into its own output directory.
+
+
+    
+    
+```bash
+for fw in firmware-samples/*.bin; do  
+  name=$(basename "$fw" .bin)  
+  binwalk --extract --directory "extract-$name" "$fw"  
+done  
+```
+## Output Examples of Binwalk Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Scan| `binwalk firmware.bin`| Detects embedded signatures.| `DECIMAL HEXADECIMAL DESCRIPTION`   
+`0 0x0 Firmware header`   
+`131072 0x20000 SquashFS filesystem`  
+Extract| `binwalk -e firmware.bin`| Extracts supported embedded content.| `Extracted 1 file system`   
+`Output: extractions/firmware.bin.extracted/`  
+Recursive Extract| `binwalk -Me firmware.bin`| Extracts nested payloads.| `Recursively scanning extracted files`   
+`Found gzip compressed data`  
+Carve| `binwalk --carve firmware.bin`| Carves known and unknown sections.| `Carved section at offset 0x20000`   
+`Wrote output to extractions/`  
+Entropy| `binwalk --entropy firmware.bin`| Generates an entropy graph.| `Entropy graph saved to firmware.bin.png`  
+JSON Log| `binwalk --log scan.json firmware.bin`| Writes machine-readable results.| `Results saved to scan.json`  
+Include Filter| `binwalk --include=squashfs firmware.bin`| Shows only selected signatures.| `0x20000 SquashFS filesystem`  
+Exclude Filter| `binwalk --exclude=jpeg,png,gif firmware.bin`| Suppresses noisy signatures.| `Media signatures excluded from results`  
+Search All| `binwalk --search-all firmware.bin`| Searches all offsets for all signatures.| `Additional candidate signatures found`  
+Signature List| `binwalk --list`| Lists supported signatures and extractors.| `Signature Name Description Extractor`  
+  
+## Practical Tips​
+
+  * Start with a normal scan before extraction so you understand the firmware layout and offsets.
+  * Use `--list` to confirm exact signature names before writing `--include` or `--exclude` filters.
+  * Use `--matryoshka --extract` when the firmware contains nested archives or compressed file systems.
+  * Use `--carve` when extraction fails or when you need raw sections for manual inspection.
+  * Use `--entropy` to identify compressed or encrypted-looking regions before spending time on manual reverse engineering.
+  * Store results with `--log` when comparing firmware versions or building repeatable analysis pipelines.
+  * Treat extracted firmware as untrusted input. Analyze scripts, binaries, and file systems in a controlled environment.

@@ -1,0 +1,548 @@
+---
+title: "Prowler"
+description: "Prowler tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['cloud security', 'compliance', 'devsecops', 'cspm']
+---
+
+## What is the purpose of Prowler?​
+
+**Prowler** is an open-source cloud security and compliance assessment tool used to audit cloud environments, SaaS platforms, Kubernetes clusters, infrastructure-as-code repositories, and container-related targets from the command line.
+
+Prowler is useful because it provides ready-to-use security checks, compliance mappings, remediation guidance, and multi-format reports for cloud posture management. It is commonly used for AWS, Azure, Google Cloud, Kubernetes, Microsoft 365, GitHub, OCI, MongoDB Atlas, and IaC security reviews.
+
+**Note:** Prowler requires a provider. The common pattern is `prowler <provider>`, such as `prowler aws`, `prowler azure`, `prowler gcp`, `prowler kubernetes`, `prowler m365`, `prowler github`, `prowler iac`, `prowler mongodbatlas`, or `prowler oci`. If no provider is specified, Prowler keeps AWS as the default for backward compatibility.
+
+**Here are the primary uses of Prowler:**
+
+  * **Cloud Security Posture Assessment:** Prowler audits cloud accounts, subscriptions, projects, and tenants for risky configuration across identity, logging, networking, storage, compute, encryption, and monitoring.
+
+  * **Compliance Reporting:** The tool maps checks to compliance frameworks and generates compliance-oriented output that can be used for internal reviews and audit preparation.
+
+  * **Provider-Specific Security Checks:** Prowler can run all checks for a provider, selected services, selected checks, or excluded checks to match the assessment scope.
+
+  * **Kubernetes Security Review:** The tool scans Kubernetes clusters using kubeconfig or in-cluster execution and checks services such as API server, etcd, scheduler, and controller manager.
+
+  * **SaaS and Repository Security:** Prowler can assess platforms such as GitHub, Microsoft 365, Google Workspace, Okta, and MongoDB Atlas when configured with the correct credentials.
+
+  * **Infrastructure-as-Code Scanning:** The IaC provider scans local paths or remote repositories for misconfigurations before deployment.
+
+  * **Report Generation and Integrations:** Prowler outputs CSV, JSON-OCSF, HTML, AWS Security Finding Format, and SARIF for supported providers and use cases.
+
+
+
+
+## Core Features​
+
+  * Cloud security posture checks
+  * AWS, Azure, GCP, Kubernetes, and Microsoft 365 coverage
+  * Compliance framework and service-specific filtering
+  * Profile, region, account, provider, and output controls
+  * CSV, JSON, HTML, OCSF, and ASFF-style reporting
+  * Allowlist, mutelist, and severity workflows
+  * CI/CD and recurring audit support
+
+
+
+## Data sources​
+
+  * Cloud provider APIs and account metadata
+  * IAM, network, storage, compute, logging, and security service configuration
+  * Kubernetes cluster configuration where enabled
+  * Microsoft 365 tenant and service settings
+  * Prowler compliance checks and provider profiles
+  * Generated findings and reports
+
+
+
+## Common Prowler Commands​
+
+### 1\. Install Prowler with Pipx​
+
+  * This command installs Prowler as an isolated Python CLI tool.
+
+
+    
+    
+```
+pipx install prowler  
+```
+### 2\. Install Prowler with Pip​
+
+  * This command installs Prowler with pip.
+
+
+    
+    
+```
+pip install prowler  
+```
+### 3\. Install Prowler with Homebrew​
+
+  * This command installs Prowler on macOS or Linux using Homebrew.
+
+
+    
+    
+```
+brew install prowler  
+```
+### 4\. Check Prowler Version​
+
+  * This command prints the installed Prowler version.
+
+
+    
+    
+```
+prowler -v  
+```
+### 5\. Show Global Help​
+
+  * This command displays Prowler options and supported provider commands.
+
+
+    
+    
+```
+prowler --help  
+```
+### 6\. Run an AWS Assessment​
+
+  * This command scans AWS using credentials from the current environment or default AWS credential chain.
+
+
+    
+    
+```
+prowler aws  
+```
+### 7\. Run AWS with a Profile​
+
+  * This command scans AWS using a named AWS profile.
+
+
+    
+    
+```
+prowler aws --profile security-audit  
+```
+### 8\. Run AWS in Selected Regions​
+
+  * This command limits AWS checks to specific regions.
+
+
+    
+    
+```
+prowler aws --profile security-audit --filter-region us-east-1 eu-west-1  
+```
+### 9\. Run Selected AWS Services​
+
+  * This command scans only selected AWS services.
+
+
+    
+    
+```
+prowler aws --services s3 ec2 iam  
+```
+### 10\. Run Selected Checks​
+
+  * This command runs selected check IDs only.
+
+
+    
+    
+```
+prowler aws --checks s3_bucket_public_access cloudtrail_logs_s3_bucket_is_not_publicly_accessible  
+```
+### 11\. Exclude Specific Checks​
+
+  * This command runs AWS checks except the selected check ID.
+
+
+    
+    
+```
+prowler aws --excluded-checks s3_bucket_public_access  
+```
+### 12\. List AWS Checks​
+
+  * This command lists available AWS checks.
+
+
+    
+    
+```
+prowler aws --list-checks  
+```
+### 13\. List AWS Services​
+
+  * This command lists services supported by the AWS provider.
+
+
+    
+    
+```
+prowler aws --list-services  
+```
+### 14\. Generate Multiple Output Formats​
+
+  * This command writes CSV, JSON-OCSF, and HTML reports.
+
+
+    
+    
+```
+prowler aws --output-formats csv json-ocsf html  
+```
+### 15\. Use a Custom Output Directory​
+
+  * This command writes reports to a selected directory.
+
+
+    
+    
+```
+prowler aws --output-directory ./prowler-output  
+```
+### 16\. Use a Custom Report Name​
+
+  * This command changes the base report filename.
+
+
+    
+    
+```
+prowler aws --output-filename aws-security-review  
+```
+### 17\. Run a Compliance Framework​
+
+  * This command scopes reporting to a specific compliance framework.
+
+
+    
+    
+```
+prowler aws --compliance cis_5.0_aws  
+```
+### 18\. Run an Azure Assessment with Azure CLI Auth​
+
+  * This command scans Azure using the current Azure CLI login.
+
+
+    
+    
+```
+prowler azure --az-cli-auth  
+```
+### 19\. Run Azure with Service Principal Environment Auth​
+
+  * This command scans Azure using service principal credentials from environment variables.
+
+
+    
+    
+```
+prowler azure --sp-env-auth  
+```
+### 20\. Run Azure with Browser Auth​
+
+  * This command scans Azure using browser authentication for a tenant.
+
+
+    
+    
+```
+prowler azure --browser-auth --tenant-id "00000000-0000-0000-0000-000000000000"  
+```
+### 21\. Run Azure for Specific Subscriptions​
+
+  * This command limits an Azure scan to selected subscriptions.
+
+
+    
+    
+```
+prowler azure --az-cli-auth --subscription-ids 00000000-0000-0000-0000-000000000000  
+```
+### 22\. Run a GCP Assessment​
+
+  * This command scans Google Cloud using configured application default credentials.
+
+
+    
+    
+```
+prowler gcp  
+```
+### 23\. Run GCP with a Service Account Key​
+
+  * This command scans Google Cloud using a credentials file.
+
+
+    
+    
+```
+prowler gcp --credentials-file ./service-account.json  
+```
+### 24\. Run GCP for Specific Projects​
+
+  * This command limits a Google Cloud scan to selected project IDs.
+
+
+    
+    
+```
+prowler gcp --project-ids prod-project security-project  
+```
+### 25\. Increase GCP Retry Attempts​
+
+  * This command increases retry attempts for Google Cloud API rate-limit scenarios.
+
+
+    
+    
+```
+prowler gcp --gcp-retries-max-attempts 5  
+```
+### 26\. Run a Kubernetes Assessment​
+
+  * This command scans the active Kubernetes context from the default kubeconfig.
+
+
+    
+    
+```
+prowler kubernetes  
+```
+### 27\. Run Kubernetes with a Kubeconfig​
+
+  * This command scans a cluster using a specific kubeconfig file.
+
+
+    
+    
+```
+prowler kubernetes --kubeconfig-file ./kubeconfig  
+```
+### 28\. Run Kubernetes with a Context and Namespace​
+
+  * This command limits Kubernetes scanning to a context and namespace.
+
+
+    
+    
+```
+prowler kubernetes --context prod-cluster --namespaces production  
+```
+### 29\. Run Selected Kubernetes Services​
+
+  * This command scans selected Kubernetes control-plane services.
+
+
+    
+    
+```
+prowler kubernetes --services etcd apiserver  
+```
+### 30\. Run Microsoft 365 with Azure CLI Auth​
+
+  * This command scans Microsoft 365 using Azure CLI authentication.
+
+
+    
+    
+```
+prowler m365 --az-cli-auth  
+```
+### 31\. Run Microsoft 365 with Service Principal Environment Auth​
+
+  * This command scans Microsoft 365 using service principal environment variables.
+
+
+    
+    
+```
+prowler m365 --sp-env-auth  
+```
+### 32\. Run GitHub with a Personal Access Token​
+
+  * This command scans GitHub using a personal access token.
+
+
+    
+    
+```
+prowler github --personal-access-token ghp_exampletoken  
+```
+### 33\. Run GitHub for an Organization​
+
+  * This command scans a selected GitHub organization.
+
+
+    
+    
+```
+prowler github --personal-access-token ghp_exampletoken --organization example-org  
+```
+### 34\. Run GitHub for a Repository​
+
+  * This command scans a selected GitHub repository.
+
+
+    
+    
+```
+prowler github --personal-access-token ghp_exampletoken --repository example-org/example-repo  
+```
+### 35\. Scan a Local IaC Directory​
+
+  * This command scans local infrastructure-as-code files.
+
+
+    
+    
+```
+prowler iac --scan-path ./infra  
+```
+### 36\. Scan a Remote IaC Repository​
+
+  * This command scans a remote Git repository.
+
+
+    
+    
+```
+prowler iac --scan-repository-url https://github.com/example/infrastructure.git  
+```
+### 37\. Scan IaC for Selected Frameworks​
+
+  * This command limits IaC scanning to selected frameworks.
+
+
+    
+    
+```
+prowler iac --scan-path ./infra --frameworks terraform kubernetes  
+```
+### 38\. Exclude IaC Paths​
+
+  * This command excludes selected paths from an IaC scan.
+
+
+    
+    
+```
+prowler iac --scan-path ./infra --exclude-path ./infra/test,./infra/examples  
+```
+### 39\. Run OCI with Config Authentication​
+
+  * This command scans Oracle Cloud Infrastructure using the configured OCI profile.
+
+
+    
+    
+```
+prowler oci  
+```
+### 40\. Run OCI with a Specific Profile​
+
+  * This command scans OCI with a selected profile name.
+
+
+    
+    
+```
+prowler oci --profile security-audit  
+```
+### 41\. Run MongoDB Atlas​
+
+  * This command scans MongoDB Atlas using API keys passed as arguments.
+
+
+    
+    
+```
+prowler mongodbatlas --atlas-public-key <public_key> --atlas-private-key <private_key>  
+```
+### 42\. Run MongoDB Atlas for a Project​
+
+  * This command limits MongoDB Atlas scanning to a selected project.
+
+
+    
+    
+```
+prowler mongodbatlas --atlas-public-key <public_key> --atlas-private-key <private_key> --atlas-project-id <project_id>  
+```
+### 43\. Run with Verbose Output​
+
+  * This command prints more execution details while Prowler runs.
+
+
+    
+    
+```
+prowler aws --verbose  
+```
+### 44\. Send AWS Reports to S3​
+
+  * This command uploads AWS reports to an S3 bucket.
+
+
+    
+    
+```
+prowler aws --output-bucket my-security-findings-bucket  
+```
+### 45\. Run Prowler with Docker​
+
+  * This command runs Prowler in a container and mounts a local output directory.
+
+
+    
+    
+```
+docker run -ti --rm -v ./prowler-output:/home/prowler/output --name prowler --env AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY --env AWS_SESSION_TOKEN toniblyx/prowler:stable aws  
+```
+### 46\. Show Only Failed Findings​
+
+  * This command filters output to failed findings for providers that support status filtering.
+
+
+    
+    
+```
+prowler aws --status FAIL  
+```
+### 47\. Show High-Severity Findings​
+
+  * This command filters output to high-severity findings for providers that support severity filtering.
+
+
+    
+    
+```
+prowler github --personal-access-token ghp_exampletoken --severity high  
+```
+## Output Examples​
+
+Command| Description| Example Output  
+---|---|---  
+`prowler -v`| Shows the installed version.| `Prowler 5.x.x`  
+`prowler aws`| Runs AWS checks with configured credentials.| `Provider: aws`   
+`Account: 123456789012`  
+`prowler aws --list-services`| Lists services supported by a provider.| `s3`   
+`ec2`   
+`iam`  
+`prowler aws --services s3 ec2`| Runs selected service checks.| `Executing check s3_bucket_public_access`  
+`prowler aws --output-formats csv json-ocsf html`| Generates selected report formats.| `output/csv/prowler-output-123456789012.csv`   
+`output/html/prowler-output-123456789012.html`  
+`prowler aws --compliance cis_5.0_aws`| Generates compliance-scoped output.| `Compliance Framework: CIS AWS Foundations Benchmark`  
+`prowler azure --az-cli-auth`| Scans Azure with Azure CLI authentication.| `Tenant: 00000000-0000-0000-0000-000000000000`  
+`prowler gcp --project-ids prod-project`| Scans selected GCP projects.| `Project: prod-project`  
+`prowler kubernetes --kubeconfig-file ./kubeconfig`| Scans Kubernetes from a kubeconfig.| `Provider: kubernetes`   
+`Context: prod-cluster`  
+`prowler iac --scan-path ./infra`| Scans local IaC files.| `SARIF report generated for IaC scan`  
+`prowler aws --status FAIL`| Filters output to failed findings.| `Status: FAIL`

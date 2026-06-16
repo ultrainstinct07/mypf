@@ -1,0 +1,166 @@
+---
+title: "Subfinder"
+description: "Subfinder tool guide; includes tool's purpose,primary uses, common commands and example of command's usages."
+tags: ['web']
+---
+
+## What is the purpose of Subfinder?​
+
+**Subfinder** is an **open source** tool. Subfinder is a subdomain discovery tool that finds and returns valid subdomains for websites.
+
+**Here are the primary uses of Subfinder:**
+
+  * **Subdomain Enumeration:** Subfinder uses for subdomain enumeration, which is a process of finding all the possible subdomains of a given domain. This is useful in the recon part of any security assessment for listing all the subdomains of any target.
+
+  * **Identifying Potential Attack Surfaces:** Subfinder provides information about hidden or forgotten subdomains, which reveal potential attack vectors an organization may have. These subdomains could be running applications, services, or old content that can be utilized by an attacker in case there are vulnerabilities.
+
+  * **Integration in Reconnaissance Workflows:** Subfinder can easily be worked with broader reconnaissance workflows and automation tools.This greatly enhances the efficiency of security assessments by assisting users in quickly gathering information on subdomains.
+
+
+
+
+## Core Features​
+
+  * Fast and powerful resolver and wildcard removal module;
+  * Passive sources list, carefully hand-picked for maximum results;
+  * Supports multiple formats, such as JSON, File, Stdout;
+  * Optimized for speed—Lightning fast, feather-light on resources;
+  * STDIN/OUT for workflow integration;
+  * Command Line Interface–based;
+  * Configuration through easy API interface;
+  * Exclude certain sources;
+  * Up to 26 passive DNS sources.
+  * Docker, tar, and pre-built binaries.
+
+
+
+## Common Subfinder Commands​
+
+### 1\. Subdomain Enumeration​
+
+  * This command starts a process that subdomain enumeration process for the specified domain.
+
+
+    
+    
+```
+subfinder -d <domain>  
+```
+### 2\. Output to File​
+
+  * This command gives outputs the discovered subdomains writes to the specified file in the default format.
+
+
+    
+    
+```
+subfinder -d <domain> -o <file>  
+```
+### 3\. Specify Threads​
+
+  * This command specifies the number of threads to use during subdomain enumeration, optimizing speed and performance for Subfinder.
+
+
+    
+    
+```
+subfinder -d <domain> -o <file> -t <threads>  
+```
+### 4\. Use All Sources​
+
+  * This command performs enumeration using all resources available in the Subfinder to maximize potential output.
+
+
+    
+    
+```
+subfinder -d <domain> -all  
+```
+### 5\. Exclude Sources​
+
+  * This command excludes specified passive resources from Subfinder's enumeration process.
+
+
+    
+    
+```
+subfinder -d <domain> -exclude <source>  
+```
+### 6\. JSON Output​
+
+  * This command returns results in JSON format suitable for integration with other tools. This makes Subfinder both an efficient tool for analyzing post-test results and a security tool that can interoperate with other security tools.
+
+
+    
+    
+```
+subfinder -d <domain> -json  
+```
+### 7\. Silent Mode​
+
+  * This command runs the enumeration procedure without printing to the terminal. This option is useful for scripting.
+
+
+    
+    
+```
+subfinder -d <domain> -silent  
+```
+### 8\. Custom Configuration​
+
+  * This command loads a configuration file that allows customization of the resources and settings used during the enumeration process.
+
+
+    
+    
+```
+subfinder -config <config_file>  
+```
+### 9\. Help and Usage Information​
+
+  * Displays the help information, including available commands and options for using Subfinder.
+
+
+    
+    
+```
+subfinder -h  
+```
+Alternative usage:
+    
+    
+```
+subfinder --help  
+```
+### 10\. Version Information​
+
+  * Shows the current version of Subfinder installed on the system.
+
+
+    
+    
+```
+subfinder -version  
+```
+## Output Examples of Subfinder Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Subdomain Enumeration| `subfinder -d example.com`| Initiates a subdomain enumeration process for the domain.| `Found subdomains for example.com: `   
+` - sub1.example.com `   
+` - sub2.example.com`  
+File Input for Domains| `subfinder -dL domains.txt`| Reads domains from a specified file for enumeration.| `Enumerating subdomains for domains in domains.txt`  
+Use All Sources| `subfinder -d example.com -all`| Performs enumeration using all available sources.| `Enumerating subdomains using all sources...`  
+Exclude Sources| `subfinder -d example.com -exclude <source>`| Excludes specific passive sources from the process.| `Excluding source: <source>`  
+Specify Threads| `subfinder -d example.com -o results.txt -t 50`| Specifies the number of threads for enumeration.| `Using 50 threads for enumeration`  
+Set Rate Limit| `subfinder -d example.com -r 50`| Limits the number of requests per second during enumeration.| `Rate limit set to 50 requests per second`  
+Output to File| `subfinder -d example.com -o results.txt`| Outputs discovered subdomains to the specified file.| `Subdomains saved to results.txt`  
+JSON Output| `subfinder -d example.com -json`| Outputs results in JSON format for integration.| `{"subdomains": ["sub1.example.com", "sub2.example.com"]}`  
+Output in CSV Format| `subfinder -d example.com -o results.csv -format csv`| Outputs results in CSV format for easier readability.| `Subdomains saved to results.csv`  
+Display Only Unique Subdomains| `subfinder -d example.com -unique`| Displays only unique subdomains, filtering duplicates.| `Unique subdomains for example.com: `   
+` - sub1.example.com`  
+Recursive Subdomain Enumeration| `subfinder -d example.com -recursive`| Performs recursive enumeration to discover deeper subdomains.| `Recursive subdomain enumeration complete.`  
+Custom Configuration| `subfinder -d example.com -config config.yaml`| Loads a custom configuration file for enumeration.| `Using configuration from config.yaml`  
+Silent Mode| `subfinder -d example.com -silent`| Runs enumeration without displaying output.| _(No output displayed)_  
+Version Information| `subfinder -version`| Shows the current version of Subfinder installed.| `Subfinder version 2.4.0`  
+Use a Custom Source List| `subfinder -d example.com -sources custom_sources.txt`| Specifies a custom source list for enumeration.| `Using custom sources from custom_sources.txt`

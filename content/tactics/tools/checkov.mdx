@@ -1,0 +1,810 @@
+---
+title: "Checkov"
+description: "Checkov tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['devsecops', 'iac', 'cloud security', 'compliance']
+---
+
+## What is the purpose of Checkov?​
+
+**Checkov** is an open-source static analysis tool for infrastructure-as-code, configuration files, secrets, and selected software composition analysis workflows. It scans Terraform, Terraform plan JSON, CloudFormation, Kubernetes, Helm, Kustomize, Dockerfile, Serverless, ARM, Bicep, OpenAPI, GitHub Actions, GitLab CI, Bitbucket Pipelines, Argo Workflows, JSON, YAML, secrets, and SCA-related inputs for security and compliance issues.
+
+Checkov is useful because it gives teams a fast command-line way to catch cloud and platform misconfigurations before deployment. It is commonly used in local development, pull request checks, CI/CD pipelines, IaC reviews, Kubernetes manifest reviews, Dockerfile reviews, compliance evidence collection, and policy-as-code programs.
+
+**Note:** Checkov's local CLI works well for IaC and many configuration scans without a platform API key. Some features, such as severity-aware filtering, Prisma Cloud enforcement rules, platform policy metadata, and SCA image scanning, require Prisma Cloud or Bridgecrew platform integration through `--bc-api-key` and `--prisma-api-url`.
+
+**Here are the primary uses of Checkov:**
+
+  * **Infrastructure-as-Code Misconfiguration Scanning:** Checkov checks Terraform, CloudFormation, ARM, Bicep, Serverless, and similar files for insecure cloud resource settings.
+
+  * **Kubernetes and Container Configuration Review:** The tool scans Kubernetes manifests, Helm charts, Kustomize output, and Dockerfiles for risky settings before workloads are deployed.
+
+  * **Terraform Plan Analysis:** Checkov can scan Terraform plan JSON output, which adds deployment context and can catch issues that are harder to see from raw HCL alone.
+
+  * **CI/CD and Repository Configuration Scanning:** The tool checks GitHub Actions, GitLab CI, Bitbucket Pipelines, Argo Workflows, and repository configuration for insecure pipeline patterns.
+
+  * **Secrets and SCA Workflows:** Checkov can scan for secrets and can run package or image SCA workflows when the required platform integration and inputs are configured.
+
+  * **Policy Selection and Suppression:** The tool supports selected checks, skipped checks, inline suppressions, baselines, external custom checks, and config files.
+
+  * **Report Generation and Build Gates:** Checkov can output CLI, CSV, JSON, JUnit XML, SARIF, GitLab SAST, CycloneDX, SPDX, and GitHub failed-only reports, and can soft-fail or hard-fail pipelines based on check IDs or severity thresholds.
+
+
+
+
+## Core Features​
+
+  * Infrastructure-as-Code security scanning
+  * Terraform, CloudFormation, Kubernetes, Helm, and Dockerfile checks
+  * Policy IDs, skip rules, baselines, and severity handling
+  * Terraform plan and framework-specific scanning
+  * Secrets and software composition checks where configured
+  * JSON, JUnit, SARIF, and CLI output formats
+  * CI/CD-friendly exit code and soft-fail controls
+
+
+
+## Data sources​
+
+  * Terraform files and Terraform plan JSON
+  * CloudFormation, Kubernetes, Helm, and Kustomize files
+  * Dockerfiles and container build definitions
+  * GitHub Actions and CI configuration files
+  * Policy configuration, skip comments, and baselines
+  * Checkov built-in and custom policies
+
+
+
+## Common Checkov Commands​
+
+### 1\. Install Checkov with Pip​
+
+  * This command installs Checkov from PyPI.
+
+
+    
+    
+```
+pip install checkov  
+```
+### 2\. Install Checkov with Pipx​
+
+  * This command installs Checkov as an isolated Python CLI tool.
+
+
+    
+    
+```
+pipx install checkov  
+```
+### 3\. Pull the Checkov Docker Image​
+
+  * This command pulls the official Checkov container image.
+
+
+    
+    
+```
+docker pull bridgecrew/checkov  
+```
+### 4\. Check Checkov Version​
+
+  * This command prints the installed Checkov version.
+
+
+    
+    
+```
+checkov --version  
+```
+### 5\. Show Help​
+
+  * This command displays Checkov CLI options.
+
+
+    
+    
+```
+checkov --help  
+```
+### 6\. Scan a Directory​
+
+  * This command scans all supported files in a directory.
+
+
+    
+    
+```
+checkov -d .  
+```
+### 7\. Scan a Single File​
+
+  * This command scans one file and auto-selects relevant runners based on file type.
+
+
+    
+    
+```
+checkov -f main.tf  
+```
+### 8\. Run Terraform Checks Only​
+
+  * This command limits the scan to Terraform checks.
+
+
+    
+    
+```
+checkov -d ./infra --framework terraform  
+```
+### 9\. Run CloudFormation Checks Only​
+
+  * This command scans CloudFormation templates.
+
+
+    
+    
+```
+checkov -d ./cloudformation --framework cloudformation  
+```
+### 10\. Run Kubernetes Checks Only​
+
+  * This command scans Kubernetes manifests.
+
+
+    
+    
+```
+checkov -d ./k8s --framework kubernetes  
+```
+### 11\. Run Helm Checks Only​
+
+  * This command scans Helm chart content.
+
+
+    
+    
+```
+checkov -d ./chart --framework helm  
+```
+### 12\. Run Kustomize Checks Only​
+
+  * This command scans Kustomize-based Kubernetes configuration.
+
+
+    
+    
+```
+checkov -d ./overlays/prod --framework kustomize  
+```
+### 13\. Run Dockerfile Checks Only​
+
+  * This command scans Dockerfiles for container build best practices.
+
+
+    
+    
+```
+checkov -d . --framework dockerfile  
+```
+### 14\. Scan a Dockerfile Directly​
+
+  * This command scans one Dockerfile.
+
+
+    
+    
+```
+checkov -f Dockerfile --framework dockerfile  
+```
+### 15\. Run Serverless Checks​
+
+  * This command scans Serverless framework files.
+
+
+    
+    
+```
+checkov -d ./serverless --framework serverless  
+```
+### 16\. Run ARM Template Checks​
+
+  * This command scans Azure ARM templates.
+
+
+    
+    
+```
+checkov -d ./arm --framework arm  
+```
+### 17\. Run Bicep Checks​
+
+  * This command scans Azure Bicep files.
+
+
+    
+    
+```
+checkov -d ./bicep --framework bicep  
+```
+### 18\. Run OpenAPI Checks​
+
+  * This command scans OpenAPI specifications.
+
+
+    
+    
+```
+checkov -d ./openapi --framework openapi  
+```
+### 19\. Run GitHub Actions Checks​
+
+  * This command scans GitHub Actions workflow files.
+
+
+    
+    
+```
+checkov -d .github/workflows --framework github_actions  
+```
+### 20\. Run GitLab CI Checks​
+
+  * This command scans GitLab CI files.
+
+
+    
+    
+```
+checkov -f .gitlab-ci.yml --framework gitlab_ci  
+```
+### 21\. Run Bitbucket Pipelines Checks​
+
+  * This command scans Bitbucket Pipelines files.
+
+
+    
+    
+```
+checkov -f bitbucket-pipelines.yml --framework bitbucket_pipelines  
+```
+### 22\. Run Argo Workflows Checks​
+
+  * This command scans Argo Workflows manifests.
+
+
+    
+    
+```
+checkov -d ./argo --framework argo_workflows  
+```
+### 23\. Run Generic JSON Checks​
+
+  * This command scans generic JSON configuration.
+
+
+    
+    
+```
+checkov -d ./config --framework json  
+```
+### 24\. Run Generic YAML Checks​
+
+  * This command scans generic YAML configuration.
+
+
+    
+    
+```
+checkov -d ./config --framework yaml  
+```
+### 25\. Run Secrets Scanning​
+
+  * This command scans supported files for secrets.
+
+
+    
+    
+```
+checkov -d . --framework secrets  
+```
+### 26\. Enable Secret Scan for All File Types​
+
+  * This command expands secret scanning to all file types.
+
+
+    
+    
+```
+checkov -d . --framework secrets --enable-secret-scan-all-files true  
+```
+### 27\. Scan Secrets in Git History​
+
+  * This command enables secret scanning across commit history.
+
+
+    
+    
+```
+checkov -d . --framework secrets --scan-secrets-history  
+```
+### 28\. Run SCA Package Scanning​
+
+  * This command scans dependency manifests for package risk using the SCA package framework.
+
+
+    
+    
+```
+checkov -d . --framework sca_package --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io --repo-id example/app  
+```
+### 29\. Run SCA Image Scanning​
+
+  * This command scans a container image with platform integration.
+
+
+    
+    
+```
+checkov --framework sca_image --docker-image nginx:1.25 --dockerfile-path Dockerfile --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io --repo-id example/app  
+```
+### 30\. Scan a Terraform Plan​
+
+  * This command creates Terraform plan JSON and scans it with Checkov.
+
+
+    
+    
+```
+terraform init  
+terraform plan --out tfplan.binary  
+terraform show -json tfplan.binary > tfplan.json  
+checkov -f tfplan.json  
+```
+### 31\. Scan a Terraform Plan with Source Enrichment​
+
+  * This command enriches Terraform plan findings with HCL source context.
+
+
+    
+    
+```
+checkov -f tfplan.json --repo-root-for-plan-enrichment ./infra  
+```
+### 32\. Run Deep Analysis for a Terraform Plan​
+
+  * This command combines plan context and Terraform source graph analysis.
+
+
+    
+    
+```
+checkov -f tfplan.json --repo-root-for-plan-enrichment ./infra --deep-analysis  
+```
+### 33\. Download External Terraform Modules​
+
+  * This command downloads public Terraform modules before scanning.
+
+
+    
+    
+```
+checkov -d ./infra --framework terraform --download-external-modules true  
+```
+### 34\. Use a Custom External Modules Path​
+
+  * This command stores downloaded Terraform modules in a selected directory.
+
+
+    
+    
+```
+checkov -d ./infra --framework terraform --download-external-modules true --external-modules-download-path .checkov_external_modules  
+```
+### 35\. Use Terraform Variable Files​
+
+  * This command loads one or more variable files for source Terraform scanning.
+
+
+    
+    
+```
+checkov -d ./infra --framework terraform --var-file prod.tfvars  
+```
+### 36\. Skip a Path​
+
+  * This command excludes paths using regular expression matching.
+
+
+    
+    
+```
+checkov -d . --skip-path ".*node_modules.*" --skip-path ".*\\.terraform.*"  
+```
+### 37\. Run Selected Checks​
+
+  * This command runs only selected Checkov policy IDs.
+
+
+    
+    
+```
+checkov -d . --check CKV_AWS_20,CKV_AWS_57  
+```
+### 38\. Skip Selected Checks​
+
+  * This command runs all checks except the selected IDs.
+
+
+    
+    
+```
+checkov -d . --skip-check CKV_AWS_20,CKV_DOCKER_7  
+```
+### 39\. Skip a Check Pattern​
+
+  * This command skips all checks that match a wildcard pattern.
+
+
+    
+    
+```
+checkov -d . --skip-check CKV_AWS*  
+```
+### 40\. Run Checks by Severity​
+
+  * This command runs medium and higher severity checks when platform severity metadata is available.
+
+
+    
+    
+```
+checkov -d . --check MEDIUM --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io  
+```
+### 41\. Skip Checks by Severity​
+
+  * This command skips low and medium findings when platform severity metadata is available.
+
+
+    
+    
+```
+checkov -d . --skip-check MEDIUM --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io  
+```
+### 42\. Soft-Fail a Scan​
+
+  * This command always exits with status code `0` while still printing findings.
+
+
+    
+    
+```
+checkov -d . --soft-fail  
+```
+### 43\. Soft-Fail Low and Medium Findings​
+
+  * This command soft-fails lower severities and hard-fails higher severities when platform severity metadata is available.
+
+
+    
+    
+```
+checkov -d . --soft-fail-on LOW,MEDIUM --hard-fail-on HIGH,CRITICAL --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io  
+```
+### 44\. Hard-Fail Specific Checks​
+
+  * This command fails the pipeline only when selected checks fail.
+
+
+    
+    
+```
+checkov -d . --hard-fail-on CKV_AWS_20,CKV_K8S_21  
+```
+### 45\. Use Prisma Cloud Enforcement Rules​
+
+  * This command applies platform-managed enforcement rules.
+
+
+    
+    
+```
+checkov -d . --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io --use-enforcement-rules  
+```
+### 46\. Print Only Failed Checks​
+
+  * This command reduces CLI output to failed checks.
+
+
+    
+    
+```
+checkov -d . --quiet  
+```
+### 47\. Use Compact CLI Output​
+
+  * This command hides code blocks in CLI output.
+
+
+    
+    
+```
+checkov -d . --compact  
+```
+### 48\. Save JSON Output​
+
+  * This command writes JSON output to a file.
+
+
+    
+    
+```
+checkov -d . -o json --output-file-path checkov-results.json  
+```
+### 49\. Save SARIF Output​
+
+  * This command writes SARIF output for code scanning systems.
+
+
+    
+    
+```
+checkov -d . -o sarif --output-file-path checkov-results.sarif  
+```
+### 50\. Save JUnit XML Output​
+
+  * This command writes JUnit XML output for CI test reporting.
+
+
+    
+    
+```
+checkov -d . -o junitxml --output-file-path checkov-junit.xml  
+```
+### 51\. Generate Multiple Outputs​
+
+  * This command prints CLI output to the console and writes JUnit XML to a file.
+
+
+    
+    
+```
+checkov -d . -o cli -o junitxml --output-file-path console,checkov-junit.xml  
+```
+### 52\. Generate GitLab SAST Output​
+
+  * This command writes GitLab SAST-compatible output.
+
+
+    
+    
+```
+checkov -d . -o gitlab_sast --output-file-path gl-sast-report.json  
+```
+### 53\. Generate CycloneDX Output​
+
+  * This command writes CycloneDX output.
+
+
+    
+    
+```
+checkov -d . -o cyclonedx --output-file-path checkov-cyclonedx.xml  
+```
+### 54\. Generate CycloneDX JSON Output​
+
+  * This command writes CycloneDX JSON output.
+
+
+    
+    
+```
+checkov -d . -o cyclonedx_json --output-file-path checkov-cyclonedx.json  
+```
+### 55\. Generate SPDX Output​
+
+  * This command writes SPDX output.
+
+
+    
+    
+```
+checkov -d . -o spdx --output-file-path checkov-spdx.json  
+```
+### 56\. List Checks​
+
+  * This command lists available checks.
+
+
+    
+    
+```
+checkov --list  
+```
+### 57\. List Terraform Checks​
+
+  * This command lists Terraform checks.
+
+
+    
+    
+```
+checkov --list --framework terraform  
+```
+### 58\. Load Custom Checks from a Directory​
+
+  * This command loads local custom policies.
+
+
+    
+    
+```
+checkov -d . --external-checks-dir ./checkov-policies  
+```
+### 59\. Load Custom Checks from Git​
+
+  * This command loads custom policies from a Git repository.
+
+
+    
+    
+```
+checkov -d . --external-checks-git https://github.com/example/checkov-policies.git//policies?ref=main  
+```
+### 60\. Run All External Checks​
+
+  * This command ensures loaded external checks run even when `--check` is used.
+
+
+    
+    
+```
+checkov -d . --check CKV_AWS_20 --external-checks-dir ./checkov-policies --run-all-external-checks  
+```
+### 61\. Create a Baseline​
+
+  * This command saves current findings into `.checkov.baseline`.
+
+
+    
+    
+```
+checkov -d . --create-baseline  
+```
+### 62\. Scan Against a Baseline​
+
+  * This command reports only new failed checks relative to a baseline file.
+
+
+    
+    
+```
+checkov -d . --baseline .checkov.baseline  
+```
+### 63\. Output Baseline Skips​
+
+  * This command shows findings skipped because they are already in the baseline.
+
+
+    
+    
+```
+checkov -d . --baseline .checkov.baseline --output-baseline-as-skipped  
+```
+### 64\. Use a Configuration File​
+
+  * This command loads Checkov settings from a config file.
+
+
+    
+    
+```
+checkov --config-file .checkov.yml  
+```
+### 65\. Create a Configuration File​
+
+  * This command writes current command-line settings into a config file.
+
+
+    
+    
+```
+checkov -d . --framework terraform --skip-check CKV_AWS_20 --soft-fail --create-config .checkov.yml  
+```
+### 66\. Show Effective Configuration​
+
+  * This command prints CLI, environment, config, and default settings.
+
+
+    
+    
+```
+checkov --show-config  
+```
+### 67\. Run with Prisma Cloud API Key​
+
+  * This command enables platform-backed metadata and integrations.
+
+
+    
+    
+```
+checkov -d . --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io --repo-id example/app  
+```
+### 68\. Skip Result Upload​
+
+  * This command uses platform metadata while keeping results local.
+
+
+    
+    
+```
+checkov -d . --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io --skip-results-upload  
+```
+### 69\. Output Bridgecrew Platform IDs​
+
+  * This command prints platform IDs where available instead of Checkov IDs.
+
+
+    
+    
+```
+checkov -d . --bc-api-key <access_key_id>::<secret_key> --prisma-api-url https://api.prismacloud.io --output-bc-ids  
+```
+### 70\. Run Checkov with Docker​
+
+  * This command scans a mounted directory from the official Checkov container image.
+
+
+    
+    
+```bash
+docker run --tty --volume "$(pwd)":/tf --workdir /tf bridgecrew/checkov --directory /tf  
+```
+### 71\. Run Docker Output Without TTY for File Redirection​
+
+  * This command avoids terminal control characters in redirected output.
+
+
+    
+    
+```bash
+docker run --volume "$(pwd)":/tf --workdir /tf bridgecrew/checkov --directory /tf -o junitxml > checkov-junit.xml  
+```
+### 72\. Verify the Signed Checkov Image​
+
+  * This command verifies the Checkov container image signature with cosign.
+
+
+    
+    
+```
+COSIGN_EXPERIMENTAL=1 cosign verify bridgecrew/checkov | jq .  
+```
+### 73\. Verify the Checkov Image Attestation​
+
+  * This command verifies and decodes the CycloneDX attestation for the Checkov image.
+
+
+    
+    
+```
+COSIGN_EXPERIMENTAL=1 cosign verify-attestation --type cyclonedx bridgecrew/checkov | jq -r .payload | base64 -D | jq .  
+```
+## Output Examples​
+
+Command| Description| Example Output  
+---|---|---  
+`checkov --version`| Shows the installed version.| `3.2.473`  
+`checkov -d .`| Scans a directory.| `Check: CKV_AWS_20: "S3 Bucket has an ACL defined which allows public READ access"`   
+`FAILED for resource: aws_s3_bucket.public`  
+`checkov -f main.tf`| Scans one file.| `File: /main.tf:1-16`  
+`checkov -d ./k8s --framework kubernetes`| Scans Kubernetes manifests.| `Check: CKV_K8S_21: "The default namespace should not be used"`  
+`checkov -f tfplan.json`| Scans Terraform plan JSON.| `FAILED for resource: aws_s3_bucket.customer`   
+`File: /tfplan.json:224-268`  
+`checkov -d . --skip-check CKV_AWS_20`| Skips selected checks.| `Skipped checks: CKV_AWS_20`  
+`checkov -d . --soft-fail`| Always exits successfully after scanning.| `Checkov exited with code 0`  
+`checkov -d . -o sarif --output-file-path checkov-results.sarif`| Writes SARIF output.| `checkov-results.sarif written`  
+`checkov -d . -o cli -o junitxml --output-file-path console,checkov-junit.xml`| Prints CLI output and writes JUnit XML.| `checkov-junit.xml written`  
+`checkov --list --framework terraform`| Lists Terraform checks.| `CKV_AWS_20`   
+`CKV_AWS_57`  
+`checkov -d . --create-baseline`| Creates a baseline file.| `.checkov.baseline created`  
+`docker run --volume "$(pwd)":/tf --workdir /tf bridgecrew/checkov --directory /tf`| Runs Checkov from Docker.| `terraform scan results:`

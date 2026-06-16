@@ -1,0 +1,188 @@
+---
+title: "Parth"
+description: "Parth tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['web']
+---
+
+## What is the purpose of Parth?​
+
+**Parth** tool is an **open source** tool. Parth python language-based tool that can discover URLs to find parameters names and the vulnerabilities or risks commonly associated with them.
+
+**Here are the primary uses of Parth:**
+
+  * **Network Security:** Parth is often used to analyze and assess web security. Parth can help in identifying vulnerabilities and weaknesses in the target system's network configurations.
+
+  * **Web Application Security:** It is mainly used for testing web applications for the presence of vulnerabilities. This includes the following: web application common vulnerability detection, including SQL injection and cross-site scripting, and other vulnerabilities.
+
+  * **Penetration Testing:** Parth is a tool used in penetration testing or bug bounty programs, where security professionals aim to reveal security vulnerabilities by simulating an attack against a system or network.
+
+  * **Vulnerability Assessment:** Parth assists in the vulnerability assessment of a network and a web application, thereby providing information about potential risks and enabling their remediation.
+
+  * **Security Research:** Parth, güncel zafiyetleri test etmek, yeni güvenlik teknikleri geliştirmek ve yeni güvenlik araçlarını test etmek için güvenlik uzmanları tarafından etkili bir şekilde kullanılabilir. Parth, diğer araçlarla birlikte entegrasyona uygundur.
+
+
+
+
+## Core Features​
+
+  * Vulnerability Scanning
+  * Exploit Testing
+  * Security Assessment
+  * Bug Bounty Integration
+  * Customizable Testing
+  * Automated Reporting
+  * Integration with Other Tools
+
+
+
+## Data sources:​
+
+  * Public Vulnerability Databases
+  * Security Advisories and Bulletins
+  * Exploit Databases
+  * Open Source Intelligence (OSINT)
+  * Web Application Fingerprints
+  * Network Scanning Results
+  * Threat Intelligence Feeds
+
+
+
+## Common Parth Commands​
+
+### 1\. Basic Usage​
+
+  * This command will initiate a security scan of the target URL. This will help in finding vulnerabilities that may be present in the target system.
+
+
+    
+    
+```
+parth scan https://example.com  
+```
+### 2\. Scanning from a File​
+
+  * This command is useful for scanning a large number of systems efficiently. Scans multiple targets given from users in a file.
+
+
+    
+    
+```
+parth scan -f targets.txt  
+```
+### 3\. Using Custom Templates​
+
+  * Uses custom or additional templates from a customized directory from users. This customization helps focus the scan on specific vulnerabilities of target system.
+
+
+    
+    
+```
+parth scan -t /path/to/templates/  
+```
+### 4\. Scanning for CVEs​
+
+  * Scans for vulnerabilities related to CVEs (Common Vulnerabilities and Exposures). It uses CVE-specific templates from Parth database to detect known common security vulnerabilities.
+
+
+    
+    
+```
+parth scan -t cves/ -f targets.txt  
+```
+### 5\. Displaying Version​
+
+  * This command will display which version of the Parth tool is installed on the system. This utility helps ensure that you are running the latest version.
+
+
+    
+    
+```
+parth --version  
+```
+### 6\. Updating Parth​
+
+  * Updates the Parth tool to the latest available version. This ensures that you have the latest features and vulnerability definitions.In addition, using the latest version of Parth is very important for scaning and finding current web vulnerabilities.
+
+
+    
+    
+```
+parth update  
+```
+### 7\. Outputting Results to a File​
+
+  * Users can save the scan results to a specified file. This command is provides for logging the results. Its necessary for post-analysis assessments by experts and integration with other security tools.
+
+
+    
+    
+```
+parth scan -o output.txt  
+```
+### 8\. Verbose output​
+
+  * Provides detailed information about each step of the scanning process. This helps in understanding the scan actions and results in-depth.
+
+
+    
+    
+```
+parth scan -v https://example.com  
+```
+### 9.Silent Mode​
+
+  * Runs the scan without any output showing on the user's console. This feature is useful when the scan is run as a background operation and there is a minimum desire for console activity.
+
+
+    
+    
+```
+parth scan -s  
+```
+### 10\. Help and Usage Information​
+
+  * Displays a help message with a list of available commands and options. This helps users understand how to use Parth correctly.
+
+
+    
+    
+```
+parth -h  
+```
+Alternative usage:
+    
+    
+```
+parth --help  
+```
+## Output Examples of Parth Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Scan| `parth scan https://example.com`| Initiates a security scan on the specified target URL.| `Scanning https://example.com...`  
+Scanning from a File| `parth scan -f targets.txt`| Scans multiple targets listed in a file.| `Scanning targets from targets.txt...`  
+Using Custom Templates| `parth scan -t /path/to/templates/`| Uses custom or additional templates from a specified directory.| `Using templates from /path/to/templates/`  
+Scanning for CVEs| `parth scan -t cves/ -f targets.txt`| Scans for vulnerabilities related to CVEs using CVE-specific templates.| `Scanning for CVEs...`  
+Outputting Results to a File| `parth scan -o output.txt`| Saves scan results to a specified file for later analysis.| `Results saved to output.txt`  
+Verbose Output| `parth scan -v https://example.com`| Provides detailed information about the scanning process.| `Verbose mode enabled.`  
+Silent Mode| `parth scan -s`| Runs the scan without displaying output on the console.| `Running scan in silent mode.`  
+Displaying Version| `parth --version`| Displays the current version of the Parth tool installed.| `Parth version 1.0.0`  
+Updating Parth| `parth update`| Updates the Parth tool to the latest version available.| `Parth updated to the latest version.`  
+Specify Multiple Targets| `parth scan -f targets.txt -t /path/to/templates/`| Scans multiple targets with specified templates.| `Scanning targets from targets.txt...`  
+Timeout for Requests| `parth scan -t /path/to/templates/ -timeout 5`| Sets a timeout duration for requests during the scan.| `Timeout set to 5 seconds.`  
+Custom User-Agent| `parth scan -t /path/to/templates/ -ua "CustomUserAgent"`| Sets a custom User-Agent string for requests.| `Using custom User-Agent: CustomUserAgent`  
+Output JSON Format| `parth scan -o output.json`| Outputs scan results in JSON format.| `Results saved in JSON format.`  
+Resume Previous Scan| `parth resume session.json`| Resumes a previously interrupted scan using a session file.| `Resuming scan from session.json...`  
+Health Check| `parth health`| Performs a diagnostic check on the Parth tool.| `Parth is functioning correctly.`  
+Include/Exclude Templates| `parth scan -t /path/to/templates/ -exclude exclude.yaml`| Includes or excludes specific templates during the scan.| `Excluding templates in exclude.yaml`  
+Use Custom DNS Resolvers| `parth scan -d resolvers.txt`| Specifies custom DNS resolvers for the scan.| `Using DNS resolvers from resolvers.txt`  
+Rate Limiting| `parth scan -u https://example.com --rate-limit 10`| Limits requests sent per second during the scan.| `Rate limit set to 10 requests per second.`  
+Store HTTP Responses| `parth scan -u https://example.com --store-requests`| Stores HTTP requests and responses during the scan.| `HTTP requests and responses stored.`  
+Firewall Detection| `parth scan -u https://example.com --detect-firewall`| Detects the presence of a firewall and assesses its impact on scanning.| `Detecting firewall presence...`  
+Finding Common Log Files| `parth scan -u https://example.com --find-logs`| Searches for common log files on the target site.| `Searching for log files...`  
+Finding Common Backup Files| `parth scan -u https://example.com --find-backups`| Searches for common backup files on the target site.| `Searching for backup files...`  
+Enumerate Users| `parth scan -u https://example.com --enum-users`| Lists registered users on the target site.| `Enumerating users...`  
+Check for Vulnerabilities| `parth scan -u https://example.com --check-vulns`| Scans for known vulnerabilities in web components.| `Scanning for vulnerabilities...`  
+Enumerate Plugins and Extensions| `parth scan -u https://example.com --enum-plugins`| Enumerates installed plugins and extensions.| `Enumerating plugins and extensions...`  
+Brute Force Testing| `parth scan -u https://example.com --brute --wordlist wordlist.txt`| Performs brute force attacks to test password strength.| `Brute forcing with wordlist.txt...`  
+Check Configuration| `parth scan -u https://example.com --check-config`| Checks for insecure configurations and misconfigurations.| `Checking configuration...`

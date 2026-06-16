@@ -1,0 +1,596 @@
+---
+title: "Amass"
+description: "Amass tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['web', 'dns', 'osint', 'reconnaissance']
+---
+
+## What is the purpose of Amass?​
+
+**OWASP Amass** is an **open-source** attack surface intelligence framework for external asset discovery, DNS enumeration, OSINT collection, and network mapping. It helps security teams discover domains, subdomains, IP addresses, netblocks, autonomous systems, and relationships that describe an organization's exposed footprint.
+
+Amass is more than a simple subdomain enumeration tool. It stores discovered assets in an asset database, models relationships through the Open Asset Model, and can present, track, and visualize findings across repeated reconnaissance runs.
+
+**Note:** Amass has changed across major versions. The commands below follow the current OWASP Amass v5 command structure. If a packaged version behaves differently, check it with `amass --version` and `amass -h`.
+
+**Here are the primary uses of Amass:**
+
+  * **Subdomain Enumeration:** Amass discovers subdomains using public data sources, DNS techniques, brute forcing, alterations, and recursive discovery.
+
+  * **Attack Surface Mapping:** The tool maps DNS names, IP addresses, netblocks, ASNs, ports, and related assets to help teams understand external exposure.
+
+  * **Passive Reconnaissance:** Amass can collect information from OSINT and API-backed sources without directly probing the target infrastructure. Passive collection is the default behavior in current versions.
+
+  * **Active Reconnaissance:** When explicitly enabled, Amass can perform active techniques such as certificate name grabs, DNS zone transfer attempts, and port-aware network mapping.
+
+  * **Data Source Integration:** Amass can use API-backed sources such as Shodan and CIRCL through `datasources.yaml`, making it stronger when authenticated data sources are configured.
+
+  * **Asset Database Workflows:** The tool stores results in an asset database so users can query discovered subdomains, show IP relationships, track new assets, and generate visualizations.
+
+  * **Long-Term Monitoring:** Amass supports repeated discovery workflows where new findings can be compared against historical data.
+
+
+
+
+## Core Features​
+
+  * Passive and active asset discovery
+  * Subdomain enumeration and DNS mapping
+  * Certificate transparency and search-source collection
+  * Brute-force and alteration-based name discovery
+  * ASN, netblock, and organization mapping
+  * Graph-backed relationship analysis
+  * Multiple output formats for automation
+  * Scope and source configuration support
+
+
+
+## Data sources​
+
+  * Domain names and DNS records
+  * Certificate transparency logs
+  * Search engines and public datasets
+  * WHOIS, ASN, and netblock metadata
+  * Custom wordlists and resolver lists
+  * API-backed OSINT sources
+  * Previous Amass graph data
+
+
+
+## Common Amass Commands​
+
+### 1\. Install Amass with Homebrew​
+
+  * This command installs Amass on macOS using the official OWASP Amass Homebrew tap.
+
+
+    
+    
+```
+brew tap owasp-amass/homebrew-amass  
+brew install amass  
+```
+### 2\. Install Amass from Source​
+
+  * This command installs the current Amass v5 command-line binary with Go.
+
+
+    
+    
+```
+CGO_ENABLED=0 go install -v github.com/owasp-amass/amass/v5/cmd/amass@main  
+```
+### 3\. Pull the Official Docker Image​
+
+  * This command downloads the official Amass Docker image.
+
+
+    
+    
+```
+docker pull owaspamass/amass:latest  
+```
+### 4\. Run Amass with Docker​
+
+  * This command runs Amass in a container and mounts the local Amass configuration directory so results and configuration persist.
+
+
+    
+    
+```
+docker run --rm -it -v ~/.config/amass:/.config/amass owaspamass/amass:latest enum -d example.com  
+```
+### 5\. Show Global Help​
+
+  * This command displays the main Amass help menu and available subcommands.
+
+
+    
+    
+```
+amass -h  
+```
+### 6\. Show Version​
+
+  * This command prints the installed Amass version.
+
+
+    
+    
+```
+amass --version  
+```
+### 7\. Show Enumeration Help​
+
+  * This command displays options for the `enum` subcommand.
+
+
+    
+    
+```
+amass enum -h  
+```
+### 8\. Basic Domain Enumeration​
+
+  * This command starts an enumeration for a single root domain.
+
+
+    
+    
+```
+amass enum -d example.com  
+```
+### 9\. Enumerate Multiple Domains​
+
+  * This command enumerates multiple domains in one run.
+
+
+    
+    
+```
+amass enum -d example.com,example.org  
+```
+### 10\. Enumerate Domains from a File​
+
+  * This command reads root domains from a file and starts enumeration for each one.
+
+
+    
+    
+```
+amass enum -df domains.txt  
+```
+### 11\. Enable Verbose Output​
+
+  * This command prints status, debug, and troubleshooting information during enumeration.
+
+
+    
+    
+```
+amass enum -v -d example.com  
+```
+### 12\. List Available Data Sources​
+
+  * This command prints the data source names available to the installed Amass version.
+
+
+    
+    
+```
+amass enum -list  
+```
+### 13\. Include Specific Data Sources​
+
+  * This command limits collection to selected data sources.
+
+
+    
+    
+```
+amass enum -d example.com -include Shodan,Crtsh  
+```
+### 14\. Exclude Specific Data Sources​
+
+  * This command excludes selected data sources from the enumeration workflow.
+
+
+    
+    
+```
+amass enum -d example.com -exclude Shodan  
+```
+### 15\. Use a Configuration File​
+
+  * This command runs enumeration with a selected YAML configuration file.
+
+
+    
+    
+```
+amass enum -d example.com -config config.yaml  
+```
+### 16\. Use a Custom Output Directory​
+
+  * This command stores output files, logs, and database data in a selected directory.
+
+
+    
+    
+```
+amass enum -d example.com -dir amass-output  
+```
+### 17\. Set an Output File Prefix​
+
+  * This command sets the prefix used when Amass creates output files.
+
+
+    
+    
+```
+amass enum -d example.com -oA amass-output/example  
+```
+### 18\. Write Enumeration Logs​
+
+  * This command writes enumeration errors and log messages to a chosen file.
+
+
+    
+    
+```
+amass enum -d example.com -log amass.log  
+```
+### 19\. Enable Active Reconnaissance​
+
+  * This command enables active techniques such as certificate name grabs and zone transfer attempts.
+
+
+    
+    
+```
+amass enum -active -d example.com  
+```
+### 20\. Active Reconnaissance with Ports​
+
+  * This command uses active mode and checks selected ports during network mapping.
+
+
+    
+    
+```
+amass enum -active -d example.com -p 80,443,8080  
+```
+### 21\. DNS Brute Force​
+
+  * This command performs DNS brute forcing after data source searches.
+
+
+    
+    
+```
+amass enum -d example.com -brute -w subdomains.txt  
+```
+### 22\. DNS Brute Force with a Mask​
+
+  * This command uses a hashcat-style mask for DNS brute forcing.
+
+
+    
+    
+```
+amass enum -d example.com -brute -wm "?l?l?l"  
+```
+### 23\. Enable Name Alterations​
+
+  * This command generates altered names during enumeration.
+
+
+    
+    
+```
+amass enum -d example.com -alts  
+```
+### 24\. Use an Alteration Wordlist​
+
+  * This command uses a custom wordlist for name alterations.
+
+
+    
+    
+```
+amass enum -d example.com -alts -aw alterations.txt  
+```
+### 25\. Set Recursive Brute Force Threshold​
+
+  * This command requires a subdomain pattern to be seen at least twice before recursive brute forcing is attempted.
+
+
+    
+    
+```
+amass enum -d example.com -brute -min-for-recursive 2  
+```
+### 26\. Set Maximum Brute Force Depth​
+
+  * This command limits the maximum number of subdomain labels used during brute forcing.
+
+
+    
+    
+```
+amass enum -d example.com -brute -max-depth 3  
+```
+### 27\. Disable Recursive Brute Forcing​
+
+  * This command turns off recursive brute forcing behavior.
+
+
+    
+    
+```
+amass enum -d example.com -brute -norecursive  
+```
+### 28\. Use Custom DNS Resolvers​
+
+  * This command uses selected untrusted DNS resolvers.
+
+
+    
+    
+```
+amass enum -d example.com -r 1.1.1.1,8.8.8.8  
+```
+### 29\. Load DNS Resolvers from a File​
+
+  * This command loads resolver IP addresses from a file.
+
+
+    
+    
+```
+amass enum -d example.com -rf resolvers.txt  
+```
+### 30\. Use Trusted DNS Resolvers​
+
+  * This command adds trusted DNS resolvers for enumeration.
+
+
+    
+    
+```
+amass enum -d example.com -tr 9.9.9.9  
+```
+### 31\. Blacklist a Subdomain​
+
+  * This command prevents a selected subdomain from being investigated.
+
+
+    
+    
+```
+amass enum -d example.com -bl test.example.com  
+```
+### 32\. Load a Blacklist File​
+
+  * This command loads blacklisted subdomain names from a file.
+
+
+    
+    
+```
+amass enum -d example.com -blf blacklist.txt  
+```
+### 33\. Disable Scope Expansion​
+
+  * This command keeps enumeration within stricter scope boundaries.
+
+
+    
+    
+```
+amass enum -d example.com -rigid  
+```
+### 34\. Demo Mode​
+
+  * This command censors output so it can be shown in demonstrations or screenshots.
+
+
+    
+    
+```
+amass enum -d example.com -demo  
+```
+### 35\. Run Silent Enumeration​
+
+  * This command disables terminal output during execution, which is useful for automation.
+
+
+    
+    
+```
+amass enum -d example.com -silent  
+```
+### 36\. Show Discovered Subdomains​
+
+  * This command reads the asset database and prints discovered names for a domain.
+
+
+    
+    
+```
+amass subs -d example.com -names  
+```
+### 37\. Show Discovered Subdomains with IP Addresses​
+
+  * This command prints discovered names with associated IP addresses.
+
+
+    
+    
+```
+amass subs -d example.com -names -ip  
+```
+### 38\. Show IPv4 Results Only​
+
+  * This command prints discovered names that have IPv4 addresses.
+
+
+    
+    
+```
+amass subs -d example.com -names -ipv4  
+```
+### 39\. Show ASN Summary​
+
+  * This command prints an ASN summary table for discovered infrastructure.
+
+
+    
+    
+```
+amass subs -d example.com -summary  
+```
+### 40\. Show Names and Summary Together​
+
+  * This command prints both discovered names and the ASN summary.
+
+
+    
+    
+```
+amass subs -d example.com -show  
+```
+### 41\. Save Subdomain Output​
+
+  * This command writes subdomain output to a selected file.
+
+
+    
+    
+```
+amass subs -d example.com -names -o subdomains.txt  
+```
+### 42\. Track Newly Discovered Assets​
+
+  * This command identifies newly discovered assets for a domain using the asset database.
+
+
+    
+    
+```
+amass track -d example.com  
+```
+### 43\. Track Assets Since a Date​
+
+  * This command shows assets discovered after the selected timestamp.
+
+
+    
+    
+```
+amass track -d example.com -since "01/02 15:04:05 2026 UTC"  
+```
+### 44\. Generate a D3 Visualization​
+
+  * This command generates a D3 force graph HTML file from the asset database.
+
+
+    
+    
+```
+amass viz -d3 -d example.com  
+```
+### 45\. Generate a DOT Graph​
+
+  * This command generates a DOT graph file for graph analysis tools.
+
+
+    
+    
+```
+amass viz -dot -d example.com  
+```
+### 46\. Generate a GEXF Graph​
+
+  * This command generates a GEXF file for tools such as Gephi.
+
+
+    
+    
+```
+amass viz -gexf -d example.com  
+```
+### 47\. Set Visualization Output Directory and Prefix​
+
+  * This command writes visualization files to a selected directory with a custom prefix.
+
+
+    
+    
+```
+amass viz -d3 -d example.com -o graphs -oA example  
+```
+### 48\. Start the Collection Engine​
+
+  * This command starts the Amass collection engine as a standalone service.
+
+
+    
+    
+```
+amass engine -log-dir ./logs  
+```
+### 49\. Use a Remote Collection Engine​
+
+  * This command directs enumeration to a selected Amass engine URL.
+
+
+    
+    
+```
+amass enum -engine http://127.0.0.1:4000 -d example.com  
+```
+## Output Examples of Amass Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Global Help| `amass -h`| Shows Amass help and subcommands.| `Subcommands: assoc, engine, enum, subs, track, viz`  
+Version| `amass --version`| Prints the installed version.| `v5.1.1`  
+Enum Help| `amass enum -h`| Shows enumeration options.| `Usage: amass enum [options] -d DOMAIN`  
+Basic Enumeration| `amass enum -d example.com`| Starts discovery for one domain.| `Session Scope FQDN: example.com`  
+Multiple Domains| `amass enum -d example.com,example.org`| Enumerates multiple root domains.| `example.com and example.org added to scope`  
+Domain File| `amass enum -df domains.txt`| Reads root domains from a file.| `Loaded domains from domains.txt`  
+Verbose Mode| `amass enum -v -d example.com`| Prints troubleshooting information.| `Output status and debug information enabled`  
+List Sources| `amass enum -list`| Lists available data source names.| `Shodan, CIRCL, Crtsh, ...`  
+Include Sources| `amass enum -d example.com -include Shodan,Crtsh`| Uses selected data sources.| `Included data sources: Shodan, Crtsh`  
+Exclude Sources| `amass enum -d example.com -exclude Shodan`| Excludes selected data sources.| `Excluded data source: Shodan`  
+Config File| `amass enum -d example.com -config config.yaml`| Loads YAML configuration.| `Using configuration file: config.yaml`  
+Output Directory| `amass enum -d example.com -dir amass-output`| Stores results in a chosen directory.| `Output directory: amass-output`  
+Output Prefix| `amass enum -d example.com -oA amass-output/example`| Sets output file prefix.| `Output prefix: amass-output/example`  
+Active Recon| `amass enum -active -d example.com`| Enables active recon methods.| `Active reconnaissance enabled`  
+Active Ports| `amass enum -active -d example.com -p 80,443`| Includes selected ports in active mapping.| `Ports: 80,443`  
+Brute Force| `amass enum -d example.com -brute -w subdomains.txt`| Performs DNS brute forcing.| `DNS brute forcing enabled`  
+Brute Mask| `amass enum -d example.com -brute -wm "?l?l?l"`| Uses a hashcat-style DNS mask.| `Loaded brute force mask`  
+Alterations| `amass enum -d example.com -alts`| Generates altered names.| `Name alterations enabled`  
+Alteration Wordlist| `amass enum -d example.com -alts -aw alterations.txt`| Uses an alteration wordlist.| `Loaded alteration wordlist`  
+Recursive Threshold| `amass enum -d example.com -brute -min-for-recursive 2`| Controls recursive brute forcing.| `Minimum for recursive brute forcing: 2`  
+Max Depth| `amass enum -d example.com -brute -max-depth 3`| Limits brute force depth.| `Maximum depth: 3`  
+No Recursive| `amass enum -d example.com -brute -norecursive`| Disables recursive brute forcing.| `Recursive brute forcing disabled`  
+Custom Resolvers| `amass enum -d example.com -r 1.1.1.1,8.8.8.8`| Uses selected DNS resolvers.| `Resolvers configured`  
+Resolver File| `amass enum -d example.com -rf resolvers.txt`| Loads resolvers from a file.| `Loaded resolvers from resolvers.txt`  
+Trusted Resolver| `amass enum -d example.com -tr 9.9.9.9`| Adds trusted DNS resolvers.| `Trusted resolver configured`  
+Blacklist| `amass enum -d example.com -bl test.example.com`| Blocks a subdomain from investigation.| `Blacklisted: test.example.com`  
+Rigid Scope| `amass enum -d example.com -rigid`| Disables scope expansion.| `Rigid scope enabled`  
+Demo Mode| `amass enum -d example.com -demo`| Censors output for demonstrations.| `Demo mode enabled`  
+Silent Mode| `amass enum -d example.com -silent`| Disables terminal output.| `No terminal output shown`  
+Show Names| `amass subs -d example.com -names`| Prints discovered subdomains.| `app.example.com`  
+Show Names and IPs| `amass subs -d example.com -names -ip`| Prints discovered names with IPs.| `app.example.com 192.0.2.10`  
+IPv4 Only| `amass subs -d example.com -names -ipv4`| Shows names with IPv4 addresses.| `api.example.com 192.0.2.20`  
+ASN Summary| `amass subs -d example.com -summary`| Prints ASN summary data.| `ASN 64500 Example Network`  
+Save Names| `amass subs -d example.com -names -o subdomains.txt`| Writes names to a file.| `Output written to subdomains.txt`  
+Track New Assets| `amass track -d example.com`| Shows newly discovered assets.| `new.example.com`  
+Track Since| `amass track -d example.com -since "01/02 15:04:05 2026 UTC"`| Filters new assets by timestamp.| `Assets discovered after timestamp`  
+D3 Visualization| `amass viz -d3 -d example.com`| Generates an HTML graph.| `amass.html created`  
+DOT Visualization| `amass viz -dot -d example.com`| Generates a DOT graph file.| `amass.dot created`  
+GEXF Visualization| `amass viz -gexf -d example.com`| Generates a GEXF graph file.| `amass.gexf created`  
+Start Engine| `amass engine -log-dir ./logs`| Runs the collection engine service.| `Amass engine started`  
+Remote Engine| `amass enum -engine http://127.0.0.1:4000 -d example.com`| Uses a selected engine API URL.| `Connected to engine API`

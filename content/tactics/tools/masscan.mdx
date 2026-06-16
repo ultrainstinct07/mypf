@@ -1,0 +1,292 @@
+---
+title: "Masscan"
+description: "Masscan tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network']
+---
+
+**Masscan** is an **open-source** TCP port scanner that is designed to scan the entire Internet in under 6 minutes, transmitting 10 million packets per second. It produces results similar to Nmap but is significantly faster due to its asynchronous transmission approach. Masscan is the fastest port scanner available and is particularly useful for large-scale network reconnaissance.
+
+**Here are the primary uses of Masscan:**
+
+  * **Rapid Port Scanning:** Masscan excels at scanning large IP ranges and entire networks at incredible speeds. It can scan the entire Internet IPv4 address space in under 6 minutes when configured properly, making it ideal for initial reconnaissance and large-scale security assessments.
+
+  * **Internet-Wide Surveys:** The tool is commonly used by security researchers to conduct Internet-wide surveys and identify exposed services across the globe. Its speed makes it practical for scanning millions of hosts in a reasonable timeframe.
+
+  * **Network Asset Discovery:** Masscan quickly identifies all active hosts and open ports within large network ranges, helping organizations map their attack surface and discover unauthorized or forgotten devices on their networks.
+
+  * **Service Enumeration:** While primarily a port scanner, Masscan can also perform basic banner grabbing to identify services running on discovered ports. This helps security professionals understand what applications are exposed on their networks.
+
+  * **Integration with Other Tools:** Masscan's output can be easily integrated with other security tools like Nmap for detailed service scanning. The common workflow is to use Masscan for fast initial discovery, then use Nmap for in-depth analysis of discovered hosts.
+
+  * **Firewall and IDS Testing:** Security teams use Masscan to test firewall rules and intrusion detection systems by generating high-volume network traffic. Its speed and flexibility make it effective for validating security controls under realistic conditions.
+
+
+
+
+## Core Features​
+
+  * Ultra-Fast Scanning Speed
+  * Asynchronous Transmission
+  * Entire Internet Scanning Capability
+  * TCP SYN Scanning
+  * Banner Grabbing
+  * Customizable Scan Rates
+  * Multiple Output Formats
+  * Flexible IP Range Specification
+  * Port Range Configuration
+  * Packet Rate Control
+  * Exclude IP Ranges
+  * Resume Capability
+
+
+
+## Data sources​
+
+  * Target IP Addresses
+  * Port Numbers
+  * Network Interfaces
+  * Configuration Files
+  * Exclude Lists
+  * Banner Data
+  * TCP/IP Responses
+  * Scan Results
+
+
+
+## Common Masscan Commands​
+
+### 1\. Basic Port Scan​
+
+  * This command performs a basic TCP SYN scan on the specified IP address for a single port. It's the simplest form of port scanning with Masscan.
+
+
+    
+    
+```
+masscan 192.168.1.1 -p 80  
+```
+### 2\. Scan Multiple Ports​
+
+  * This command scans multiple specified ports on a target IP address. It allows security professionals to check multiple services simultaneously.
+
+
+    
+    
+```
+masscan 192.168.1.1 -p 80,443,8080  
+```
+### 3\. Scan Port Range​
+
+  * This command scans a range of ports on the target system. It's useful for discovering services running on non-standard ports within a specific range.
+
+
+    
+    
+```
+masscan 192.168.1.1 -p 1-1000  
+```
+### 4\. Scan Entire IP Range​
+
+  * This command scans all hosts within a specified IP range or subnet. It's essential for network-wide reconnaissance and asset discovery.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80,443  
+```
+### 5\. Scan All Ports​
+
+  * This command scans all 65,535 TCP ports on the target system. It provides complete port coverage but takes longer to complete.
+
+
+    
+    
+```
+masscan 192.168.1.1 -p 0-65535  
+```
+### 6\. Set Scan Rate​
+
+  * This command controls the packet transmission rate in packets per second. Higher rates speed up scanning but may trigger IDS/IPS systems or overwhelm networks.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 --rate 10000  
+```
+### 7\. Banner Grabbing​
+
+  * This command enables banner grabbing to identify services running on open ports. It provides basic service information beyond just port status.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80,443 --banners  
+```
+### 8\. Output to File​
+
+  * This command saves scan results to a specified file in various formats. It's crucial for documentation, analysis, and integration with other tools.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 -oL scan_results.txt  
+```
+### 9\. XML Output​
+
+  * This command exports results in XML format, which is compatible with Nmap and other security tools for further analysis.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 -oX scan_results.xml  
+```
+### 10\. JSON Output​
+
+  * This command outputs results in JSON format for easy parsing and integration with automated security workflows and scripts.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 -oJ scan_results.json  
+```
+### 11\. Exclude IP Addresses​
+
+  * This command excludes specific IP addresses or ranges from scanning. It's useful for avoiding critical infrastructure or authorized systems during assessments.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 --exclude 192.168.1.100  
+```
+### 12\. Exclude from File​
+
+  * This command reads a list of IP addresses to exclude from a file. It simplifies excluding multiple systems from large-scale scans.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 --excludefile exclude.txt  
+```
+### 13\. Specify Interface​
+
+  * This command specifies the network interface to use for scanning. It's important when the scanning system has multiple network interfaces.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 -e eth0  
+```
+### 14\. Set Source IP​
+
+  * This command sets a custom source IP address for packets. It can be used for testing routing or bypassing certain security controls.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 --source-ip 192.168.1.50  
+```
+### 15\. Randomize Targets​
+
+  * This command randomizes the order in which targets are scanned. It helps avoid detection patterns and distributes load more evenly.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 --randomize-hosts  
+```
+### 16\. Configuration File​
+
+  * This command loads scan parameters from a configuration file. It simplifies complex scans by storing frequently used options.
+
+
+    
+    
+```
+masscan -c masscan.conf  
+```
+### 17\. Resume Scan​
+
+  * This command resumes a previously interrupted scan using a paused.conf file. It's essential for completing long-running scans after interruptions.
+
+
+    
+    
+```
+masscan --resume paused.conf  
+```
+### 18\. Echo Configuration​
+
+  * This command displays the current configuration without running a scan. It's useful for verifying scan parameters before execution.
+
+
+    
+    
+```
+masscan 192.168.1.0/24 -p 80 --echo  
+```
+### 19\. Help and Usage Information​
+
+  * This command displays the help menu and usage information for Masscan, listing all available options and parameters.
+
+
+    
+    
+```
+masscan -h  
+```
+Alternative usage:
+    
+    
+```
+masscan --help  
+```
+## Output Examples of Masscan Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Port Scan| `masscan 192.168.1.1 -p 80`| Scans single port on target IP.| `Discovered open port 80/tcp on 192.168.1.1`  
+Scan Multiple Ports| `masscan 192.168.1.1 -p 80,443,8080`| Scans specified ports on target.| `Discovered open port 80/tcp on 192.168.1.1 `   
+` Discovered open port 443/tcp on 192.168.1.1`  
+Scan Port Range| `masscan 192.168.1.1 -p 1-1000`| Scans ports 1 through 1000.| `Discovered open port 22/tcp on 192.168.1.1 `   
+` Discovered open port 80/tcp on 192.168.1.1`  
+Scan IP Range| `masscan 192.168.1.0/24 -p 80`| Scans entire subnet for port 80.| `Discovered open port 80/tcp on 192.168.1.10 `   
+` Discovered open port 80/tcp on 192.168.1.15`  
+Scan All Ports| `masscan 192.168.1.1 -p 0-65535`| Scans all TCP ports on target.| `Discovered open port 22/tcp on 192.168.1.1 `   
+` Discovered open port 3306/tcp on 192.168.1.1`  
+Set Scan Rate| `masscan 192.168.1.0/24 -p 80 --rate 10000`| Sets scan rate to 10,000 packets/sec.| `rate: 10000.00 packets/second`  
+Banner Grabbing| `masscan 192.168.1.1 -p 80 --banners`| Grabs service banners from open ports.| `Banner on port 80/tcp: HTTP/1.1 200 OK `   
+` Server: Apache/2.4.41`  
+Output to List| `masscan 192.168.1.0/24 -p 80 -oL results.txt`| Saves results in list format.| `Results saved to results.txt`  
+XML Output| `masscan 192.168.1.0/24 -p 80 -oX results.xml`| Exports results in XML format.| `<?xml version="1.0"?> `   
+` <nmaprun>...`  
+JSON Output| `masscan 192.168.1.0/24 -p 80 -oJ results.json`| Outputs results in JSON format.| `[{"ip":"192.168.1.1","ports":[{"port":80}]}]`  
+Grepable Output| `masscan 192.168.1.0/24 -p 80 -oG results.gnmap`| Saves in grepable format.| `Host: 192.168.1.1 () Ports: 80/open/tcp//`  
+Binary Output| `masscan 192.168.1.0/24 -p 80 -oB results.bin`| Saves in binary format for fast processing.| `Binary output saved to results.bin`  
+Exclude IP| `masscan 192.168.1.0/24 -p 80 --exclude 192.168.1.100`| Excludes specific IP from scan.| `Excluding 192.168.1.100 from scan`  
+Exclude from File| `masscan 192.168.1.0/24 -p 80 --excludefile exclude.txt`| Excludes IPs listed in file.| `Loaded 5 exclusions from exclude.txt`  
+Specify Interface| `masscan 192.168.1.0/24 -p 80 -e eth0`| Uses specified network interface.| `Using interface: eth0`  
+Source IP| `masscan 192.168.1.0/24 -p 80 --source-ip 192.168.1.50`| Sets custom source IP.| `Source IP: 192.168.1.50`  
+Randomize Hosts| `masscan 192.168.1.0/24 -p 80 --randomize-hosts`| Randomizes target scan order.| `Randomizing host order`  
+Wait Time| `masscan 192.168.1.0/24 -p 80 --wait 5`| Sets wait time before closing.| `Waiting 5 seconds before closing`  
+Offline Mode| `masscan 192.168.1.0/24 -p 80 --offline`| Prints packets without transmitting.| `Offline mode: no packets transmitted`  
+Configuration File| `masscan -c masscan.conf`| Loads settings from config file.| `Configuration loaded from masscan.conf`  
+Echo Configuration| `masscan 192.168.1.0/24 -p 80 --echo`| Displays configuration without scanning.| `rate = 100.00 `   
+` randomize-hosts = true`  
+Resume Scan| `masscan --resume paused.conf`| Resumes interrupted scan.| `Resuming scan from paused.conf`  
+Adapter List| `masscan --adapter-list`| Lists available network adapters.| `eth0: 192.168.1.50 `   
+` wlan0: 192.168.2.100`  
+Router MAC| `masscan 192.168.1.0/24 -p 80 --router-mac 11:22:33:44:55:66`| Specifies router MAC address.| `Router MAC: 11:22:33:44:55:66`  
+Ping Scan| `masscan 192.168.1.0/24 --ping`| Performs ICMP ping scan.| `Host 192.168.1.1 is up`  
+Show Statistics| `masscan 192.168.1.0/24 -p 80 --open-only`| Shows only open ports.| `Discovered open port 80/tcp on 192.168.1.1`  
+Retries| `masscan 192.168.1.0/24 -p 80 --retries 3`| Sets number of retries for packets.| `Retries set to 3`

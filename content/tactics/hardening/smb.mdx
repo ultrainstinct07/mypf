@@ -1,0 +1,100 @@
+---
+title: "SMB (Server Message Block) Hardening"
+description: "An in-depth guide for hardening SMB (Server Message Block), including advanced configurations and best practices."
+tags: []
+---
+
+The **Server Message Block (SMB)** is a network protocol that enables shared file access, printers, serial ports, and various communications between nodes on a network. This guide presents critical steps to harden and secure the SMB service.
+
+## Patch System Regularly​
+
+Ensure to regularly apply patches and updates on your server. This action prevents exploits of known vulnerabilities in the SMB service.
+    
+    
+```
+sudo apt-get update && sudo apt-get upgrade   # for Ubuntu  
+sudo yum update -y   # for RH-based systems  
+```
+This command updates the system packages including SMB.
+
+## Restrict Access​
+
+Only allow essential and authorized systems to access the SMB ports. This restriction prevents unauthorized access.
+    
+    
+```
+sudo ufw enable   # Enable firewall  
+sudo ufw deny from {unauthorized_IP_address} to any port 445    
+sudo ufw deny from {unauthorized_IP_address} to any port 135  
+```
+This command blocks access to SMB ports.
+
+## Disable SMB 1​
+
+SMB 1 is outdated and susceptible to numerous security vulnerabilities such as ransomware attacks. Disable SMB 1 to mitigate these risks.
+    
+    
+```
+echo "[global]" >> /etc/samba/smb.conf  
+echo "min protocol = SMB2" >> /etc/samba/smb.conf  
+```
+This command disables SMB 1 on linux servers.
+
+On Windows Server, follow these steps:
+
+  * Open Windows Features.
+  * Deselect SMB 1.0/CIFS File Sharing Support, and then click OK.
+
+
+
+## Enable SMB Signing​
+
+SMB signing verifies the authenticity of SMB communications and prevents man-in-the-middle (MITM) attacks.
+    
+    
+```
+echo "server signing = mandatory" >> /etc/samba/smb.conf  
+echo "client signing = mandatory" >> /etc/samba/smb.conf  
+```
+This command enables SMB signing on both the server and client sides.
+
+## Set Strong Passwords​
+
+Use strong passwords for all user accounts. This action prevents unauthorized access.
+    
+    
+```
+sudo smbpasswd -a {username}  
+```
+This command creates or updates the smb password of the user.
+
+## Limit SMB Permissions​
+
+Limit permissions to what a user or a group of users need. This action prevents misuse of SMB.
+    
+    
+```
+chmod 770 {share_directory_path}  
+sudo chown {username}:{groupname} {share_directory_path}  
+```
+This command sets directory permissions and ownership.
+
+## Enable SMB Encryption​
+
+Use SMB encryption to protect against eavesdropping on untrusted networks.
+    
+    
+```
+echo "smb encrypt = mandatory" >> /etc/samba/smb.conf  
+```
+This command enables SMB encryption.
+
+## Regular Auditing​
+
+Perform regular audits of your SMB configuration and maintain logs for analysis.
+    
+    
+```
+testparm   # Checks the Samba configuration file for internal correctness  
+```
+This command validates smb configuration.

@@ -1,0 +1,634 @@
+---
+title: "Trivy"
+description: "Trivy tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['devsecops', 'container security', 'vulnerability scanning', 'kubernetes']
+---
+
+## What is the purpose of Trivy?​
+
+**Trivy** is an open-source security scanner used to find vulnerabilities, misconfigurations, secrets, licenses, and software bill of materials (SBOM) information across container images, filesystems, Git repositories, Kubernetes resources, infrastructure-as-code files, and cloud-focused assets.
+
+Trivy is useful because it gives teams one practical command-line workflow for image scanning, dependency scanning, IaC review, Kubernetes posture checks, SBOM generation, and CI/CD security gates. It is commonly used by developers, DevSecOps teams, platform engineers, and penetration testers who need fast security visibility before deploying software.
+
+**Supply chain hygiene note:** Trivy is often used inside CI pipelines, so pin versions, avoid mutable `latest` tags in production pipelines, and verify release artifacts where possible. This matters especially after public supply-chain advisories because scanners themselves become part of the trusted build path.
+
+**Here are the primary uses of Trivy:**
+
+  * **Container Image Vulnerability Scanning:** Trivy scans operating system packages and application dependencies inside container images and reports known vulnerabilities with severity, package name, installed version, and fixed version when available.
+
+  * **Filesystem and Repository Scanning:** The tool can scan local project directories and remote Git repositories for vulnerabilities, secrets, IaC misconfigurations, and license issues before code reaches production.
+
+  * **Infrastructure-as-Code Review:** Trivy checks Terraform, Kubernetes YAML, Dockerfile, Helm, CloudFormation, and similar configuration files for risky security settings and compliance problems.
+
+  * **Kubernetes Security Assessment:** Trivy can scan Kubernetes clusters, namespaces, workloads, and configuration objects to identify vulnerable images, exposed secrets, and misconfigured resources.
+
+  * **SBOM Generation and Consumption:** The tool can generate CycloneDX and SPDX SBOMs, scan existing SBOMs, and use SBOM workflows to support supply-chain security programs.
+
+  * **CI/CD Security Gates:** Trivy can return non-zero exit codes for selected severities, export JSON, SARIF, table, template, and SBOM formats, and integrate with code scanning dashboards.
+
+  * **Private Registry and Offline Workflows:** Trivy supports private registry authentication, local image archives, custom cache directories, offline scans, and controlled database update behavior.
+
+
+
+
+## Core Features​
+
+  * Container image, filesystem, repository, Kubernetes, and SBOM scanning
+  * Vulnerability, misconfiguration, secret, and license checks
+  * Severity, ignore, exit-code, and policy controls
+  * IaC scanning for Kubernetes, Terraform, Dockerfile, and related formats
+  * Database update, cache, and offline-friendly options
+  * JSON, table, SARIF, CycloneDX, SPDX, and template outputs
+  * CI/CD gate and reporting workflows
+
+
+
+## Data sources​
+
+  * Container images and image archives
+  * Filesystems, repositories, and rootfs directories
+  * Kubernetes clusters and manifests
+  * SBOM files and package lockfiles
+  * IaC files, Dockerfiles, and CI configuration
+  * Trivy vulnerability and policy databases
+
+
+
+## Common Trivy Commands​
+
+### 1\. Install Trivy with Homebrew​
+
+  * This command installs Trivy on macOS using Homebrew.
+
+
+    
+    
+```
+brew install trivy  
+```
+### 2\. Run Trivy with Docker​
+
+  * This command runs Trivy from the official container image and scans a container image.
+
+
+    
+    
+```
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image alpine:3.19  
+```
+### 3\. Check Trivy Version​
+
+  * This command prints the installed Trivy version and database metadata.
+
+
+    
+    
+```
+trivy --version  
+```
+### 4\. Show Global Help​
+
+  * This command displays Trivy commands and global options.
+
+
+    
+    
+```
+trivy --help  
+```
+### 5\. Show Image Scan Help​
+
+  * This command displays options for container image scanning.
+
+
+    
+    
+```
+trivy image --help  
+```
+### 6\. Scan a Container Image​
+
+  * This command scans an image for vulnerabilities using Trivy's default scanner behavior.
+
+
+    
+    
+```
+trivy image nginx:1.25  
+```
+### 7\. Scan Only for Vulnerabilities​
+
+  * This command limits the image scan to vulnerability checks.
+
+
+    
+    
+```
+trivy image --scanners vuln nginx:1.25  
+```
+### 8\. Scan for Vulnerabilities, Secrets, and Misconfigurations​
+
+  * This command enables multiple scanners in one image scan.
+
+
+    
+    
+```
+trivy image --scanners vuln,secret,misconfig nginx:1.25  
+```
+### 9\. Filter by Severity​
+
+  * This command only reports high and critical findings.
+
+
+    
+    
+```
+trivy image --severity HIGH,CRITICAL nginx:1.25  
+```
+### 10\. Ignore Unfixed Vulnerabilities​
+
+  * This command hides vulnerabilities that do not currently have a fixed version.
+
+
+    
+    
+```
+trivy image --ignore-unfixed nginx:1.25  
+```
+### 11\. Fail a CI Job on Critical Findings​
+
+  * This command exits with status code `1` if critical findings are detected.
+
+
+    
+    
+```
+trivy image --severity CRITICAL --exit-code 1 nginx:1.25  
+```
+### 12\. Save JSON Output​
+
+  * This command writes scan results to a JSON file.
+
+
+    
+    
+```
+trivy image --format json --output trivy-image.json nginx:1.25  
+```
+### 13\. Save SARIF Output​
+
+  * This command writes SARIF output for code scanning systems.
+
+
+    
+    
+```
+trivy image --format sarif --output trivy-results.sarif nginx:1.25  
+```
+### 14\. Generate a CycloneDX SBOM​
+
+  * This command creates a CycloneDX SBOM from a container image.
+
+
+    
+    
+```
+trivy image --format cyclonedx --output sbom.cdx.json nginx:1.25  
+```
+### 15\. Generate an SPDX SBOM​
+
+  * This command creates an SPDX JSON SBOM from a container image.
+
+
+    
+    
+```
+trivy image --format spdx-json --output sbom.spdx.json nginx:1.25  
+```
+### 16\. Scan an Existing SBOM​
+
+  * This command scans an SBOM file for known vulnerabilities.
+
+
+    
+    
+```
+trivy sbom sbom.cdx.json  
+```
+### 17\. Scan a Local Filesystem​
+
+  * This command scans the current project directory.
+
+
+    
+    
+```
+trivy fs .  
+```
+### 18\. Scan a Project with Multiple Scanners​
+
+  * This command checks a local project for vulnerabilities, secrets, misconfigurations, and licenses.
+
+
+    
+    
+```
+trivy fs --scanners vuln,secret,misconfig,license .  
+```
+### 19\. Scan a Specific Directory​
+
+  * This command scans only the selected directory.
+
+
+    
+    
+```
+trivy fs ./src  
+```
+### 20\. Scan a Remote Git Repository​
+
+  * This command scans a remote repository without cloning it manually first.
+
+
+    
+    
+```
+trivy repo https://github.com/aquasecurity/trivy-ci-test  
+```
+### 21\. Scan a Root Filesystem​
+
+  * This command scans an unpacked root filesystem.
+
+
+    
+    
+```
+trivy rootfs /path/to/rootfs  
+```
+### 22\. Scan Infrastructure-as-Code Files​
+
+  * This command checks configuration files for misconfigurations.
+
+
+    
+    
+```
+trivy config ./infra  
+```
+### 23\. Scan a Terraform Plan​
+
+  * This command scans a Terraform plan exported as JSON.
+
+
+    
+    
+```
+terraform show -json tfplan.binary > tfplan.json  
+trivy config tfplan.json  
+```
+### 24\. Scan Kubernetes YAML Files​
+
+  * This command scans Kubernetes manifests before deployment.
+
+
+    
+    
+```
+trivy config ./k8s  
+```
+### 25\. Scan a Kubernetes Cluster Summary​
+
+  * This command scans the connected Kubernetes cluster and prints a summary report.
+
+
+    
+    
+```
+trivy k8s --report summary  
+```
+### 26\. Scan a Kubernetes Namespace​
+
+  * This command limits a Kubernetes scan to one namespace.
+
+
+    
+    
+```
+trivy k8s --include-namespaces production --report all  
+```
+### 27\. Scan Kubernetes Workloads Only​
+
+  * This command focuses Kubernetes scanning on workload resources.
+
+
+    
+    
+```
+trivy k8s --include-kinds Deployment,StatefulSet,DaemonSet --report all  
+```
+### 28\. Scan Image Configuration​
+
+  * This command scans image configuration metadata for misconfigurations.
+
+
+    
+    
+```
+trivy image --image-config-scanners misconfig nginx:1.25  
+```
+### 29\. Scan Licenses​
+
+  * This command checks package license information.
+
+
+    
+    
+```
+trivy fs --scanners license .  
+```
+### 30\. Show All Packages​
+
+  * This command includes package inventory information in the result.
+
+
+    
+    
+```
+trivy image --list-all-pkgs nginx:1.25  
+```
+### 31\. Skip Directories​
+
+  * This command excludes noisy or irrelevant directories from a filesystem scan.
+
+
+    
+    
+```
+trivy fs --skip-dirs node_modules --skip-dirs vendor .  
+```
+### 32\. Skip Files​
+
+  * This command excludes specific files from a scan.
+
+
+    
+    
+```
+trivy fs --skip-files package-lock.json .  
+```
+### 33\. Use a Trivy Ignore File​
+
+  * This command applies ignore rules from a custom ignore file.
+
+
+    
+    
+```
+trivy image --ignorefile .trivyignore nginx:1.25  
+```
+### 34\. Run an Offline Scan​
+
+  * This command runs without downloading vulnerability database updates during the scan.
+
+
+    
+    
+```
+trivy image --offline-scan nginx:1.25  
+```
+### 35\. Skip Database Update​
+
+  * This command uses the local vulnerability database without checking for updates.
+
+
+    
+    
+```
+trivy image --skip-db-update nginx:1.25  
+```
+### 36\. Use a Custom Cache Directory​
+
+  * This command stores Trivy cache data in a selected directory.
+
+
+    
+    
+```
+trivy image --cache-dir .trivy-cache nginx:1.25  
+```
+### 37\. Clean Trivy Caches​
+
+  * This command removes cached scan and database data according to the selected clean options.
+
+
+    
+    
+```
+trivy clean --all  
+```
+### 38\. Login to a Private Registry​
+
+  * This command stores registry credentials for scanning private images.
+
+
+    
+    
+```
+trivy registry login registry.example.com  
+```
+### 39\. Scan a Private Registry Image with Environment Credentials​
+
+  * This command passes registry credentials through environment variables.
+
+
+    
+    
+```
+TRIVY_USERNAME="scanner" TRIVY_PASSWORD="password" trivy image registry.example.com/app/api:1.0.0  
+```
+### 40\. Scan an Image Tar Archive​
+
+  * This command scans an image archive exported from Docker or another image tool.
+
+
+    
+    
+```
+trivy image --input image.tar  
+```
+### 41\. Scan a Specific Platform​
+
+  * This command scans the selected platform variant of a multi-architecture image.
+
+
+    
+    
+```
+trivy image --platform linux/amd64 nginx:1.25  
+```
+### 42\. Use a Configuration File​
+
+  * This command runs Trivy with options defined in a config file.
+
+
+    
+    
+```
+trivy image --config trivy.yaml nginx:1.25  
+```
+### 43\. Generate a Default Configuration File​
+
+  * This command prints a sample configuration file.
+
+
+    
+    
+```
+trivy --generate-default-config  
+```
+### 44\. Run in Quiet Mode​
+
+  * This command reduces non-result output in automation.
+
+
+    
+    
+```
+trivy image --quiet nginx:1.25  
+```
+### 45\. Disable Progress Output​
+
+  * This command disables progress indicators for cleaner CI logs.
+
+
+    
+    
+```
+trivy image --no-progress nginx:1.25  
+```
+### 46\. Set a Timeout​
+
+  * This command limits how long Trivy waits before timing out.
+
+
+    
+    
+```
+trivy image --timeout 10m nginx:1.25  
+```
+### 47\. Enable Debug Output​
+
+  * This command prints detailed logs for troubleshooting scans.
+
+
+    
+    
+```
+trivy image --debug nginx:1.25  
+```
+### 48\. Run a Docker CIS Compliance Check​
+
+  * This command runs a Docker CIS compliance report against a container image.
+
+
+    
+    
+```
+trivy image --compliance docker-cis-1.6.0 nginx:1.25  
+```
+### 49\. Scan with Secret Detection Disabled​
+
+  * This command disables secret scanning when speed is more important than secret review.
+
+
+    
+    
+```
+trivy fs --scanners vuln,misconfig .  
+```
+### 50\. Convert a Trivy Report​
+
+  * This command converts an existing Trivy JSON report into another supported format.
+
+
+    
+    
+```
+trivy convert --format table trivy-image.json  
+```
+### 51\. Start Trivy Server Mode​
+
+  * This command starts Trivy as a server for client/server scanning workflows.
+
+
+    
+    
+```
+trivy server --listen 0.0.0.0:4954  
+```
+### 52\. Use Trivy Client Mode​
+
+  * This command sends scan work to a Trivy server.
+
+
+    
+    
+```
+trivy image --server http://127.0.0.1:4954 nginx:1.25  
+```
+### 53\. List Trivy Plugins​
+
+  * This command lists installed Trivy plugins.
+
+
+    
+    
+```
+trivy plugin list  
+```
+### 54\. Install a Trivy Plugin​
+
+  * This command installs a plugin from a repository.
+
+
+    
+    
+```
+trivy plugin install github.com/aquasecurity/trivy-plugin-referrer  
+```
+### 55\. Scan an Image SBOM Source​
+
+  * This command attempts to retrieve and scan SBOM data attached to an OCI image.
+
+
+    
+    
+```
+trivy image --sbom-sources oci nginx:1.25  
+```
+## Output Examples​
+
+Command| Description| Example Output  
+---|---|---  
+`trivy --version`| Shows the installed version and database metadata.| `Version: 0.70.0`   
+`Vulnerability DB: ...`  
+`trivy image nginx:1.25`| Scans a container image for known issues.| `nginx:1.25 (debian 12.x)`   
+`Total: 12 (UNKNOWN: 0, LOW: 4, MEDIUM: 6, HIGH: 2, CRITICAL: 0)`  
+`trivy image --severity HIGH,CRITICAL nginx:1.25`| Filters results by severity.| `Total: 2 (HIGH: 2, CRITICAL: 0)`  
+`trivy image --exit-code 1 --severity CRITICAL nginx:1.25`| Fails automation when matching findings exist.| `CRITICAL vulnerabilities found`   
+`exit status 1`  
+`trivy fs .`| Scans a local project directory.| `package-lock.json`   
+`Total: 7 (LOW: 1, MEDIUM: 4, HIGH: 2)`  
+`trivy fs --scanners secret .`| Searches local files for exposed secrets.| `Secret Type: GitHub Personal Access Token`   
+`Severity: CRITICAL`  
+`trivy config ./infra`| Scans IaC files for risky configuration.| `AVD-KSV-0014: Container should not run as root`  
+`trivy repo https://github.com/example/app`| Scans a remote Git repository.| `Detected config files: Dockerfile, deployment.yaml`  
+`trivy sbom sbom.cdx.json`| Scans an existing SBOM.| `Detected SBOM format: CycloneDX`   
+`Total: 5 vulnerabilities`  
+`trivy k8s --report summary`| Scans a Kubernetes cluster.| `Workloads: 31`   
+`Critical: 3, High: 17`  
+`trivy image --format sarif --output trivy.sarif nginx:1.25`| Exports SARIF for code scanning systems.| `trivy.sarif written`  
+`trivy registry login registry.example.com`| Authenticates to a private registry.| `Login Succeeded`  
+`trivy clean --all`| Clears cached Trivy data.| `Removing scan cache...`   
+`Removing vulnerability database...`

@@ -1,0 +1,372 @@
+---
+title: "BloodHound CE"
+description: "BloodHound CE tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'windows', 'active directory', 'cloud']
+---
+
+**BloodHound Community Edition (BloodHound CE)** is an **open-source** attack path analysis platform used to map and analyze privilege relationships across Active Directory, Entra ID, Microsoft Azure, and supported OpenGraph data sources. It uses graph theory to reveal paths that attackers may abuse and defenders can prioritize for remediation.
+
+**Here are the primary uses of BloodHound CE:**
+
+  * **Attack Path Analysis:** BloodHound CE visualizes how users, groups, computers, sessions, permissions, trusts, and cloud identities connect. This helps security professionals identify paths from low-privileged access to high-value targets.
+
+  * **Active Directory Assessment:** The tool ingests data collected by SharpHound CE to analyze domain users, groups, computers, ACLs, sessions, local admin rights, GPO links, trusts, ADCS objects, and other AD relationships.
+
+  * **Cloud Identity Mapping:** BloodHound CE can ingest AzureHound CE data to analyze Entra ID and Azure relationships such as users, groups, applications, service principals, subscriptions, role assignments, and Azure resources.
+
+  * **Red Team Planning:** Attackers and red teams use BloodHound CE to prioritize realistic privilege escalation paths, validate credential impact, and understand where a compromised identity can lead.
+
+  * **Blue Team Remediation:** Defenders use BloodHound CE to identify excessive privileges, dangerous delegation, risky local admin assignments, exposed Tier Zero objects, and identity relationships that should be reduced or monitored.
+
+  * **Graph Querying:** BloodHound CE supports search, pathfinding, and Cypher queries so users can investigate relationships that are difficult to find manually.
+
+
+
+
+## Core Features​
+
+  * Active Directory attack path graphing
+  * SharpHound data ingestion and collection workflows
+  * User, group, computer, session, and ACL relationship analysis
+  * Prebuilt and custom Cypher queries
+  * Privilege escalation and lateral movement path discovery
+  * Domain and forest relationship visualization
+  * Exportable findings for reporting and remediation
+
+
+
+## Data sources​
+
+  * Active Directory users, groups, computers, and OUs
+  * Group memberships and local admin relationships
+  * ACLs, delegation, GPOs, and trust relationships
+  * Session, RDP, and logged-on user collection data
+  * SharpHound JSON or ZIP collection files
+  * BloodHound CE graph database content
+
+
+
+## Common BloodHound CE Commands​
+
+### 1\. Download BloodHound CLI on Linux​
+
+  * This command downloads the latest Linux AMD64 BloodHound CLI release archive.
+
+
+    
+    
+```
+wget https://github.com/SpecterOps/bloodhound-cli/releases/latest/download/bloodhound-cli-linux-amd64.tar.gz  
+```
+### 2\. Extract BloodHound CLI​
+
+  * This command extracts the downloaded BloodHound CLI archive.
+
+
+    
+    
+```
+tar -xvzf bloodhound-cli-linux-amd64.tar.gz  
+```
+### 3\. Install BloodHound CE​
+
+  * This command installs BloodHound CE using the BloodHound CLI. The CLI wraps Docker Compose and creates the required containers.
+
+
+    
+    
+```
+./bloodhound-cli install  
+```
+### 4\. Reset the Admin Password​
+
+  * This command resets the local BloodHound CE admin password if the generated password was lost.
+
+
+    
+    
+```
+./bloodhound-cli resetpwd  
+```
+### 5\. Update BloodHound CE​
+
+  * This command updates a BloodHound CE instance through the BloodHound CLI.
+
+
+    
+    
+```
+./bloodhound-cli update  
+```
+### 6\. Open the BloodHound CE Interface​
+
+  * This URL opens the local BloodHound CE login page after installation.
+
+
+    
+    
+```
+http://localhost:8080/ui/login  
+```
+### 7\. Run SharpHound CE Default Collection​
+
+  * This command runs SharpHound CE from a domain-joined Windows system and performs the default Active Directory collection.
+
+
+    
+    
+```
+SharpHound.exe  
+```
+### 8\. Run SharpHound CE All Collection​
+
+  * This command tells SharpHound CE to run all supported collection methods.
+
+
+    
+    
+```
+SharpHound.exe --CollectionMethods All  
+```
+### 9\. Run SharpHound CE DC-Only Collection​
+
+  * This command collects only domain controller data and avoids touching domain-joined workstations and servers.
+
+
+    
+    
+```
+SharpHound.exe --CollectionMethods DCOnly  
+```
+### 10\. Run SharpHound CE Session Loop​
+
+  * This command repeatedly collects session data for the default loop duration.
+
+
+    
+    
+```
+SharpHound.exe --CollectionMethods Session --Loop  
+```
+### 11\. Set SharpHound CE Loop Duration​
+
+  * This command runs session collection in a loop for a specific duration.
+
+
+    
+    
+```
+SharpHound.exe --CollectionMethods Session --Loop --LoopDuration 03:00:00  
+```
+### 12\. Set SharpHound CE Output Directory​
+
+  * This command writes SharpHound output to a specific directory.
+
+
+    
+    
+```bash
+SharpHound.exe --OutputDirectory C:\temp\  
+```
+### 13\. Add SharpHound CE Output Prefix​
+
+  * This command adds a custom prefix to generated JSON and ZIP files.
+
+
+    
+    
+```
+SharpHound.exe --OutputPrefix "Internal Audit"  
+```
+### 14\. Run SharpHound CE Against a Specific Domain​
+
+  * This command specifies the Active Directory domain to collect from.
+
+
+    
+    
+```
+SharpHound.exe -d corp.local  
+```
+### 15\. Run SharpHound CE from a Non-Domain-Joined Host​
+
+  * This command opens a network-only session as a domain user before running SharpHound with a target domain.
+
+
+    
+    
+```
+runas /netonly /user:CORP\analyst cmd.exe  
+SharpHound.exe -d corp.local  
+```
+### 16\. Upload Collected Data in the UI​
+
+  * This workflow uploads SharpHound or AzureHound output through the BloodHound CE interface.
+
+
+    
+    
+```
+Administration > Data Collection > File Ingest > Upload File(s)  
+```
+### 17\. Upload Collected Data with the API​
+
+  * This endpoint accepts collected BloodHound CE JSON or ZIP data through the API.
+
+
+    
+    
+```
+/api/v2/file-upload/  
+```
+### 18\. Run AzureHound CE with Username and Password​
+
+  * This command collects Azure and Entra ID data using a user account and tenant.
+
+
+    
+    
+```
+azurehound list -u <user@domain.com> -p <password> -t <tenant>  
+```
+### 19\. Write AzureHound CE Output to a File​
+
+  * This command writes collected AzureHound data to a JSON file.
+
+
+    
+    
+```
+azurehound list -u <user@domain.com> -p <password> -t <tenant> -o azurehound.json  
+```
+### 20\. Run AzureHound CE with an Existing Azure CLI Token​
+
+  * This command reuses an Azure CLI access token for AzureHound authentication.
+
+
+    
+    
+```bash
+JWT=$(az account get-access-token --resource https://graph.microsoft.com | jq -r .accessToken)  
+azurehound list --jwt "$JWT" -o azurehound.json  
+```
+### 21\. Scope AzureHound CE to Azure AD Data​
+
+  * This command collects tenant-level Azure AD data.
+
+
+    
+    
+```
+azurehound list az-ad -u <user@domain.com> -p <password> -t <tenant> -o az-ad.json  
+```
+### 22\. Scope AzureHound CE to Azure Resource Manager Data​
+
+  * This command collects AzureRM subscription-level data when the account has the required permissions.
+
+
+    
+    
+```
+azurehound list az-rm -u <user@domain.com> -p <password> -t <tenant> -o az-rm.json  
+```
+### 23\. Search for a Node​
+
+  * This search finds objects by name in the BloodHound CE Explore page.
+
+
+    
+    
+```
+user:bob  
+```
+### 24\. Search for Admin Groups​
+
+  * This search constrains results to group nodes that contain the word admin.
+
+
+    
+    
+```
+group:admin  
+```
+### 25\. Run a Basic Cypher Query​
+
+  * This query returns user nodes from the graph for manual exploration.
+
+
+    
+    
+```
+MATCH (u:User)  
+RETURN u  
+LIMIT 25  
+```
+### 26\. Find Paths to a Target Group​
+
+  * This query searches for short paths from user objects to a Domain Admins group.
+
+
+    
+    
+```
+MATCH p = shortestPath((u:User)-[*..]->(g:Group))  
+WHERE g.name CONTAINS "DOMAIN ADMINS"  
+RETURN p  
+```
+### 27\. Mark an Object as Owned​
+
+  * This UI action marks a compromised object so BloodHound CE can show paths from that controlled identity.
+
+
+    
+    
+```
+Right-click node > Add to Owned  
+```
+### 28\. Set Pathfinding Start and End Nodes​
+
+  * This UI action sends objects to the Pathfinding tab and draws paths between them.
+
+
+    
+    
+```
+Right-click node > Set as starting node  
+Right-click node > Set as ending node  
+```
+## Output Examples of BloodHound CE Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Download CLI| `wget https://github.com/SpecterOps/bloodhound-cli/releases/latest/download/bloodhound-cli-linux-amd64.tar.gz`| Downloads BloodHound CLI.| `bloodhound-cli-linux-amd64.tar.gz saved`  
+Extract CLI| `tar -xvzf bloodhound-cli-linux-amd64.tar.gz`| Extracts the CLI archive.| `bloodhound-cli`  
+Install CE| `./bloodhound-cli install`| Installs BloodHound CE containers.| `[+] BloodHound is ready to go!`   
+`[+] You can log in as admin with this password: <password>`  
+Reset Password| `./bloodhound-cli resetpwd`| Resets the admin password.| `[+] Password reset successfully`  
+Update CE| `./bloodhound-cli update`| Updates BloodHound CE.| `[+] BloodHound update complete`  
+Local Login| `http://localhost:8080/ui/login`| Opens the local UI.| `BloodHound login page`  
+SharpHound Default| `SharpHound.exe`| Runs default AD collection.| `Status: Starting collection`   
+`Compressing output into ZIP`  
+SharpHound All| `SharpHound.exe --CollectionMethods All`| Runs all collection methods.| `Collection Methods: All`  
+SharpHound DCOnly| `SharpHound.exe --CollectionMethods DCOnly`| Collects domain controller data only.| `Collection Methods: DCOnly`  
+SharpHound Loop| `SharpHound.exe --CollectionMethods Session --Loop`| Repeats session collection.| `Starting looped collection`   
+`Loop duration: 02:00:00`  
+SharpHound Loop Duration| `SharpHound.exe --CollectionMethods Session --Loop --LoopDuration 03:00:00`| Sets loop runtime.| `Loop duration: 03:00:00`  
+Output Directory| `SharpHound.exe --OutputDirectory C:\temp\`| Writes output to a folder.| `Writing output to C:\temp\`  
+Output Prefix| `SharpHound.exe --OutputPrefix "Internal Audit"`| Adds output filename prefix.| `Internal Audit_*.zip`  
+Specific Domain| `SharpHound.exe -d corp.local`| Collects from a specified domain.| `Resolved domain: corp.local`  
+File Ingest| `Administration > Data Collection > File Ingest`| Uploads collector output in the UI.| `Upload complete`   
+`Ingest task queued`  
+API Upload| `/api/v2/file-upload/`| Uploads collected data through API.| `HTTP 202 Accepted`  
+AzureHound List| `azurehound list -u analyst@corp.com -p '<password>' -t corp.onmicrosoft.com`| Collects Azure and Entra ID data.| `Collecting AzureAD tenant data`  
+AzureHound Output| `azurehound list -u analyst@corp.com -p '<password>' -t corp.onmicrosoft.com -o azurehound.json`| Saves AzureHound output.| `Writing output to azurehound.json`  
+AzureHound JWT| `azurehound list --jwt "$JWT" -o azurehound.json`| Uses an existing token.| `Authenticated using JWT`  
+Azure AD Scope| `azurehound list az-ad -u analyst@corp.com -p '<password>' -t corp.onmicrosoft.com`| Collects tenant-level data.| `Collecting users, groups, roles, apps, service principals`  
+AzureRM Scope| `azurehound list az-rm -u analyst@corp.com -p '<password>' -t corp.onmicrosoft.com`| Collects AzureRM data.| `Collecting subscriptions and resource data`  
+Node Search| `user:bob`| Searches for a user node.| `BOB@PHANTOM.CORP`  
+Group Search| `group:admin`| Searches for admin-related groups.| `DOMAIN ADMINS@CORP.LOCAL`  
+Basic Cypher| `MATCH (u:User) RETURN u LIMIT 25`| Returns user nodes.| `25 user nodes returned`  
+Path Query| `MATCH p = shortestPath((u:User)-[*..]->(g:Group)) WHERE g.name CONTAINS "DOMAIN ADMINS" RETURN p`| Finds paths to privileged groups.| `Path returned in graph view`  
+Add Owned| `Right-click node > Add to Owned`| Marks a compromised object.| `Owned label applied`  
+Pathfinding| `Set as starting node / Set as ending node`| Draws paths between objects.| `Pathfinding results rendered`

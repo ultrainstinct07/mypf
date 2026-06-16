@@ -16,13 +16,16 @@ export default function SiteLoadingScreen() {
   const [progress, setProgress] = useState(0);
   const [canSkip, setCanSkip] = useState(false);
   const [announcement, setAnnouncement] = useState('');
-  const startTimeRef = useRef(Date.now());
+  const startTimeRef = useRef<number>(0);
   const dismissedRef = useRef(false);
 
   useEffect(() => {
     if (showSplash) {
-      setOverlayVisible(true);
+      const handle = requestAnimationFrame(() => {
+        setOverlayVisible(true);
+      });
       dismissedRef.current = false;
+      return () => cancelAnimationFrame(handle);
     }
   }, [showSplash]);
 

@@ -1,0 +1,630 @@
+---
+title: "Apktool"
+description: "Apktool tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['mobile security', 'android', 'reverse engineering', 'apk analysis']
+---
+
+## What is the purpose of Apktool?​
+
+**Apktool** is an open-source command-line tool for reverse engineering Android APK files. It decodes Android application packages into a project-like directory structure, converts Dalvik bytecode into smali, decodes resources and manifests, installs framework resources, and rebuilds modified projects back into APK files.
+
+Apktool is useful because it preserves Android-specific resources and smali-level structure better than generic archive extraction. It is commonly used in mobile application security testing, malware triage, CTF workflows, localization review, Android resource inspection, manifest analysis, and controlled APK rebuild experiments.
+
+**Note:** Apktool is not a Java decompiler. Use JADX when you want Java-like source output. Use Apktool when you need Android resources, `AndroidManifest.xml`, `resources.arsc`, smali code, framework files, or rebuildable APK project output. Rebuilt APKs must be signed before installation or execution.
+
+**Version note:** Current Apktool 3.x syntax changed some older 2.x aliases. This guide uses 3.x-friendly long options where possible. If you are pinned to Apktool 2.x, check `apktool --help` because some options may use older names such as `empty-framework-dir`, `--force-all`, or `--debug`.
+
+**Here are the primary uses of Apktool:**
+
+  * **APK Decoding:** Apktool decodes APK files into a directory containing smali code, decoded resources, assets, native libraries, and `AndroidManifest.xml`.
+
+  * **Android Resource Inspection:** The tool reconstructs XML resources, resource tables, string files, layouts, permissions, network security configuration, and application metadata.
+
+  * **Smali-Level Analysis:** Apktool disassembles DEX bytecode into smali so analysts can inspect low-level Android instructions, class structure, and method behavior.
+
+  * **Framework Resource Handling:** The tool can install OEM or vendor framework files so applications from customized Android builds decode and rebuild more accurately.
+
+  * **APK Rebuilding:** Apktool rebuilds decoded projects into APK files after controlled changes to resources, manifest files, or smali files.
+
+  * **Patch and Repackaging Workflows:** In authorized labs, Apktool supports repeatable decode, edit, rebuild, zipalign, sign, and install workflows for security testing.
+
+  * **Troubleshooting Broken Resources:** The tool includes options for broken resource handling, resource resolution modes, custom framework paths, custom AAPT binaries, and verbose output.
+
+
+
+
+## Core Features​
+
+  * APK decoding and rebuilding
+  * Smali disassembly and reassembly
+  * AndroidManifest.xml and resource decoding
+  * Framework APK installation and tagging
+  * Selective decode options for sources, resources, and assets
+  * Custom output, force, quiet, and verbose modes
+  * Patch, rebuild, sign, and install workflow support
+
+
+
+## Data sources​
+
+  * APK and JAR files
+  * DEX and smali code
+  * AndroidManifest.xml and resources.arsc
+  * res, assets, lib, and META-INF directories
+  * Android framework and vendor framework APKs
+  * Decoded Apktool project directories
+  * Rebuilt and signed APK files
+
+
+
+## Common Apktool Commands​
+
+### 1\. Install Apktool with Homebrew​
+
+  * This command installs Apktool on macOS using Homebrew.
+
+
+    
+    
+```
+brew install apktool  
+```
+### 2\. Run Apktool from the JAR File​
+
+  * This command runs Apktool directly with Java when a wrapper script is not installed.
+
+
+    
+    
+```
+java -jar apktool.jar --help  
+```
+### 3\. Check Apktool Version​
+
+  * This command prints the installed Apktool version.
+
+
+    
+    
+```
+apktool --version  
+```
+### 4\. Show Help​
+
+  * This command displays Apktool commands and common options.
+
+
+    
+    
+```
+apktool --help  
+```
+### 5\. Decode an APK​
+
+  * This command decodes an APK into the default output directory.
+
+
+    
+    
+```
+apktool d app.apk  
+```
+### 6\. Decode an APK with the Long Command​
+
+  * This command uses the long form of the decode command.
+
+
+    
+    
+```
+apktool decode app.apk  
+```
+### 7\. Decode to a Specific Directory​
+
+  * This command writes decoded output to a selected directory.
+
+
+    
+    
+```
+apktool d app.apk -o app-decoded  
+```
+### 8\. Force Decode Over an Existing Directory​
+
+  * This command deletes the existing destination directory before decoding.
+
+
+    
+    
+```
+apktool d app.apk -o app-decoded --force  
+```
+### 9\. Decode Without Smali Sources​
+
+  * This command keeps DEX files untouched and skips smali disassembly.
+
+
+    
+    
+```
+apktool d app.apk --no-src -o app-resources-only  
+```
+### 10\. Decode Without Resources​
+
+  * This command skips resource decoding and keeps `resources.arsc` intact.
+
+
+    
+    
+```
+apktool d app.apk --no-res -o app-smali-only  
+```
+### 11\. Decode Without Assets​
+
+  * This command prevents unknown asset files from being decoded or copied.
+
+
+    
+    
+```
+apktool d app.apk --no-assets -o app-no-assets  
+```
+### 12\. Force Manifest Decoding​
+
+  * This command decodes `AndroidManifest.xml` even when other decode options would skip it.
+
+
+    
+    
+```
+apktool d app.apk --no-res --force-manifest -o app-manifest-only  
+```
+### 13\. Decode Without Debug Info​
+
+  * This command prevents baksmali from writing debug metadata such as `.line`, `.local`, and `.param`.
+
+
+    
+    
+```
+apktool d app.apk --no-debug-info -o app-no-debug-info  
+```
+### 14\. Decode All DEX Sources​
+
+  * This command disassembles all DEX files, including unknown DEX files outside the usual root `classes*.dex` pattern.
+
+
+    
+    
+```
+apktool d app.apk --all-src -o app-all-dex  
+```
+### 15\. Keep Broken Resources​
+
+  * This command continues decoding when some resources cannot be resolved cleanly.
+
+
+    
+    
+```
+apktool d app.apk --keep-broken-res -o app-broken-res  
+```
+### 16\. Use Greedy Resource Resolution​
+
+  * This command adds dummy entries for missing resources during resolution.
+
+
+    
+    
+```
+apktool d app.apk --res-resolve-mode greedy -o app-greedy-res  
+```
+### 17\. Use Lazy Resource Resolution​
+
+  * This command ignores missing resources during resource resolution.
+
+
+    
+    
+```
+apktool d app.apk --res-resolve-mode lazy -o app-lazy-res  
+```
+### 18\. Match Original Output More Closely​
+
+  * This command tries to make generated files closer to the original APK structure.
+
+
+    
+    
+```
+apktool d app.apk --match-original -o app-match-original  
+```
+### 19\. Use a Custom Framework Directory​
+
+  * This command reads and stores framework files in a selected directory.
+
+
+    
+    
+```
+apktool d app.apk --frame-path ./frameworks -o app-decoded  
+```
+### 20\. Decode with a Framework Tag​
+
+  * This command uses framework files tagged for a specific device or vendor profile.
+
+
+    
+    
+```
+apktool d vendor-app.apk --frame-path ./frameworks --frame-tag samsung -o vendor-app-decoded  
+```
+### 21\. Decode with a Dynamic Library Mapping​
+
+  * This command maps a shared Android library package to a local APK.
+
+
+    
+    
+```
+apktool d app.apk --lib com.google.android.test.shared_library:/tmp/shared_library.apk -o app-decoded  
+```
+### 22\. Build a Decoded APK Project​
+
+  * This command rebuilds a decoded Apktool project into the default `dist` output.
+
+
+    
+    
+```
+apktool b app-decoded  
+```
+### 23\. Build with the Long Command​
+
+  * This command uses the long form of the build command.
+
+
+    
+    
+```
+apktool build app-decoded  
+```
+### 24\. Build the Current Directory​
+
+  * This command builds the current directory if it contains `apktool.yml`.
+
+
+    
+    
+```
+apktool b .  
+```
+### 25\. Build to a Specific APK File​
+
+  * This command writes the rebuilt APK to a selected file.
+
+
+    
+    
+```
+apktool b app-decoded -o rebuilt-unsigned.apk  
+```
+### 26\. Force Rebuild Outputs​
+
+  * This command overwrites existing build output files.
+
+
+    
+    
+```
+apktool b app-decoded --force -o rebuilt-unsigned.apk  
+```
+### 27\. Build a Debuggable APK​
+
+  * This command adds `debuggable="true"` to the rebuilt manifest.
+
+
+    
+    
+```
+apktool b app-decoded --debuggable -o rebuilt-debuggable.apk  
+```
+### 28\. Copy Original Manifest and META-INF​
+
+  * This command copies the original `AndroidManifest.xml` and `META-INF` into the build output.
+
+
+    
+    
+```
+apktool b app-decoded --copy-original -o rebuilt-copy-original.apk  
+```
+### 29\. Add a Generic Network Security Configuration​
+
+  * This command adds a generic network security configuration during build.
+
+
+    
+    
+```
+apktool b app-decoded --net-sec-conf -o rebuilt-netsec.apk  
+```
+### 30\. Build Without Repacking an APK​
+
+  * This command builds intermediate files but skips APK repacking.
+
+
+    
+    
+```
+apktool b app-decoded --no-apk  
+```
+### 31\. Disable PNG Crunching​
+
+  * This command disables resource crunching during build.
+
+
+    
+    
+```
+apktool b app-decoded --no-crunch -o rebuilt-no-crunch.apk  
+```
+### 32\. Use a Custom AAPT Binary​
+
+  * This command builds with a selected `aapt2` binary instead of Apktool's internal version.
+
+
+    
+    
+```
+apktool b app-decoded --aapt /path/to/aapt2 -o rebuilt-custom-aapt.apk  
+```
+### 33\. Build with a Custom Framework Directory​
+
+  * This command uses framework files stored in a selected directory while building.
+
+
+    
+    
+```
+apktool b app-decoded --frame-path ./frameworks -o rebuilt-unsigned.apk  
+```
+### 34\. Install an Android Framework APK​
+
+  * This command installs a framework resource APK for future decode and build operations.
+
+
+    
+    
+```
+apktool if framework-res.apk  
+```
+### 35\. Install a Vendor Framework APK​
+
+  * This command installs an OEM or vendor framework APK.
+
+
+    
+    
+```
+apktool if com.vendor.resources.apk  
+```
+### 36\. Install a Tagged Framework​
+
+  * This command stores a framework with a tag so multiple device framework sets can coexist.
+
+
+    
+    
+```
+apktool if com.vendor.resources.apk -t samsung  
+```
+### 37\. Install a Framework into a Custom Directory​
+
+  * This command stores framework files in a selected directory.
+
+
+    
+    
+```
+apktool if framework-res.apk --frame-path ./frameworks  
+```
+### 38\. Install a Tagged Framework into a Custom Directory​
+
+  * This command combines framework tagging with a custom framework directory.
+
+
+    
+    
+```
+apktool if com.vendor.resources.apk -t samsung --frame-path ./frameworks  
+```
+### 39\. List Installed Frameworks​
+
+  * This command lists installed untagged framework files.
+
+
+    
+    
+```
+apktool list-frameworks  
+```
+### 40\. List All Installed Frameworks​
+
+  * This command lists all installed framework files, including tagged files.
+
+
+    
+    
+```
+apktool list-frameworks --all  
+```
+### 41\. List Tagged Frameworks​
+
+  * This command lists framework files for one tag.
+
+
+    
+    
+```
+apktool list-frameworks --frame-tag samsung  
+```
+### 42\. List Frameworks from a Custom Directory​
+
+  * This command lists framework files in a selected framework path.
+
+
+    
+    
+```
+apktool list-frameworks --frame-path ./frameworks --all  
+```
+### 43\. Clean Untagged Frameworks​
+
+  * This command removes untagged framework files.
+
+
+    
+    
+```
+apktool clean-frameworks  
+```
+### 44\. Clean All Frameworks​
+
+  * This command removes all framework files.
+
+
+    
+    
+```
+apktool clean-frameworks --all  
+```
+### 45\. Clean Tagged Frameworks​
+
+  * This command removes framework files with a selected tag.
+
+
+    
+    
+```
+apktool clean-frameworks --frame-tag samsung  
+```
+### 46\. Clean Frameworks from a Custom Directory​
+
+  * This command removes framework files from a selected framework path.
+
+
+    
+    
+```
+apktool clean-frameworks --frame-path ./frameworks --all  
+```
+### 47\. Run with More Parallel Jobs​
+
+  * This command sets the number of parallel jobs used by supported operations.
+
+
+    
+    
+```
+apktool d app.apk --jobs 8 -o app-decoded  
+```
+### 48\. Run Quietly​
+
+  * This command reduces Apktool output.
+
+
+    
+    
+```
+apktool d app.apk --quiet -o app-decoded  
+```
+### 49\. Run Verbosely​
+
+  * This command prints verbose diagnostic output.
+
+
+    
+    
+```
+apktool d app.apk --verbose -o app-decoded  
+```
+### 50\. Inspect Decoded Manifest Permissions​
+
+  * This command lists permissions after decoding.
+
+
+    
+    
+```
+grep -n "uses-permission" app-decoded/AndroidManifest.xml  
+```
+### 51\. Search Decoded Resources for Cleartext URLs​
+
+  * This command searches decoded resources and smali for HTTP URLs.
+
+
+    
+    
+```
+grep -RIn "http://" app-decoded/res app-decoded/smali  
+```
+### 52\. Find Native Libraries in a Decoded APK​
+
+  * This command lists native libraries copied from the APK.
+
+
+    
+    
+```
+find app-decoded/lib -type f -name "*.so"  
+```
+### 53\. Zipalign a Rebuilt APK  ​
+
+  * This command aligns a rebuilt APK before signing.
+
+
+    
+    
+```
+zipalign -p -f 4 rebuilt-unsigned.apk rebuilt-aligned.apk  
+```
+### 54\. Sign a Rebuilt APK​
+
+  * This command signs a rebuilt APK with Android build tools.
+
+
+    
+    
+```
+apksigner sign --ks debug.keystore --out rebuilt-signed.apk rebuilt-aligned.apk  
+```
+### 55\. Verify an APK Signature​
+
+  * This command verifies a signed APK.
+
+
+    
+    
+```
+apksigner verify --verbose rebuilt-signed.apk  
+```
+## Output Examples​
+
+Command| Description| Example Output  
+---|---|---  
+`apktool --version`| Shows the installed version.| `3.0.2`  
+`apktool d app.apk`| Decodes an APK.| `I: Using Apktool ...`   
+`I: Decoding resources...`  
+`apktool d app.apk -o app-decoded`| Decodes to a selected directory.| `I: Copying assets and libs...`   
+`I: Copying unknown files...`  
+`apktool d app.apk --no-src`| Decodes resources while keeping DEX files untouched.| `I: Copying raw classes.dex file...`  
+`apktool b app-decoded -o rebuilt-unsigned.apk`| Rebuilds a decoded project.| `I: Building apk file...`   
+`I: Built apk into: rebuilt-unsigned.apk`  
+`apktool if framework-res.apk`| Installs a framework APK.| `I: Framework installed to: 1.apk`  
+`apktool if com.vendor.resources.apk -t samsung`| Installs a tagged vendor framework.| `I: Framework installed to: 2-samsung.apk`  
+`apktool list-frameworks --all`| Lists installed framework files.| `1.apk`   
+`2-samsung.apk`  
+`apktool clean-frameworks --all`| Removes installed framework files.| `I: Removed framework directory`  
+`grep -n "uses-permission" app-decoded/AndroidManifest.xml`| Reviews decoded permissions.| `12:<uses-permission android:name="android.permission.INTERNET" />`  
+`apksigner verify --verbose rebuilt-signed.apk`| Verifies the signed rebuilt APK.| `Verified`

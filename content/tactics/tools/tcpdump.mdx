@@ -1,0 +1,418 @@
+---
+title: "Tcpdump"
+description: "Tcpdump tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'packet analysis']
+---
+
+**Tcpdump** is an **open-source** command-line packet analyzer that allows users to capture and display network traffic transmitted or received over a network interface. It is one of the most widely used network analysis tools, essential for network troubleshooting, security analysis, and protocol debugging. Tcpdump provides powerful filtering capabilities and can save captured packets for later analysis with tools like Wireshark.
+
+**Here are the primary uses of Tcpdump:**
+
+  * **Network Traffic Analysis:** Tcpdump captures and displays network packets in real-time, enabling security professionals to analyze network traffic patterns, identify anomalies, and understand communication flows between systems.
+
+  * **Security Monitoring:** The tool detects suspicious network activity, unauthorized connections, and potential security breaches by capturing and analyzing packet-level data. It helps identify port scans, DDoS attacks, and other malicious activities.
+
+  * **Protocol Analysis:** Tcpdump examines protocol behavior at the packet level, helping developers and administrators debug network applications, verify protocol implementations, and troubleshoot connectivity issues.
+
+  * **Packet Capture for Forensics:** The tool captures network traffic to PCAP files for forensic analysis, providing evidence of network communications, data exfiltration attempts, and security incidents.
+
+  * **Network Troubleshooting:** Tcpdump diagnoses network problems including connectivity issues, DNS resolution failures, routing problems, and application communication errors by examining packet-level details.
+
+  * **Filter-Based Monitoring:** The tool supports complex filtering expressions using Berkeley Packet Filter (BPF) syntax, allowing users to capture only relevant traffic and focus on specific protocols, hosts, or ports.
+
+
+
+
+## Core Features​
+
+  * Real-Time Packet Capture
+  * PCAP File Support
+  * Berkeley Packet Filter (BPF)
+  * Protocol Decoding
+  * Timestamp Display
+  * Packet Count Limiting
+  * Interface Selection
+  * Promiscuous Mode
+  * Snapshot Length Control
+  * ASCII/Hex Packet Display
+  * DNS Resolution Control
+  * Verbose Output Levels
+  * Multiple Interface Support
+
+
+
+## Data sources​
+
+  * Network Interface Cards
+  * Virtual Network Interfaces
+  * Loopback Interface
+  * PCAP Files
+  * Network Packets
+  * Protocol Headers
+  * Packet Payloads
+  * Timestamp Information
+  * MAC Addresses
+  * IP Addresses
+
+
+
+## Common Tcpdump Commands​
+
+### 1\. Basic Packet Capture​
+
+  * This command captures all packets on the default network interface, displaying them in real-time to the console.
+
+
+    
+    
+```
+tcpdump  
+```
+### 2\. Capture on Specific Interface​
+
+  * This command captures packets on a specified network interface, useful when multiple network adapters are present.
+
+
+    
+    
+```
+tcpdump -i <interface>  
+```
+### 3\. Capture Limited Packets​
+
+  * This command captures a specific number of packets and then stops, useful for quick sampling of network traffic.
+
+
+    
+    
+```
+tcpdump -c <count>  
+```
+### 4\. Save Capture to File​
+
+  * This command saves captured packets to a PCAP file for later analysis with tcpdump or other tools like Wireshark.
+
+
+    
+    
+```
+tcpdump -w <output_file.pcap>  
+```
+### 5\. Read from Capture File​
+
+  * This command reads and displays packets from a previously saved PCAP file, enabling offline analysis.
+
+
+    
+    
+```
+tcpdump -r <input_file.pcap>  
+```
+### 6\. Capture Specific Protocol​
+
+  * This command captures only packets of a specified protocol such as TCP, UDP, or ICMP.
+
+
+    
+    
+```
+tcpdump <protocol>  
+```
+### 7\. Capture Specific Host​
+
+  * This command captures packets to or from a specific host IP address, filtering all other traffic.
+
+
+    
+    
+```
+tcpdump host <ip_address>  
+```
+### 8\. Capture Specific Port​
+
+  * This command captures packets on a specific port number, useful for monitoring particular services.
+
+
+    
+    
+```
+tcpdump port <port_number>  
+```
+### 9\. Capture Source Host​
+
+  * This command captures packets originating from a specific source IP address.
+
+
+    
+    
+```
+tcpdump src host <ip_address>  
+```
+### 10\. Capture Destination Host​
+
+  * This command captures packets destined for a specific target IP address.
+
+
+    
+    
+```
+tcpdump dst host <ip_address>  
+```
+### 11\. Capture Network Range​
+
+  * This command captures packets from an entire network subnet using CIDR notation.
+
+
+    
+    
+```
+tcpdump net <network/cidr>  
+```
+### 12\. Verbose Output​
+
+  * This command enables verbose output mode, displaying additional packet details including TTL, identification, total length, and options.
+
+
+    
+    
+```
+tcpdump -v  
+```
+### 13\. Very Verbose Output​
+
+  * This command provides maximum verbosity, showing detailed protocol information for comprehensive packet analysis.
+
+
+    
+    
+```
+tcpdump -vv  
+```
+### 14\. Display ASCII Content​
+
+  * This command displays packet payload content in ASCII format, useful for reading plaintext protocols like HTTP.
+
+
+    
+    
+```
+tcpdump -A  
+```
+### 15\. Display Hex and ASCII​
+
+  * This command displays packet content in both hexadecimal and ASCII format for detailed packet inspection.
+
+
+    
+    
+```
+tcpdump -X  
+```
+### 16\. No DNS Resolution​
+
+  * This command disables DNS name resolution, displaying raw IP addresses instead of hostnames for faster capture.
+
+
+    
+    
+```
+tcpdump -n  
+```
+### 17\. No Port Resolution​
+
+  * This command disables port name resolution, showing port numbers instead of service names.
+
+
+    
+    
+```
+tcpdump -nn  
+```
+### 18\. Capture with Timestamp​
+
+  * This command displays absolute timestamps for each packet, helping correlate events with specific times.
+
+
+    
+    
+```
+tcpdump -tttt  
+```
+### 19\. Snapshot Length​
+
+  * This command sets the snapshot length to capture only the specified number of bytes per packet, reducing file size.
+
+
+    
+    
+```
+tcpdump -s <bytes>  
+```
+### 20\. Promiscuous Mode Off​
+
+  * This command disables promiscuous mode, capturing only packets addressed to the interface.
+
+
+    
+    
+```
+tcpdump -p  
+```
+### 21\. Combine Filters with AND​
+
+  * This command combines multiple filter conditions using AND logic to capture specific traffic patterns.
+
+
+    
+    
+```
+tcpdump host <ip> and port <port>  
+```
+### 22\. Combine Filters with OR​
+
+  * This command uses OR logic to capture packets matching any of the specified conditions.
+
+
+    
+    
+```
+tcpdump host <ip1> or host <ip2>  
+```
+### 23\. Capture HTTP Traffic​
+
+  * This command captures HTTP traffic by filtering for port 80 and optionally displaying packet content.
+
+
+    
+    
+```
+tcpdump -i <interface> port 80 -A  
+```
+### 24\. Capture HTTPS Traffic​
+
+  * This command captures HTTPS/TLS traffic on port 443 for security analysis.
+
+
+    
+    
+```
+tcpdump -i <interface> port 443  
+```
+### 25\. Capture DNS Queries​
+
+  * This command captures DNS traffic on port 53, useful for monitoring name resolution requests.
+
+
+    
+    
+```
+tcpdump -i <interface> port 53  
+```
+### 26\. Capture Specific MAC Address​
+
+  * This command filters packets based on source or destination MAC address at the data link layer.
+
+
+    
+    
+```
+tcpdump ether host <mac_address>  
+```
+### 27\. Capture TCP SYN Packets​
+
+  * This command captures TCP SYN packets used for connection establishment, useful for detecting port scans.
+
+
+    
+    
+```
+tcpdump 'tcp[tcpflags] & tcp-syn != 0'  
+```
+### 28\. Capture Packets Greater Than Size​
+
+  * This command captures packets larger than a specified size, useful for identifying data transfers.
+
+
+    
+    
+```
+tcpdump greater <size>  
+```
+### 29\. Capture Packets Less Than Size​
+
+  * This command captures packets smaller than a specified size, filtering out large data transfers.
+
+
+    
+    
+```
+tcpdump less <size>  
+```
+### 30\. List Available Interfaces​
+
+  * This command lists all available network interfaces that can be used for packet capture.
+
+
+    
+    
+```
+tcpdump -D  
+```
+### 31\. Help and Usage Information​
+
+  * This command displays help information and usage options for tcpdump.
+
+
+    
+    
+```
+tcpdump -h  
+```
+Alternative usage:
+    
+    
+```
+tcpdump --help  
+```
+## Output Examples of Tcpdump Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Capture| `tcpdump`| Captures all packets.| `15:30:45.123456 IP 192.168.1.10.54321 > 192.168.1.1.80: Flags [S], seq 123456789, win 64240`  
+Specific Interface| `tcpdump -i eth0`| Captures on eth0.| `tcpdump: listening on eth0, link-type EN10MB (Ethernet)`  
+Limited Packets| `tcpdump -c 10`| Captures 10 packets.| `10 packets captured `   
+` 10 packets received by filter `   
+` 0 packets dropped by kernel`  
+Save to File| `tcpdump -w capture.pcap`| Saves to PCAP file.| `tcpdump: listening on eth0, link-type EN10MB (Ethernet) `   
+` ^C15 packets captured`  
+Read from File| `tcpdump -r capture.pcap`| Reads PCAP file.| `reading from file capture.pcap, link-type EN10MB (Ethernet)`  
+TCP Protocol| `tcpdump tcp`| Captures TCP packets.| `15:30:45.123456 IP 192.168.1.10.54321 > 192.168.1.1.80: Flags [S]`  
+Specific Host| `tcpdump host 192.168.1.10`| Captures host traffic.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.1: ICMP echo request`  
+Specific Port| `tcpdump port 80`| Captures port 80 traffic.| `15:30:45.123456 IP 192.168.1.10.54321 > 192.168.1.1.80: HTTP GET /`  
+Source Host| `tcpdump src 192.168.1.10`| Captures from source.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.1: ICMP echo request`  
+Destination Host| `tcpdump dst 192.168.1.1`| Captures to destination.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.1: TCP syn`  
+Network Range| `tcpdump net 192.168.1.0/24`| Captures subnet traffic.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.20: ICMP`  
+Verbose Output| `tcpdump -v`| Detailed packet info.| `15:30:45.123456 IP (tos 0x0, ttl 64, id 12345, offset 0, flags [DF])`  
+Very Verbose| `tcpdump -vv`| Maximum detail.| `15:30:45.123456 IP (tos 0x0, ttl 64, id 12345, offset 0, flags [DF], proto TCP (6), length 60)`  
+ASCII Display| `tcpdump -A`| Shows ASCII content.| `GET / HTTP/1.1 `   
+` Host: example.com `   
+` User-Agent: Mozilla/5.0`  
+Hex and ASCII| `tcpdump -X`| Shows hex and ASCII.| `0x0000: 4500 003c 1c46 4000 4006 b1e6 c0a8 010a E..<.F@.@....... `   
+` 0x0010: c0a8 0101 d431 0050 1234 5678 0000 0000 .....1.P.4Vx....`  
+No DNS Resolution| `tcpdump -n`| Shows IP addresses.| `15:30:45.123456 IP 192.168.1.10.54321 > 192.168.1.1.80`  
+No Port Names| `tcpdump -nn`| Shows port numbers.| `15:30:45.123456 IP 192.168.1.10.54321 > 192.168.1.1.80`  
+Timestamp| `tcpdump -tttt`| Absolute timestamp.| `2024-11-04 15:30:45.123456 IP 192.168.1.10 > 192.168.1.1`  
+Snapshot Length| `tcpdump -s 64`| Captures 64 bytes.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.1: truncated-ip`  
+No Promiscuous| `tcpdump -p`| Normal mode capture.| `tcpdump: listening on eth0, link-type EN10MB`  
+Combined AND| `tcpdump host 192.168.1.10 and port 80`| Host AND port filter.| `15:30:45.123456 IP 192.168.1.10.54321 > 192.168.1.1.80: HTTP`  
+Combined OR| `tcpdump port 80 or port 443`| Port 80 OR 443.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.1.443: TLS`  
+HTTP Traffic| `tcpdump -i eth0 port 80 -A`| Captures HTTP.| `GET /index.html HTTP/1.1 `   
+` Host: example.com`  
+HTTPS Traffic| `tcpdump port 443`| Captures HTTPS.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.1.443: TLS`  
+DNS Queries| `tcpdump port 53`| Captures DNS.| `15:30:45.123456 IP 192.168.1.10.54321 > 8.8.8.8.53: DNS A? example.com`  
+MAC Address| `tcpdump ether host 00:11:22:33:44:55`| Filters by MAC.| `15:30:45.123456 00:11:22:33:44:55 > ff:ff:ff:ff:ff:ff: ARP`  
+TCP SYN| `tcpdump 'tcp[tcpflags] & tcp-syn != 0'`| Captures SYN packets.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.1: Flags [S]`  
+Packet Size| `tcpdump greater 1000`| Packets > 1000 bytes.| `15:30:45.123456 IP 192.168.1.10 > 192.168.1.1: length 1500`  
+List Interfaces| `tcpdump -D`| Lists interfaces.| `1.eth0 [Up, Running] `   
+` 2.wlan0 [Up, Running] `   
+` 3.lo [Up, Running, Loopback]`

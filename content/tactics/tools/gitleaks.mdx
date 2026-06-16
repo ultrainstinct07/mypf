@@ -1,0 +1,507 @@
+---
+title: "Gitleaks"
+description: "Gitleaks tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['devsecops', 'git', 'secrets', 'sast']
+---
+
+## What is the purpose of Gitleaks?​
+
+**Gitleaks** is an **open-source** secret scanning tool used to detect hardcoded credentials such as passwords, API keys, private keys, tokens, and other sensitive values in Git repositories, directories, files, archives, and standard input.
+
+Gitleaks is useful for both security teams and developers because it can scan existing Git history, check working directories, run in CI/CD pipelines, produce machine-readable reports, and block accidental credential leaks before they are committed.
+
+**Note:** Gitleaks v8.19.0 deprecated the older `detect` and `protect` commands. The current command model uses `git`, `dir`, and `stdin`. Older commands may still work in some versions, but new workflows should prefer the current commands below.
+
+**Here are the primary uses of Gitleaks:**
+
+  * **Git History Secret Scanning:** Gitleaks scans Git repositories using patch data from Git history, which helps find secrets committed in the past as well as recent changes.
+
+  * **Working Directory Secret Scanning:** The tool can scan directories and individual files outside Git history, making it useful for source trees, configuration folders, build artifacts, and downloaded packages.
+
+  * **Pre-Commit Protection:** Gitleaks can run as a pre-commit hook or against staged changes so developers can catch secrets before they enter the repository.
+
+  * **CI/CD Secret Detection:** The tool can run in pipelines, return a non-zero exit code when leaks are found, and generate JSON, CSV, JUnit, SARIF, or custom template reports.
+
+  * **Custom Detection Rules:** Gitleaks supports TOML configuration files for custom rules, rule extension, disabled rules, allowlists, path filters, entropy checks, keywords, and rule-specific tuning.
+
+  * **False Positive Management:** The tool supports baseline reports, `.gitleaksignore`, inline `gitleaks:allow` comments, and allowlist rules for reducing known or intentional findings.
+
+  * **Archive and Encoded Secret Discovery:** Gitleaks can optionally scan nested archives and decode encoded values such as base64, hex, and percent-encoded content.
+
+
+
+
+## Core Features​
+
+  * Secret scanning for Git repositories and filesystems
+  * Commit history, working tree, and stdin scanning
+  * Rule-based detection with custom configuration
+  * Baselines, allowlists, redaction, and exit-code controls
+  * JSON, CSV, SARIF, and JUnit reporting
+  * Pre-commit and CI/CD integration support
+  * Archive and no-git scanning modes
+
+
+
+## Data sources​
+
+  * Git repositories and commit history
+  * Working directories and standalone files
+  * Standard input streams
+  * Gitleaks rule configuration files
+  * Baselines and allowlists
+  * Generated findings and reports
+
+
+
+## Common Gitleaks Commands​
+
+### 1\. Install Gitleaks with Homebrew​
+
+  * This command installs Gitleaks on macOS using Homebrew.
+
+
+    
+    
+```
+brew install gitleaks  
+```
+### 2\. Pull the Docker Image from GHCR​
+
+  * This command downloads the official GitHub Container Registry image.
+
+
+    
+    
+```
+docker pull ghcr.io/gitleaks/gitleaks:latest  
+```
+### 3\. Run Gitleaks with Docker​
+
+  * This command scans the current directory through the official Docker image.
+
+
+    
+    
+```bash
+docker run --rm -v "$(pwd)":/path ghcr.io/gitleaks/gitleaks:latest dir /path  
+```
+### 4\. Show Help​
+
+  * This command displays Gitleaks help and available subcommands.
+
+
+    
+    
+```
+gitleaks -h  
+```
+### 5\. Show Git Scan Help​
+
+  * This command displays options for scanning Git repositories.
+
+
+    
+    
+```
+gitleaks git -h  
+```
+### 6\. Show Directory Scan Help​
+
+  * This command displays options for scanning directories and files.
+
+
+    
+    
+```
+gitleaks dir -h  
+```
+### 7\. Show Version​
+
+  * This command prints the installed Gitleaks version.
+
+
+    
+    
+```
+gitleaks version  
+```
+### 8\. Scan Current Git Repository​
+
+  * This command scans the current Git repository history for secrets.
+
+
+    
+    
+```
+gitleaks git -v .  
+```
+### 9\. Scan a Specific Git Repository Path​
+
+  * This command scans a selected local Git repository path.
+
+
+    
+    
+```
+gitleaks git -v /path/to/repo  
+```
+### 10\. Scan All Git References​
+
+  * This command scans all branches and references by passing options to `git log`.
+
+
+    
+    
+```
+gitleaks git -v --log-opts="--all" /path/to/repo  
+```
+### 11\. Scan a Commit Range​
+
+  * This command scans a selected commit range.
+
+
+    
+    
+```
+gitleaks git -v --log-opts="--all commitA..commitB" /path/to/repo  
+```
+### 12\. Scan Staged Changes​
+
+  * This command checks staged changes before they are committed.
+
+
+    
+    
+```
+gitleaks git --staged -v .  
+```
+### 13\. Scan with Pre-Commit Mode​
+
+  * This command scans changes using the Git diff workflow intended for pre-commit checks.
+
+
+    
+    
+```
+gitleaks git --pre-commit -v .  
+```
+### 14\. Scan a Directory​
+
+  * This command scans the current directory and files without requiring Git history.
+
+
+    
+    
+```
+gitleaks dir -v .  
+```
+### 15\. Scan a Specific File​
+
+  * This command scans one file directly.
+
+
+    
+    
+```
+gitleaks dir -v .env.example  
+```
+### 16\. Scan a Directory and Follow Symlinks​
+
+  * This command scans symlinked files as well as regular files.
+
+
+    
+    
+```
+gitleaks dir -v --follow-symlinks ./src  
+```
+### 17\. Scan Standard Input​
+
+  * This command streams a file into Gitleaks through standard input.
+
+
+    
+    
+```
+cat config.txt | gitleaks -v stdin  
+```
+### 18\. Save a JSON Report​
+
+  * This command writes scan findings to a JSON report.
+
+
+    
+    
+```
+gitleaks git -v --report-format json --report-path gitleaks-report.json .  
+```
+### 19\. Save a SARIF Report​
+
+  * This command writes findings in SARIF format for code scanning platforms.
+
+
+    
+    
+```
+gitleaks git -v --report-format sarif --report-path gitleaks.sarif .  
+```
+### 20\. Save a JUnit Report​
+
+  * This command writes findings in JUnit format for CI systems that collect test reports.
+
+
+    
+    
+```
+gitleaks git -v --report-format junit --report-path gitleaks-junit.xml .  
+```
+### 21\. Create a Baseline​
+
+  * This command creates a report that can later be used as a baseline for known findings.
+
+
+    
+    
+```
+gitleaks git --report-format json --report-path gitleaks-baseline.json .  
+```
+### 22\. Scan with a Baseline​
+
+  * This command ignores findings already present in the baseline and reports only new findings.
+
+
+    
+    
+```
+gitleaks git --baseline-path gitleaks-baseline.json --report-format json --report-path new-findings.json .  
+```
+### 23\. Use a Custom Config File​
+
+  * This command runs Gitleaks with a selected TOML configuration file.
+
+
+    
+    
+```
+gitleaks git -v --config .gitleaks.toml .  
+```
+### 24\. Use Config from an Environment Variable​
+
+  * This command points Gitleaks to a configuration file through `GITLEAKS_CONFIG`.
+
+
+    
+    
+```
+GITLEAKS_CONFIG=.gitleaks.toml gitleaks git -v .  
+```
+### 25\. Enable Only One Rule​
+
+  * This command runs only the selected rule ID.
+
+
+    
+    
+```
+gitleaks git -v --enable-rule aws-access-token .  
+```
+### 26\. Use a Gitleaks Ignore File​
+
+  * This command uses a selected `.gitleaksignore` file or folder containing one.
+
+
+    
+    
+```
+gitleaks git -v --gitleaks-ignore-path .gitleaksignore .  
+```
+### 27\. Ignore Inline Allow Comments​
+
+  * This command ignores `gitleaks:allow` comments so suppressed findings are still reported.
+
+
+    
+    
+```
+gitleaks git -v --ignore-gitleaks-allow .  
+```
+### 28\. Redact Secrets in Output​
+
+  * This command redacts detected secrets in logs and stdout.
+
+
+    
+    
+```
+gitleaks git -v --redact .  
+```
+### 29\. Partially Redact Secrets​
+
+  * This command redacts most of the secret while leaving a small portion visible for triage.
+
+
+    
+    
+```
+gitleaks git -v --redact=20 .  
+```
+### 30\. Scan Encoded Content​
+
+  * This command enables recursive decoding up to the selected depth.
+
+
+    
+    
+```
+gitleaks dir -v --max-decode-depth 2 .  
+```
+### 31\. Scan Archive Contents​
+
+  * This command enables archive traversal up to the selected depth.
+
+
+    
+    
+```
+gitleaks dir -v --max-archive-depth 2 .  
+```
+### 32\. Skip Large Files​
+
+  * This command skips files larger than the selected size in megabytes.
+
+
+    
+    
+```
+gitleaks dir -v --max-target-megabytes 10 .  
+```
+### 33\. Set a Scan Timeout​
+
+  * This command stops the scan after the selected number of seconds.
+
+
+    
+    
+```
+gitleaks git -v --timeout 120 .  
+```
+### 34\. Change the Exit Code on Leaks​
+
+  * This command changes the exit code used when leaks are found, which can be useful for advisory-only CI jobs.
+
+
+    
+    
+```
+gitleaks git -v --exit-code 0 .  
+```
+### 35\. Generate GitHub Links in Reports​
+
+  * This command tells Gitleaks to generate links for GitHub-hosted repositories when possible.
+
+
+    
+    
+```
+gitleaks git -v --platform github .  
+```
+### 36\. Generate GitLab Links in Reports​
+
+  * This command tells Gitleaks to generate links for GitLab-hosted repositories when possible.
+
+
+    
+    
+```
+gitleaks git -v --platform gitlab .  
+```
+### 37\. Run Without Banner or Color​
+
+  * This command makes output cleaner for CI logs.
+
+
+    
+    
+```
+gitleaks git --no-banner --no-color -v .  
+```
+### 38\. Use a Custom Log Level​
+
+  * This command changes the log level for troubleshooting.
+
+
+    
+    
+```
+gitleaks git --log-level debug .  
+```
+### 39\. Install the Pre-Commit Hook​
+
+  * This command installs pre-commit hooks after adding Gitleaks to `.pre-commit-config.yaml`.
+
+
+    
+    
+```
+pre-commit install  
+```
+### 40\. Run Gitleaks Pre-Commit Manually​
+
+  * This command runs the configured Gitleaks pre-commit hook against all files.
+
+
+    
+    
+```
+pre-commit run gitleaks --all-files  
+```
+### 41\. Skip the Gitleaks Pre-Commit Hook Once​
+
+  * This command skips the Gitleaks hook for a single commit when there is a documented exception.
+
+
+    
+    
+```
+SKIP=gitleaks git commit -m "documented exception"  
+```
+## Output Examples of Gitleaks Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Show Help| `gitleaks -h`| Displays global help and commands.| `Available Commands: dir, git, stdin, version`  
+Show Version| `gitleaks version`| Prints installed version.| `v8.30.1`  
+Git Scan| `gitleaks git -v .`| Scans Git history for secrets.| `Finding: export SERVICE_TOKEN=REDACTED`  
+Git Path Scan| `gitleaks git -v /path/to/repo`| Scans a selected Git repository.| `File: app/config.py`  
+All References| `gitleaks git --log-opts="--all" .`| Scans all Git refs.| `Commit: abc123...`  
+Commit Range| `gitleaks git --log-opts="--all commitA..commitB" .`| Scans selected commits.| `Scanned 12 commits`  
+Staged Scan| `gitleaks git --staged -v .`| Checks staged changes.| `Detect hardcoded secrets...Failed`  
+Pre-Commit Mode| `gitleaks git --pre-commit -v .`| Scans using Git diff mode.| `Pre-commit scan complete`  
+Directory Scan| `gitleaks dir -v .`| Scans files and directories.| `File: .env.example`  
+File Scan| `gitleaks dir -v .env.example`| Scans one file.| `RuleID: generic-api-key`  
+Symlink Scan| `gitleaks dir --follow-symlinks ./src`| Includes symlinked files.| `Following symlinks enabled`  
+STDIN Scan| `cat config.txt | gitleaks -v stdin`| Scans streamed content.| `Finding: token=REDACTED`  
+JSON Report| `gitleaks git --report-format json --report-path report.json .`| Saves JSON findings.| `report.json written`  
+SARIF Report| `gitleaks git --report-format sarif --report-path gitleaks.sarif .`| Saves SARIF findings.| `gitleaks.sarif written`  
+JUnit Report| `gitleaks git --report-format junit --report-path gitleaks-junit.xml .`| Saves JUnit findings.| `gitleaks-junit.xml written`  
+Baseline Creation| `gitleaks git --report-path baseline.json .`| Creates a baseline report.| `baseline.json written`  
+Baseline Scan| `gitleaks git --baseline-path baseline.json --report-path new.json .`| Reports only new findings.| `new.json contains new findings`  
+Custom Config| `gitleaks git --config .gitleaks.toml .`| Uses a TOML config.| `Using config: .gitleaks.toml`  
+Environment Config| `GITLEAKS_CONFIG=.gitleaks.toml gitleaks git .`| Loads config through env var.| `Loaded config from environment`  
+Enable Rule| `gitleaks git --enable-rule aws-access-token .`| Runs selected rule only.| `Enabled rule: aws-access-token`  
+Ignore File| `gitleaks git --gitleaks-ignore-path .gitleaksignore .`| Uses ignore fingerprints.| `Ignored fingerprint from .gitleaksignore`  
+Ignore Allow Comments| `gitleaks git --ignore-gitleaks-allow .`| Reports findings even with allow comments.| `gitleaks:allow ignored`  
+Redact Output| `gitleaks git --redact .`| Hides secrets from output.| `Secret: REDACTED`  
+Partial Redaction| `gitleaks git --redact=20 .`| Shows only part of a secret.| `Secret: REDACTED_WITH_PARTIAL_CONTEXT`  
+Decode Scan| `gitleaks dir --max-decode-depth 2 .`| Scans decoded content.| `Tags: decoded:base64`  
+Archive Scan| `gitleaks dir --max-archive-depth 2 .`| Scans archive contents.| `File: archive.tar!files/.env`  
+Size Limit| `gitleaks dir --max-target-megabytes 10 .`| Skips large files.| `Skipping large file`  
+Timeout| `gitleaks git --timeout 120 .`| Stops after a timeout.| `Timeout: 120 seconds`  
+Exit Code Control| `gitleaks git --exit-code 0 .`| Makes leaks advisory-only.| `Exit code configured: 0`  
+GitHub Links| `gitleaks git --platform github .`| Generates GitHub links.| `Link: https://github.com/org/repo/...`  
+CI-Friendly Output| `gitleaks git --no-banner --no-color .`| Reduces CI log noise.| `Banner disabled`  
+Debug Logging| `gitleaks git --log-level debug .`| Shows debug logs.| `DBG loaded config`  
+Pre-Commit Install| `pre-commit install`| Installs configured hooks.| `pre-commit installed at .git/hooks/pre-commit`  
+Pre-Commit Run| `pre-commit run gitleaks --all-files`| Runs the hook manually.| `Detect hardcoded secrets...Passed`  
+Skip Hook| `SKIP=gitleaks git commit -m "documented exception"`| Skips one hook run.| `Detect hardcoded secrets...Skipped`

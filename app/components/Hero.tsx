@@ -1,8 +1,9 @@
 'use client';
 
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from 'framer-motion';
-import { ArrowRight, Mail } from 'lucide-react';
+import { ArrowRight, Mail, Terminal } from 'lucide-react';
 import { useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import { SITE_CONFIG } from '@/lib/constants';
 import { CONFIDENTIAL_STATS } from '@/lib/confidential-engagements';
 import { useBoldScrollMotion } from '../hooks/useBoldScrollMotion';
@@ -516,7 +517,7 @@ export default function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.0 }}
               >
-                <a
+                <Link
                   href="/projects"
                   className="group inline-flex items-center gap-2.5 px-5 sm:px-6 py-3 border-2 border-black dark:border-white rounded-none text-[12px] sm:text-[13px] font-extrabold uppercase tracking-wider transition-all duration-200 min-h-[44px] touch-manipulation bg-crimson text-white"
                   style={{
@@ -539,7 +540,16 @@ export default function Hero() {
                     size={15}
                     className="group-hover:translate-x-1 transition-transform duration-200"
                   />
-                </a>
+                </Link>
+
+                <Link
+                  href="/tactics"
+                  className="inline-flex items-center gap-2.5 px-5 sm:px-6 py-3 border border-white/20 rounded-none text-[12px] sm:text-[13px] font-bold uppercase tracking-wider transition-all duration-200 hover:border-crimson hover:text-white min-h-[44px] touch-manipulation bg-white/5 text-white/80"
+                  style={{ fontFamily: 'var(--font-manrope)' }}
+                >
+                  <Terminal size={15} />
+                  Tactics KB
+                </Link>
 
                 <a
                   href="#contact"

@@ -36,26 +36,20 @@ interface ParticleCloudContextValue {
 const ParticleCloudContext = createContext<ParticleCloudContextValue | null>(null);
 
 export function ParticleCloudProvider({ children }: { children: ReactNode }) {
-  const [phase, setPhase] = useState<ParticleCloudPhase>('splash');
   const [splashVisible, setSplashVisible] = useState(true);
   const [ambientEnabled, setAmbientEnabled] = useState(false);
   const [ambientOpacity, setAmbientOpacity] = useState<MotionValue<number> | null>(null);
   const [ambientCamera, setAmbientCamera] = useState<AmbientCameraMotionValues | null>(null);
   const [ambientScrollOpacity, setAmbientScrollOpacity] = useState(0);
 
+  const phase = useMemo<ParticleCloudPhase>(() => {
+    if (splashVisible) return 'splash';
+    return ambientEnabled ? 'ambient' : 'hidden';
+  }, [splashVisible, ambientEnabled]);
+
   const dismissSplash = useCallback(() => {
     setSplashVisible(false);
-    setPhase(ambientEnabled ? 'ambient' : 'hidden');
-  }, [ambientEnabled]);
-
-  useEffect(() => {
-    if (phase === 'hidden' && ambientEnabled && !splashVisible) {
-      setPhase('ambient');
-    }
-    if (phase === 'ambient' && !ambientEnabled) {
-      setPhase('hidden');
-    }
-  }, [ambientEnabled, phase, splashVisible]);
+  }, []);
 
   useEffect(() => {
     if (!ambientOpacity || splashVisible || phase !== 'ambient') return;
