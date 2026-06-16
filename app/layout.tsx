@@ -4,6 +4,7 @@ import './globals.css';
 import { SITE_CONFIG } from '@/lib/constants';
 import { getAllTactics } from '@/lib/tactics';
 import ThemeProvider from './providers/ThemeProvider';
+import Script from 'next/script';
 import ParticleCloudShell from './components/ParticleCloudShell';
 import { CtfProvider } from './components/CtfProvider';
 import CtfTerminal from './components/CtfTerminal';
@@ -129,7 +130,11 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <script
+      </head>
+      <body>
+        <Script
+          id="theme-initializer"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -157,8 +162,6 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body>
         <ThemeProvider>
           <ParticleCloudShell>
           <CtfProvider>

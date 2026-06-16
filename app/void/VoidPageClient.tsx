@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Terminal, ArrowLeft } from 'lucide-react';
 import { useCtf } from '@/app/components/CtfProvider';
@@ -11,6 +11,12 @@ import type { CtfStageId } from '@/types/ctf';
 
 export default function VoidPageClient() {
   const { discoverVoid, openTerminal, canOpenTerminal, progress } = useCtf();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(handle);
+  }, []);
 
   useEffect(() => {
     discoverVoid();
@@ -52,7 +58,7 @@ export default function VoidPageClient() {
           <ol className="space-y-4">
             {stageIds.map((stageId) => {
               const stage = CTF_STAGES.find((item) => item.id === stageId);
-              const complete = progress.completedStages.includes(stageId);
+              const complete = mounted && progress.completedStages.includes(stageId);
 
               return (
                 <li
@@ -86,7 +92,7 @@ export default function VoidPageClient() {
             <code className="text-gray-300">submit --final &lt;flag&gt;</code> for stage 5.
           </p>
 
-          {canOpenTerminal && (
+          {mounted && canOpenTerminal && (
             <button
               type="button"
               onClick={openTerminal}
@@ -97,9 +103,9 @@ export default function VoidPageClient() {
           )}
         </div>
 
-        {progress.completedStages.includes(5) && <CtfLeaderboard />}
+        {mounted && progress.completedStages.includes(5) && <CtfLeaderboard />}
 
-        {!progress.completedStages.includes(5) && (
+        {(!mounted || !progress.completedStages.includes(5)) && (
           <p className="text-xs text-gray-600 uppercase tracking-wider">
             Complete all five stages to unlock the hall of fame.
           </p>
